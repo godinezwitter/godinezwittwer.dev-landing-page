@@ -47,12 +47,12 @@ export function Process() {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7 }}
         >
-          <p className="text-xs font-medium tracking-widest uppercase mb-3" style={{ color: "#828e73" }}>
+          <p className="text-xs font-medium tracking-widest uppercase mb-3" style={{ color: "#252640" }}>
             How We Work
           </p>
           <h2
             className="font-display leading-tight max-w-lg"
-            style={{ fontSize: "clamp(2rem, 4vw, 3.2rem)", color: "#3b3d66" }}
+            style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", color: "#3b3d66" }}
           >
             From idea to live page — four clean steps
           </h2>
@@ -79,7 +79,7 @@ export function Process() {
               >
                 <motion.div
                   className="w-14 h-14 rounded-2xl flex items-center justify-center font-display text-lg font-bold mb-5 relative z-10"
-                  style={{ background: "#3b3d66", color: "#ada49a" }}
+                  style={{ background: "#3b3d66", color: "#c8c0b8" }}
                   whileHover={{ scale: 1.1, rotate: 3 }}
                   transition={{ duration: 0.2 }}
                 >
@@ -88,7 +88,7 @@ export function Process() {
                 <h3 className="font-display text-xl mb-3" style={{ color: "#3b3d66" }}>
                   {step.title}
                 </h3>
-                <p className="text-sm leading-relaxed" style={{ color: "#5a504a" }}>
+                <p className="text-base leading-relaxed" style={{ color: "#252640" }}>
                   {step.desc}
                 </p>
               </motion.div>
@@ -98,7 +98,8 @@ export function Process() {
 
         {/* Guarantee strip */}
         <motion.div
-          className="mt-20 glass-dark rounded-3xl px-8 py-7 flex flex-col md:flex-row items-center justify-between gap-6"
+          className="mt-20 rounded-3xl px-8 py-7 flex flex-col md:flex-row items-center justify-between gap-6"
+          style={{ background: "#252640" }}
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, delay: 0.7 }}
@@ -107,14 +108,14 @@ export function Process() {
             <p className="font-display text-2xl mb-1" style={{ color: "#ada49a" }}>
               100% Satisfaction Guarantee
             </p>
-            <p className="text-sm" style={{ color: "rgba(173,164,154,0.6)" }}>
+            <p className="text-sm" style={{ color: "#c8c0b8" }}>
               Not happy after two revisions? You get a full refund — no questions asked.
             </p>
           </div>
           <MagneticButton
             href="#contact"
             className="shrink-0 px-7 py-3 rounded-full font-semibold text-sm"
-            style={{ background: "#828e73", color: "#fff" }}
+            style={{ background: "#5e6853", color: "#fff" }}
             whileHover={{ scale: 1.05 }}
           >
             Claim Your Page →

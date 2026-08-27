@@ -56,12 +56,12 @@ export function Testimonials() {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7 }}
         >
-          <p className="text-xs font-medium tracking-widest uppercase mb-3" style={{ color: "#828e73" }}>
+          <p className="text-xs font-medium tracking-widest uppercase mb-3" style={{ color: "#252640" }}>
             Client Results
           </p>
           <h2
             className="font-display leading-tight"
-            style={{ fontSize: "clamp(2rem, 4vw, 3.2rem)", color: "#3b3d66" }}
+            style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", color: "#3b3d66" }}
           >
             Heard from real sellers
           </h2>
@@ -79,20 +79,20 @@ export function Testimonials() {
             >
               <div className="flex mb-4">
                 {Array.from({ length: t.rating }).map((_, j) => (
-                  <span key={j} style={{ color: "#828e73" }}>★</span>
+                  <span key={j} style={{ color: "#252640" }}>★</span>
                 ))}
               </div>
               <p
-                className="text-sm leading-relaxed mb-6 font-display italic"
-                style={{ color: "#3b3d66" }}
+                className="text-base leading-relaxed mb-6 font-display italic"
+                style={{ color: "#252640" }}
               >
                 "{t.quote}"
               </p>
               <div>
-                <p className="text-sm font-semibold" style={{ color: "#3b3d66" }}>
+                <p className="text-sm font-semibold" style={{ color: "#252640" }}>
                   {t.name}
                 </p>
-                <p className="text-xs" style={{ color: "#5a504a" }}>
+                <p className="text-xs" style={{ color: "#252640" }}>
                   {t.role}
                 </p>
               </div>
@@ -116,7 +116,7 @@ export function Testimonials() {
             />
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div>
-                <p className="text-xs font-medium tracking-widest uppercase mb-4" style={{ color: "#828e73" }}>
+                <p className="text-xs font-medium tracking-widest uppercase mb-4" style={{ color: "#b4c2a3" }}>
                   Start Today
                 </p>
                 <h2
@@ -125,7 +125,7 @@ export function Testimonials() {
                 >
                   Ready to build a page that actually works?
                 </h2>
-                <p className="text-sm leading-relaxed" style={{ color: "rgba(173,164,154,0.6)" }}>
+                <p className="text-base leading-relaxed" style={{ color: "#c8c0b8" }}>
                   Tell us about your Fiverr gig and we'll come back within 24 hours with
                   a strategy and a clear quote.
                 </p>
@@ -134,11 +134,11 @@ export function Testimonials() {
                     <div key={p} className="flex items-center gap-3">
                       <span
                         className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
-                        style={{ background: "#828e73", color: "#fff" }}
+                        style={{ background: "#5e6853", color: "#fff" }}
                       >
                         ✓
                       </span>
-                      <span className="text-sm" style={{ color: "rgba(173,164,154,0.8)" }}>
+                      <span className="text-base" style={{ color: "#c8c0b8" }}>
                         {p}
                       </span>
                     </div>
@@ -155,7 +155,7 @@ export function Testimonials() {
                     { key: "service", label: "Fiverr Category", type: "text", placeholder: "e.g. Logo Design, SEO, Writing" },
                   ].map((field) => (
                     <div key={field.key}>
-                      <label className="block text-xs font-medium mb-1.5" style={{ color: "rgba(173,164,154,0.7)" }}>
+                      <label className="block text-xs font-medium mb-1.5" style={{ color: "#c8c0b8" }}>
                         {field.label}
                       </label>
                       <input
@@ -167,7 +167,7 @@ export function Testimonials() {
                         style={{
                           background: "rgba(255,255,255,0.06)",
                           border: "1px solid rgba(255,255,255,0.12)",
-                          color: "#ada49a",
+                          color: "#c8c0b8",
                         }}
                         onFocus={(e) => (e.target.style.borderColor = "#828e73")}
                         onBlur={(e) => (e.target.style.borderColor = "rgba(255,255,255,0.12)")}
@@ -175,7 +175,7 @@ export function Testimonials() {
                     </div>
                   ))}
                   <div>
-                    <label className="block text-xs font-medium mb-1.5" style={{ color: "rgba(173,164,154,0.7)" }}>
+                    <label className="block text-xs font-medium mb-1.5" style={{ color: "#c8c0b8" }}>
                       Tell Us About Your Gig
                     </label>
                     <textarea
@@ -187,7 +187,7 @@ export function Testimonials() {
                       style={{
                         background: "rgba(255,255,255,0.06)",
                         border: "1px solid rgba(255,255,255,0.12)",
-                        color: "#ada49a",
+                        color: "#c8c0b8",
                       }}
                       onFocus={(e) => (e.target.style.borderColor = "#828e73")}
                       onBlur={(e) => (e.target.style.borderColor = "rgba(255,255,255,0.12)")}
@@ -197,8 +197,8 @@ export function Testimonials() {
                     as="button"
                     type="submit"
                     className="w-full py-3.5 rounded-xl font-semibold text-sm mt-1"
-                    style={{ background: "#828e73", color: "#fff" }}
-                    whileHover={{ scale: 1.02, background: "#6e7a61" }}
+                    style={{ background: "#5e6853", color: "#fff" }}
+                    whileHover={{ scale: 1.02, background: "#4d5744" }}
                   >
                     Send My Brief →
                   </MagneticButton>
@@ -215,7 +215,7 @@ export function Testimonials() {
         <span className="font-display text-lg" style={{ color: "#3b3d66" }}>
           Page<span style={{ color: "#828e73" }}>Craft</span>
         </span>
-        <p className="text-xs" style={{ color: "rgba(59,61,102,0.5)" }}>
+        <p className="text-xs" style={{ color: "#252640" }}>
           © 2026 PageCraft. All rights reserved.
         </p>
         <div className="flex gap-6">
@@ -224,9 +224,9 @@ export function Testimonials() {
               key={l}
               href="#"
               className="text-xs transition-colors"
-              style={{ color: "rgba(59,61,102,0.5)" }}
+              style={{ color: "#252640" }}
               onMouseEnter={(e) => ((e.target as HTMLElement).style.color = "#828e73")}
-              onMouseLeave={(e) => ((e.target as HTMLElement).style.color = "rgba(59,61,102,0.5)")}
+              onMouseLeave={(e) => ((e.target as HTMLElement).style.color = "#252640")}
             >
               {l}
             </a>

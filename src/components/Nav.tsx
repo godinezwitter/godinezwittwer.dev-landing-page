@@ -23,7 +23,7 @@ export function Nav() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.2 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled ? "glass-dark shadow-lg shadow-black/20" : ""
+        scrolled ? "glass-nav shadow-lg shadow-black/20" : ""
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -44,15 +44,15 @@ export function Nav() {
                 key={l}
                 href={`#${sectionIds[i]}`}
                 className="relative text-sm font-medium tracking-wide transition-colors pb-1"
-                style={{ color: isActive ? "#828e73" : "rgba(173,164,154,0.85)" }}
-                whileHover={{ color: "#828e73", y: -1 }}
+                style={{ color: isActive ? "#b4c2a3" : "#c8c0b8" }}
+                whileHover={{ color: "#b4c2a3", y: -1 }}
               >
                 {l}
                 {isActive && (
                   <motion.span
                     layoutId="nav-active"
                     className="absolute left-0 right-0 -bottom-0.5 h-px"
-                    style={{ background: "#828e73" }}
+                    style={{ background: "#b4c2a3" }}
                     transition={{ duration: 0.3, ease: "easeOut" }}
                   />
                 )}
@@ -64,8 +64,8 @@ export function Nav() {
         <MagneticButton
           href="#contact"
           className="hidden md:block text-sm font-semibold px-5 py-2 rounded-full transition-colors"
-          style={{ background: "#828e73", color: "#fff" }}
-          whileHover={{ scale: 1.05, background: "#6e7a61" }}
+          style={{ background: "#5e6853", color: "#fff" }}
+          whileHover={{ scale: 1.05, background: "#4d5744" }}
         >
           Get Started
         </MagneticButton>
@@ -102,7 +102,7 @@ export function Nav() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="md:hidden glass-dark overflow-hidden"
+            className="md:hidden glass-nav overflow-hidden"
           >
             <div className="px-6 py-4 flex flex-col gap-4">
               {links.map((l, i) => (

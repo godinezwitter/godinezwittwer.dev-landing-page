@@ -33,7 +33,7 @@ export function About() {
             <motion.p
               variants={fadeUp}
               className="text-xs font-medium tracking-widest uppercase mb-4"
-              style={{ color: "#828e73" }}
+              style={{ color: "#252640" }}
             >
               Why PageCraft
             </motion.p>
@@ -46,8 +46,8 @@ export function About() {
             </motion.h2>
             <motion.p
               variants={fadeUp}
-              className="text-base leading-relaxed mb-8"
-              style={{ color: "#5a504a" }}
+              className="text-base md:text-lg leading-relaxed mb-8"
+              style={{ color: "#252640" }}
             >
               Most Fiverr buyers scroll past forgettable pages in seconds. We craft landing pages
               that stop the scroll — combining conversion psychology, high-end design, and
@@ -63,11 +63,11 @@ export function About() {
                 <div key={item} className="flex items-start gap-3">
                   <span
                     className="mt-1 w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-xs font-bold"
-                    style={{ background: "#828e73", color: "#fff" }}
+                    style={{ background: "#5e6853", color: "#fff" }}
                   >
                     ✓
                   </span>
-                  <span className="text-sm" style={{ color: "#3b3d66" }}>
+                  <span className="text-base" style={{ color: "#252640" }}>
                     {item}
                   </span>
                 </div>
@@ -102,10 +102,10 @@ export function About() {
                 >
                   <Counter to={stat} suffix={suf} />
                 </div>
-                <p className="text-sm font-semibold mb-1" style={{ color: "#3b3d66" }}>
+                <p className="text-sm font-semibold mb-1" style={{ color: "#252640" }}>
                   {label}
                 </p>
-                <p className="text-xs" style={{ color: "#5a504a" }}>
+                <p className="text-xs" style={{ color: "#252640" }}>
                   {desc}
                 </p>
               </motion.div>

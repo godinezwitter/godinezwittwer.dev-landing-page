@@ -56,17 +56,17 @@ export function Portfolio() {
           transition={{ duration: 0.7 }}
         >
           <div>
-            <p className="text-xs font-medium tracking-widest uppercase mb-3" style={{ color: "#828e73" }}>
+            <p className="text-xs font-medium tracking-widest uppercase mb-3" style={{ color: "#b4c2a3" }}>
               Selected Work
             </p>
             <h2
               className="font-display leading-tight"
-              style={{ fontSize: "clamp(2rem, 4vw, 3.2rem)", color: "#ada49a" }}
+              style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", color: "#ada49a" }}
             >
               Pages that perform
             </h2>
           </div>
-          <p className="text-sm max-w-xs" style={{ color: "rgba(173,164,154,0.55)" }}>
+          <p className="text-base max-w-xs" style={{ color: "#c8c0b8" }}>
             Each project starts with a clear conversion goal and ends with measurable results.
           </p>
         </motion.div>
@@ -115,7 +115,7 @@ export function Portfolio() {
               <div className="absolute bottom-0 left-0 right-0 p-6">
                 <motion.span
                   className="block text-xs font-medium tracking-widest uppercase mb-1"
-                  style={{ color: "#828e73" }}
+                  style={{ color: "#b4c2a3" }}
                 >
                   {item.category}
                 </motion.span>
@@ -130,7 +130,7 @@ export function Portfolio() {
                 >
                   <span
                     className="text-xs font-semibold px-3 py-1 rounded-full"
-                    style={{ background: "rgba(130,142,115,0.25)", color: "#a3b090" }}
+                    style={{ background: "rgba(130,142,115,0.3)", color: "#b4c2a3" }}
                   >
                     {item.result}
                   </span>

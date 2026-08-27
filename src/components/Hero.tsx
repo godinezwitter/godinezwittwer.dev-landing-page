@@ -10,6 +10,7 @@ import {
 import { useEffect, useRef } from "react"
 import { Counter } from "@/components/Counter"
 import { MagneticButton } from "@/components/MagneticButton"
+import heroPortrait from "@/assets/hero-portrait.webp"
 
 /** Small pointer-driven offset used to give the glow orbs a sense of depth. */
 function useMouseParallax(depth: number, reduce: boolean) {
@@ -142,7 +143,7 @@ export function Hero() {
 
             <motion.p
               className="text-base md:text-lg leading-relaxed mb-10 max-w-lg"
-              style={{ color: "rgba(173,164,154,0.7)" }}
+              style={{ color: "#c8c0b8" }}
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.7 }}
@@ -160,8 +161,8 @@ export function Hero() {
               <MagneticButton
                 href="#contact"
                 className="px-8 py-3.5 rounded-full font-semibold text-sm"
-                style={{ background: "#828e73", color: "#fff" }}
-                whileHover={{ scale: 1.05, background: "#6e7a61" }}
+                style={{ background: "#5e6853", color: "#fff" }}
+                whileHover={{ scale: 1.05, background: "#4d5744" }}
               >
                 Start Your Project →
               </MagneticButton>
@@ -176,22 +177,44 @@ export function Hero() {
             </motion.div>
           </div>
 
-          {/* Right: glass stats card */}
+          {/* Right: portrait with floating stats chip */}
           <motion.div
-            className="hidden lg:block"
+            className="hidden lg:block relative"
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.9, delay: 0.6 }}
           >
-            <div className="glass-dark rounded-3xl p-8 relative overflow-hidden">
+            <div className="relative rounded-3xl overflow-hidden" style={{ aspectRatio: "3/4" }}>
+              <img
+                src={heroPortrait}
+                alt="PageCraft designer portrait"
+                className="w-full h-full object-cover"
+                style={{
+                  maskImage: "linear-gradient(to bottom, black 75%, transparent 100%)",
+                  WebkitMaskImage: "linear-gradient(to bottom, black 75%, transparent 100%)",
+                }}
+              />
               <div
-                className="absolute top-0 right-0 w-40 h-40 rounded-full opacity-20 blur-3xl"
+                className="absolute inset-0 rounded-3xl pointer-events-none"
+                style={{ boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.15)" }}
+              />
+              <div
+                className="absolute top-6 right-6 w-32 h-32 rounded-full opacity-25 blur-3xl pointer-events-none"
                 style={{ background: "#828e73" }}
               />
-              <p className="text-xs font-medium tracking-widest uppercase mb-6" style={{ color: "#828e73" }}>
+            </div>
+
+            {/* Floating glass stats chip, layered over the portrait */}
+            <motion.div
+              className="glass-dark rounded-3xl p-6 absolute -bottom-8 -left-8 right-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 1.1 }}
+            >
+              <p className="text-xs font-medium tracking-widest uppercase mb-4" style={{ color: "#b4c2a3" }}>
                 Proven Results
               </p>
-              <div className="grid grid-cols-2 gap-6 mb-8">
+              <div className="grid grid-cols-2 gap-5 mb-5">
                 {[
                   { n: 340, suf: "+", label: "Pages Delivered" },
                   { n: 98, suf: "%", label: "Client Satisfaction" },
@@ -200,43 +223,42 @@ export function Hero() {
                 ].map(({ n, suf, label }) => (
                   <div key={label}>
                     <div
-                      className="font-display text-3xl font-bold mb-1"
+                      className="font-display text-2xl font-bold mb-1"
                       style={{ color: "#ada49a" }}
                     >
                       <Counter to={n} suffix={suf} />
                     </div>
-                    <div className="text-xs" style={{ color: "rgba(173,164,154,0.55)" }}>
+                    <div className="text-xs" style={{ color: "#c8c0b8" }}>
                       {label}
                     </div>
                   </div>
                 ))}
               </div>
-              <div className="flex -space-x-3">
-                {["bg-indigo-400", "bg-sage-400", "bg-taupe-400", "bg-indigo-300"].map((_c, i) => (
+              <div className="flex items-center gap-3">
+                <div className="flex -space-x-3">
+                  {["#5557a0", "#828e73", "#ada49a", "#3b3d66"].map((c, i) => (
+                    <div
+                      key={i}
+                      className="w-8 h-8 rounded-full border-2"
+                      style={{ borderColor: "rgba(255,255,255,0.15)", background: c }}
+                    />
+                  ))}
                   <div
-                    key={i}
-                    className="w-9 h-9 rounded-full border-2 overflow-hidden"
+                    className="w-8 h-8 rounded-full border-2 flex items-center justify-center text-[10px] font-medium"
                     style={{
                       borderColor: "rgba(255,255,255,0.15)",
-                      background: ["#5557a0", "#828e73", "#ada49a", "#3b3d66"][i],
+                      background: "rgba(255,255,255,0.1)",
+                      color: "#ada49a",
                     }}
-                  />
-                ))}
-                <div
-                  className="w-9 h-9 rounded-full border-2 flex items-center justify-center text-xs font-medium"
-                  style={{
-                    borderColor: "rgba(255,255,255,0.15)",
-                    background: "rgba(255,255,255,0.08)",
-                    color: "#ada49a",
-                  }}
-                >
-                  +40
+                  >
+                    +40
+                  </div>
                 </div>
+                <p className="text-xs" style={{ color: "#c8c0b8" }}>
+                  Happy clients this month
+                </p>
               </div>
-              <p className="text-xs mt-3" style={{ color: "rgba(173,164,154,0.5)" }}>
-                Happy clients this month
-              </p>
-            </div>
+            </motion.div>
           </motion.div>
         </div>
 
