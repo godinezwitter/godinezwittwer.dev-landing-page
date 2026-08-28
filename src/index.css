@@ -46,6 +46,17 @@ body {
   font-family: var(--font-body);
   background-color: var(--color-void);
   color: var(--color-ink);
+  /* Persistent liquid-glass backdrop behind every section — sections tint over it with .bg-glass-section instead of covering it with a solid fill. */
+  background-image: url('/hero-bg-burgundy.webp');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* Section tint that still lets the fixed background read through — used everywhere except the Hero, which stays fully opaque. */
+.bg-glass-section {
+  background: rgba(18, 6, 10, 0.86);
 }
 
 ::-webkit-scrollbar {

@@ -45,8 +45,9 @@ function PinnedSlides() {
           start: "top top",
           end: () => `+=${(slides.length - 1) * window.innerHeight}`,
           pin: true,
-          scrub: 1,
+          scrub: 0.4,
           anticipatePin: 1,
+          fastScrollEnd: true,
         },
       })
 
@@ -140,7 +141,7 @@ export function Portfolio() {
   const reduce = useReducedMotion()
 
   return (
-    <section id="work" ref={ref} className="relative overflow-hidden" style={{ background: "var(--color-void)" }}>
+    <section id="work" ref={ref} className="relative overflow-hidden bg-glass-section">
       <div className="relative max-w-7xl mx-auto px-6 pt-28 pb-14">
         <motion.div
           className="flex flex-col md:flex-row md:items-end justify-between gap-6"

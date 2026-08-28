@@ -109,8 +109,7 @@ export function Services() {
     <motion.section
       ref={ref}
       id="services"
-      className="relative py-28 overflow-hidden"
-      style={{ background: "var(--color-void)" }}
+      className="relative py-28 overflow-hidden bg-glass-section"
       variants={reduce ? undefined : wipeReveal}
       initial={reduce ? false : "hidden"}
       animate={inView ? "visible" : "hidden"}

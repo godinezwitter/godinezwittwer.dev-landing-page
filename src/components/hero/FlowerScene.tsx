@@ -61,7 +61,7 @@ function FlowerModel({ progressRef }: FlowerModelProps) {
     const center = new THREE.Vector3()
     box.getCenter(center)
     const maxDim = Math.max(size.x, size.y, size.z) || 1
-    const scale = 3.6 / maxDim
+    const scale = 2.3 / maxDim
     scene.scale.setScalar(scale)
     scene.position.set(-center.x * scale, -center.y * scale, -center.z * scale)
 
@@ -94,7 +94,7 @@ function FlowerModel({ progressRef }: FlowerModelProps) {
     wrapper.rotation.y = p * Math.PI * 2.2
     wrapper.position.y = -p * 0.9
     wrapper.position.x = p * 0.6
-    wrapper.scale.setScalar(1 - p * 0.15)
+    wrapper.scale.setScalar(1 - p * 0.25)
   })
 
   return (

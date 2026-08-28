@@ -3,7 +3,10 @@ import { lazy, Suspense, useLayoutEffect, useRef } from "react"
 import { Counter } from "@/components/Counter"
 import { MagneticButton } from "@/components/MagneticButton"
 import { gsap } from "@/lib/gsap"
-import heroBg from "@/assets/hero-bg-burgundy.webp"
+
+// Same file the site-wide fixed background in index.css uses — referenced from
+// public/ directly (not imported) so it isn't duplicated as a second bundled asset.
+const heroBg = "/hero-bg-burgundy.webp"
 
 // Three.js is heavy — keep it out of the main bundle and load it after first paint.
 const FlowerScene = lazy(() => import("@/components/hero/FlowerScene").then((m) => ({ default: m.FlowerScene })))
@@ -28,18 +31,19 @@ export function Hero() {
         scrollTrigger: {
           trigger: pinRef.current,
           start: "top top",
-          end: () => `+=${window.innerHeight * 1.15}`,
+          end: () => `+=${window.innerHeight * 1.2}`,
           pin: true,
-          scrub: 1,
+          scrub: 0.4,
           anticipatePin: 1,
+          fastScrollEnd: true,
           onUpdate: (self) => {
             progressRef.current = self.progress
           },
         },
       })
 
-      tl.to(scene1Ref.current, { opacity: 0, scale: 0.92, duration: 0.4 }, 0.08)
-        .to(scene2Ref.current, { opacity: 1, y: 0, duration: 0.5 }, 0.42)
+      tl.to(scene1Ref.current, { opacity: 0, scale: 0.92, duration: 0.35 }, 0.05)
+        .to(scene2Ref.current, { opacity: 1, y: 0, duration: 0.55 }, 0.38)
     }, pinRef)
 
     return () => ctx.revert()
