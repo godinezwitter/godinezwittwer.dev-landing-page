@@ -1,4 +1,4 @@
-import { useReducedMotion } from "framer-motion"
+import { motion, useReducedMotion } from "framer-motion"
 import { lazy, Suspense, useLayoutEffect, useRef } from "react"
 import { Counter } from "@/components/Counter"
 import { MagneticButton } from "@/components/MagneticButton"
@@ -101,7 +101,12 @@ export function Hero() {
       {/* Scene 1: minimal intro — just the model and a scroll cue */}
       {!reduce && (
         <div ref={scene1Ref} className="absolute inset-0 flex flex-col items-center justify-end pb-14 pointer-events-none">
-          <div className="w-px h-12 rounded-full mb-2" style={{ background: "linear-gradient(to bottom, var(--color-rose), transparent)" }} />
+          <motion.div
+            className="w-px h-12 rounded-full mb-2"
+            style={{ background: "linear-gradient(to bottom, var(--color-rose), transparent)" }}
+            animate={{ transform: ["translateY(0px)", "translateY(6px)", "translateY(0px)"], opacity: [0.55, 1, 0.55] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+          />
           <span className="label-mono">[ Scroll ]</span>
         </div>
       )}

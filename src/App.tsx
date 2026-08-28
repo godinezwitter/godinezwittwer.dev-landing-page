@@ -17,11 +17,20 @@ export default function App() {
         <PageIntro />
         <Nav />
         <Hero />
-        <About />
-        <Services />
-        <Process />
-        <Portfolio />
-        <Testimonials />
+
+        {/* Light world — the page breathes out of the dark hero into warm paper. */}
+        <div className="relative" style={{ background: "var(--color-paper)" }}>
+          <div className="grain-overlay" aria-hidden="true" />
+          {/* Authored seam: the burgundy hero resolves into paper instead of cutting. */}
+          <div className="hero-seam h-24 md:h-36" aria-hidden="true" />
+          <div className="relative" style={{ zIndex: 1 }}>
+            <About />
+            <Services />
+            <Process />
+            <Portfolio />
+            <Testimonials />
+          </div>
+        </div>
       </div>
     </MotionConfig>
   )

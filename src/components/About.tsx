@@ -3,6 +3,21 @@ import { useSection } from "@/hooks/useSection"
 import { fadeUp, staggerContainer, wipeReveal } from "@/lib/motion"
 import { Counter } from "@/components/Counter"
 import { ScrollRevealText } from "@/components/ScrollRevealText"
+import { CheckIcon } from "@/components/icons"
+
+const stats = [
+  { stat: 3, suf: "×", label: "Higher click-through rate", desc: "vs. standard Fiverr pages" },
+  { stat: 67, suf: "%", label: "More conversions", desc: "from optimised page structure" },
+  { stat: 340, suf: "+", label: "Pages live", desc: "across 15+ industries" },
+  { stat: 5, suf: " days", label: "Average delivery", desc: "from brief to live" },
+]
+
+const checks = [
+  "Conversion-first design rooted in buyer psychology",
+  "SEO-optimized copy that ranks and resonates",
+  "A/B-tested layouts for maximum ROI",
+  "Mobile-perfect across every device",
+]
 
 export function About() {
   const { ref, inView } = useSection()
@@ -12,55 +27,43 @@ export function About() {
     <motion.section
       ref={ref}
       id="about"
-      className="relative py-28 overflow-hidden bg-glass-section"
+      className="relative py-28"
       variants={reduce ? undefined : wipeReveal}
       initial={reduce ? false : "hidden"}
       animate={inView ? "visible" : "hidden"}
     >
-      {/* decorative depth orb */}
-      <div
-        className="absolute -top-24 -right-24 w-96 h-96 rounded-full opacity-15 blur-[100px] pointer-events-none"
-        style={{ background: "var(--color-wine)" }}
-      />
-
       <div className="relative max-w-7xl mx-auto px-6">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            animate={inView ? "visible" : "hidden"}
-          >
-            <motion.p variants={fadeUp} className="label-mono mb-4">
-              [ Why PageCraft ]
-            </motion.p>
+        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+          <motion.div variants={staggerContainer} initial="hidden" animate={inView ? "visible" : "hidden"}>
+            <motion.span variants={fadeUp} className="kicker mb-5">
+              Why PageCraft
+            </motion.span>
             <motion.h2
               variants={fadeUp}
-              className="font-display leading-tight mb-6"
-              style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.8rem)", color: "var(--color-ink)" }}
+              className="font-serif leading-[1.05] mb-7"
+              style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.8rem)", color: "var(--color-ink-deep)", textWrap: "balance" }}
             >
-              Your Fiverr listing deserves a page as sharp as your skills
+              Your Fiverr listing deserves a page as{" "}
+              <em className="not-italic" style={{ color: "var(--color-wine)" }}>
+                sharp as your skills
+              </em>
             </motion.h2>
             <ScrollRevealText
               text="Most Fiverr buyers scroll past forgettable pages in seconds. We craft landing pages that stop the scroll — combining conversion psychology, high-end design, and persuasive copy into pages that consistently outperform."
-              className="text-base md:text-lg leading-relaxed mb-8"
-              fromColor="#4a3238"
-              toColor="#f4f2ef"
+              className="text-lg leading-relaxed mb-9 max-w-[62ch]"
+              fromColor="#cabdb4"
+              toColor="#3a2b30"
             />
             <motion.div variants={fadeUp} className="flex flex-col gap-4">
-              {[
-                "Conversion-first design rooted in buyer psychology",
-                "SEO-optimized copy that ranks and resonates",
-                "A/B-tested layouts for maximum ROI",
-                "Mobile-perfect across every device",
-              ].map((item) => (
+              {checks.map((item) => (
                 <div key={item} className="flex items-start gap-3">
                   <span
-                    className="mt-1 w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-xs font-bold"
-                    style={{ background: "var(--color-rose)", color: "var(--color-void)" }}
+                    className="mt-0.5 w-5 h-5 rounded-full flex items-center justify-center shrink-0"
+                    style={{ background: "var(--color-wine)", color: "#fff" }}
                   >
-                    ✓
+                    <CheckIcon />
                   </span>
-                  <span className="text-base" style={{ color: "var(--color-ink-muted)" }}>
+                  <span className="text-base" style={{ color: "var(--color-ink-deep)" }}>
                     {item}
                   </span>
                 </div>
@@ -68,38 +71,38 @@ export function About() {
             </motion.div>
           </motion.div>
 
-          {/* Right: metric readout panels */}
+          {/* Right: editorial stat block — hairline-divided, no boxes. */}
           <motion.div
-            className="grid grid-cols-2 gap-4"
+            className="surface rounded-3xl overflow-hidden"
             initial={{ opacity: 0, x: 40 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.3 }}
+            transition={{ duration: 0.8, delay: 0.25 }}
           >
-            {[
-              { stat: 3, suf: "×", label: "Higher Click-Through Rate", desc: "vs. standard Fiverr pages" },
-              { stat: 67, suf: "%", label: "More Conversions", desc: "from optimised page structure" },
-              { stat: 340, suf: "+", label: "Pages Live", desc: "across 15+ industries" },
-              { stat: 5, suf: " Days", label: "Avg. Delivery Time", desc: "from brief to live" },
-            ].map(({ stat, suf, label, desc }, i) => (
-              <motion.div
-                key={label}
-                className="lab-panel glass-taupe rounded-2xl p-6"
-                whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                initial={{ opacity: 0, y: 20 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.5, delay: 0.4 + i * 0.1 }}
-              >
-                <div className="font-display text-4xl font-bold mb-2" style={{ color: "var(--color-ink)" }}>
-                  <Counter to={stat} suffix={suf} />
+            <div className="grid grid-cols-2">
+              {stats.map(({ stat, suf, label, desc }, i) => (
+                <div
+                  key={label}
+                  className="p-8"
+                  style={{
+                    borderTop: i > 1 ? "1px solid var(--color-line-ink)" : undefined,
+                    borderLeft: i % 2 === 1 ? "1px solid var(--color-line-ink)" : undefined,
+                  }}
+                >
+                  <div
+                    className="font-serif font-semibold mb-2 tabular-nums"
+                    style={{ fontSize: "clamp(2.2rem, 3.5vw, 3rem)", color: "var(--color-wine)", lineHeight: 1 }}
+                  >
+                    <Counter to={stat} suffix={suf} />
+                  </div>
+                  <p className="text-sm font-semibold mb-1" style={{ color: "var(--color-ink-deep)" }}>
+                    {label}
+                  </p>
+                  <p className="text-xs" style={{ color: "var(--color-ink-soft)" }}>
+                    {desc}
+                  </p>
                 </div>
-                <p className="text-sm font-semibold mb-1" style={{ color: "var(--color-ink)" }}>
-                  {label}
-                </p>
-                <p className="text-xs" style={{ color: "var(--color-ink-muted)" }}>
-                  {desc}
-                </p>
-              </motion.div>
-            ))}
+              ))}
+            </div>
           </motion.div>
         </div>
       </div>

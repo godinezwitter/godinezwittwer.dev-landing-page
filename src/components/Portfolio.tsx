@@ -65,24 +65,24 @@ function PinnedSlides() {
     <div ref={pinRef} className="relative w-full h-screen overflow-hidden">
       {portfolioItems.map((item) => (
         <div key={item.title} className="portfolio-slide absolute inset-0">
-          <img src={item.img} alt={item.title} className="w-full h-full object-cover" />
+          <img src={item.img} alt={`${item.title} — ${item.category} landing page`} className="w-full h-full object-cover" />
           <div
             className="absolute inset-0 pointer-events-none"
-            style={{ background: "linear-gradient(to top, rgba(8,8,12,0.92) 0%, transparent 55%)" }}
+            style={{ background: "linear-gradient(to top, rgba(12,4,7,0.94) 0%, rgba(12,4,7,0.2) 45%, transparent 70%)" }}
           />
           <div className="absolute bottom-0 left-0 right-0 p-10 md:p-16 max-w-3xl">
             <span
-              className="block text-xs font-mono font-medium tracking-widest uppercase mb-2"
+              className="block text-xs font-semibold tracking-[0.16em] uppercase mb-2"
               style={{ color: "var(--color-rose)" }}
             >
               {item.category}
             </span>
-            <h3 className="font-display mb-3" style={{ fontSize: "clamp(2rem, 4vw, 3.4rem)", color: "var(--color-ink)" }}>
+            <h3 className="font-serif mb-4" style={{ fontSize: "clamp(2rem, 4vw, 3.4rem)", color: "#fff" }}>
               {item.title}
             </h3>
             <span
               className="inline-block text-sm font-semibold px-4 py-1.5 rounded-full"
-              style={{ background: "rgba(255,255,255,0.08)", color: "var(--color-rose)" }}
+              style={{ background: "var(--color-wine)", color: "#fff" }}
             >
               {item.result}
             </span>
@@ -107,25 +107,25 @@ function GridFallback() {
         >
           <motion.img
             src={item.img}
-            alt={item.title}
+            alt={`${item.title} — ${item.category} landing page`}
             className="w-full h-full object-cover"
             variants={{ hovered: { scale: 1.06 } }}
             transition={{ duration: 0.5 }}
           />
           <div
             className="absolute inset-0 pointer-events-none"
-            style={{ background: "linear-gradient(to top, rgba(8,8,12,0.9) 0%, transparent 50%)" }}
+            style={{ background: "linear-gradient(to top, rgba(12,4,7,0.92) 0%, transparent 55%)" }}
           />
           <div className="absolute bottom-0 left-0 right-0 p-6">
-            <span className="block text-xs font-mono font-medium tracking-widest uppercase mb-1" style={{ color: "var(--color-rose)" }}>
+            <span className="block text-xs font-semibold tracking-[0.16em] uppercase mb-1" style={{ color: "var(--color-rose)" }}>
               {item.category}
             </span>
-            <h3 className="font-display text-xl mb-2" style={{ color: "var(--color-ink)" }}>
+            <h3 className="font-serif text-2xl mb-2" style={{ color: "#fff" }}>
               {item.title}
             </h3>
             <span
               className="text-xs font-semibold px-3 py-1 rounded-full"
-              style={{ background: "rgba(255,255,255,0.08)", color: "var(--color-rose)" }}
+              style={{ background: "var(--color-wine)", color: "#fff" }}
             >
               {item.result}
             </span>
@@ -141,8 +141,8 @@ export function Portfolio() {
   const reduce = useReducedMotion()
 
   return (
-    <section id="work" ref={ref} className="relative overflow-hidden bg-glass-section">
-      <div className="relative max-w-7xl mx-auto px-6 pt-28 pb-14">
+    <section id="work" ref={ref} className="relative overflow-hidden">
+      <div className="relative max-w-7xl mx-auto px-6 pt-24 pb-14">
         <motion.div
           className="flex flex-col md:flex-row md:items-end justify-between gap-6"
           initial={{ opacity: 0, y: 30 }}
@@ -150,17 +150,15 @@ export function Portfolio() {
           transition={{ duration: 0.7 }}
         >
           <div>
-            <p className="text-xs font-mono font-medium tracking-widest uppercase mb-3" style={{ color: "var(--color-rose)" }}>
-              Selected Work
-            </p>
+            <span className="kicker mb-3">Selected work</span>
             <h2
-              className="font-display leading-tight"
-              style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", color: "var(--color-ink)" }}
+              className="font-serif leading-[1.05]"
+              style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.4rem)", color: "var(--color-ink-deep)", textWrap: "balance" }}
             >
               Pages that perform
             </h2>
           </div>
-          <p className="text-base max-w-xs" style={{ color: "var(--color-ink-muted)" }}>
+          <p className="text-base max-w-xs" style={{ color: "var(--color-ink-soft)" }}>
             Each project starts with a clear conversion goal and ends with measurable results.
           </p>
         </motion.div>

@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion"
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { useEffect, useState } from "react"
 import { useActiveSection } from "@/hooks/useActiveSection"
 import { MagneticButton } from "@/components/MagneticButton"
@@ -10,6 +10,7 @@ export function Nav() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const active = useActiveSection(sectionIds)
+  const reduce = useReducedMotion()
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 60)
@@ -74,6 +75,8 @@ export function Nav() {
         <button
           className="md:hidden flex flex-col gap-[5px] p-2"
           onClick={() => setMenuOpen(!menuOpen)}
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
         >
           {[0, 1, 2].map((i) => (
             <motion.span
@@ -104,19 +107,29 @@ export function Nav() {
             exit={{ height: 0, opacity: 0 }}
             className="md:hidden glass-nav overflow-hidden"
           >
-            <div className="px-6 py-4 flex flex-col gap-4">
+            <motion.div
+              className="px-6 py-4 flex flex-col gap-4"
+              initial="hidden"
+              animate="visible"
+              variants={{ visible: { transition: { staggerChildren: reduce ? 0 : 0.04, delayChildren: 0.05 } } }}
+            >
               {links.map((l, i) => (
-                <a
+                <motion.a
                   key={l}
                   href={`#${sectionIds[i]}`}
-                  className="text-sm font-medium"
+                  className="text-sm font-medium w-fit"
                   style={{ color: "var(--color-ink)" }}
                   onClick={() => setMenuOpen(false)}
+                  variants={{
+                    hidden: reduce ? { opacity: 0 } : { opacity: 0, x: -8 },
+                    visible: { opacity: 1, x: 0, transition: { duration: 0.2, ease: [0.23, 1, 0.32, 1] } },
+                  }}
+                  whileTap={reduce ? undefined : { scale: 0.97 }}
                 >
                   {l}
-                </a>
+                </motion.a>
               ))}
-            </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

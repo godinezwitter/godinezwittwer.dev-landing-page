@@ -1,5 +1,5 @@
 import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion"
-import { useRef, type CSSProperties } from "react"
+import { Fragment, useRef, type CSSProperties } from "react"
 
 type WordProps = {
   word: string
@@ -12,7 +12,7 @@ type WordProps = {
 function Word({ word, progress, range, fromColor, toColor }: WordProps) {
   const color = useTransform(progress, range, [fromColor, toColor])
   return (
-    <motion.span style={{ color }} className="inline-block mr-[0.28em]">
+    <motion.span style={{ color }} className="inline-block">
       {word}
     </motion.span>
   )
@@ -52,14 +52,16 @@ export function ScrollRevealText({ text, className, style, fromColor, toColor }:
         const start = i / words.length
         const end = start + 1.4 / words.length
         return (
-          <Word
-            key={`${word}-${i}`}
-            word={word}
-            progress={scrollYProgress}
-            range={[start, Math.min(end, 1)]}
-            fromColor={fromColor}
-            toColor={toColor}
-          />
+          <Fragment key={`${word}-${i}`}>
+            <Word
+              word={word}
+              progress={scrollYProgress}
+              range={[start, Math.min(end, 1)]}
+              fromColor={fromColor}
+              toColor={toColor}
+            />
+            {i < words.length - 1 ? " " : null}
+          </Fragment>
         )
       })}
     </p>

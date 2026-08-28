@@ -59,43 +59,41 @@ const icons = {
   ),
 }
 
-const HUES = ["var(--color-rose)", "var(--color-wine)", "var(--color-blush)"]
-
 const services = [
   {
     icon: icons.browser,
-    title: "Landing Page Design",
+    title: "Landing page design",
     desc: "Pixel-perfect, brand-consistent pages that load fast and look stunning on every screen.",
     tags: ["UI/UX", "Responsive", "Figma"],
     featured: true,
   },
   {
     icon: icons.pen,
-    title: "Conversion Copywriting",
+    title: "Conversion copywriting",
     desc: "Words that persuade. We write headlines, hooks, and CTAs that move buyers to click.",
     tags: ["SEO", "Psychology", "A/B tested"],
   },
   {
     icon: icons.storefront,
-    title: "Fiverr Gig Pages",
+    title: "Fiverr gig pages",
     desc: "Purpose-built for the Fiverr ecosystem — structured to rank higher and convert better.",
     tags: ["Fiverr SEO", "Social proof", "Trust signals"],
   },
   {
     icon: icons.funnel,
-    title: "Full Funnel Build",
+    title: "Full funnel build",
     desc: "From hero to thank-you page — complete funnel architecture for serious sellers.",
     tags: ["Multi-page", "Analytics", "Integration"],
   },
   {
     icon: icons.audit,
-    title: "Page Refresh & Audit",
+    title: "Page refresh & audit",
     desc: "Already have a page? We audit, redesign, and fix what's silently killing your conversions.",
     tags: ["Audit", "Optimisation", "CRO"],
   },
   {
     icon: icons.palette,
-    title: "Brand Identity Add-on",
+    title: "Brand identity add-on",
     desc: "Logo, color system, and typography kit — everything you need to look like a pro.",
     tags: ["Branding", "Logo", "Style guide"],
   },
@@ -109,31 +107,25 @@ export function Services() {
     <motion.section
       ref={ref}
       id="services"
-      className="relative py-28 overflow-hidden bg-glass-section"
+      className="relative py-28"
       variants={reduce ? undefined : wipeReveal}
       initial={reduce ? false : "hidden"}
       animate={inView ? "visible" : "hidden"}
     >
-      {/* background glow */}
-      <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full opacity-10 blur-[120px] pointer-events-none"
-        style={{ background: "var(--color-rose)" }}
-      />
-
       <div className="relative max-w-7xl mx-auto px-6">
         <motion.div
-          className="text-center mb-16"
+          className="max-w-2xl mb-16"
           variants={staggerContainer}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
         >
-          <motion.p variants={fadeUp} className="label-mono mb-3">
-            [ What We Offer ]
-          </motion.p>
+          <motion.span variants={fadeUp} className="kicker mb-4">
+            What we offer
+          </motion.span>
           <motion.h2
             variants={fadeUp}
-            className="font-display leading-tight"
-            style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", color: "var(--color-ink)" }}
+            className="font-serif leading-[1.05]"
+            style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.4rem)", color: "var(--color-ink-deep)", textWrap: "balance" }}
           >
             Everything a winning page needs
           </motion.h2>
@@ -145,57 +137,62 @@ export function Services() {
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
         >
-          {services.map((s, i) => {
-            const hue = HUES[i % HUES.length]
-            return (
-              <TiltCard
-                key={s.title}
-                className={`lab-panel glass rounded-2xl p-7 group cursor-default relative overflow-hidden ${
-                  s.featured ? "md:col-span-2 lg:col-span-1 lg:row-span-2 flex flex-col justify-between" : ""
-                }`}
-                style={s.featured ? { background: "rgba(224,86,127,0.06)" } : undefined}
-                motionProps={{
-                  variants: fadeUp,
-                  custom: i * 0.05,
-                  whileHover: { y: -6, transition: { duration: 0.25 } },
-                }}
-              >
-                <motion.div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-                  style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 100%)" }}
-                />
-                <div>
+          {services.map((s, i) => (
+            <TiltCard
+              key={s.title}
+              maxTilt={4}
+              className={`surface rounded-2xl p-7 group cursor-default flex flex-col justify-between ${
+                s.featured ? "md:col-span-2 lg:col-span-1 lg:row-span-2" : ""
+              }`}
+              style={
+                s.featured
+                  ? { background: "rgba(184,48,92,0.055)", borderColor: "rgba(184,48,92,0.28)" }
+                  : undefined
+              }
+              motionProps={{
+                variants: fadeUp,
+                custom: i * 0.05,
+                whileHover: { y: -6, transition: { duration: 0.25 } },
+              }}
+            >
+              <div>
+                <span
+                  className="inline-flex items-center justify-center w-12 h-12 rounded-xl mb-6 transition-transform duration-300 group-hover:scale-105"
+                  style={{
+                    background: s.featured ? "var(--color-wine)" : "var(--color-paper-2)",
+                    color: s.featured ? "#fff" : "var(--color-wine)",
+                    border: s.featured ? "none" : "1px solid var(--color-line-ink)",
+                  }}
+                >
+                  {s.icon}
+                </span>
+                <h3
+                  className={`font-serif mb-3 ${s.featured ? "text-2xl" : "text-xl"}`}
+                  style={{ color: "var(--color-ink-deep)" }}
+                >
+                  {s.title}
+                </h3>
+                <p className="text-base leading-relaxed mb-6" style={{ color: "var(--color-ink-soft)" }}>
+                  {s.desc}
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {s.tags.map((t) => (
                   <span
-                    className="block mb-5 transition-transform duration-300 group-hover:scale-110"
-                    style={{ color: hue }}
+                    key={t}
+                    className="px-3 py-1 rounded-full text-xs font-medium"
+                    style={{
+                      background: "var(--color-paper-2)",
+                      color: "var(--color-wine)",
+                      border: "1px solid var(--color-line-ink)",
+                    }}
                   >
-                    {s.icon}
+                    {t}
                   </span>
-                  <h3 className={`font-display mb-3 ${s.featured ? "text-2xl" : "text-xl"}`} style={{ color: "var(--color-ink)" }}>
-                    {s.title}
-                  </h3>
-                  <p className="text-base leading-relaxed mb-5" style={{ color: "var(--color-ink-muted)" }}>
-                    {s.desc}
-                  </p>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {s.tags.map((t) => (
-                    <span
-                      key={t}
-                      className="font-mono px-3 py-1 rounded-full text-xs font-medium"
-                      style={{
-                        background: "rgba(255,255,255,0.05)",
-                        color: hue,
-                        border: "1px solid rgba(255,255,255,0.12)",
-                      }}
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              </TiltCard>
-            )
-          })}
+                ))}
+              </div>
+            </TiltCard>
+          ))}
         </motion.div>
       </div>
     </motion.section>
