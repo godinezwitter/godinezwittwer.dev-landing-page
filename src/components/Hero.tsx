@@ -17,18 +17,25 @@ const FlowerScene = lazy(() => import("@/components/hero/FlowerScene").then((m) 
  * panel from the right). The section itself doesn't scroll past — scroll
  * input drives the transition in place, then releases into the rest of the
  * page. fastScrollEnd prevents the handoff from skipping/jumping when
- * scrolled quickly. */
+ * scrolled quickly; the overlapping timeline positions (scene 1 still
+ * receding as scene 2 arrives) plus the site-wide Lenis smoothing
+ * (SmoothScroll) keep the handoff itself feeling continuous rather than cut. */
 export function Hero() {
   const reduce = useReducedMotion()
   const pinRef = useRef<HTMLDivElement>(null)
   const scene1Ref = useRef<HTMLDivElement>(null)
   const leftRef = useRef<HTMLDivElement>(null)
+  const headlineRef = useRef<HTMLHeadingElement>(null)
   const rightRef = useRef<HTMLDivElement>(null)
   const progressRef = useRef(0)
 
   useLayoutEffect(() => {
     if (reduce) return
     const ctx = gsap.context(() => {
+      const lines = headlineRef.current
+        ? Array.from(headlineRef.current.querySelectorAll<HTMLElement>(".hero-line"))
+        : []
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: pinRef.current,
@@ -44,9 +51,13 @@ export function Hero() {
         },
       })
 
-      tl.to(scene1Ref.current, { opacity: 0, scale: 0.92, duration: 0.35 }, 0.05)
-        .to(leftRef.current, { opacity: 1, x: 0, duration: 0.5 }, 0.38)
-        .to(rightRef.current, { opacity: 1, x: 0, duration: 0.5 }, 0.45)
+      // One continuous, overlapping sequence rather than disjoint blocks —
+      // scene 1 is still receding while scene 2 starts arriving, so the
+      // handoff reads as a single fluid motion instead of a cut.
+      tl.to(scene1Ref.current, { opacity: 0, scale: 0.9, ease: "power2.in", duration: 0.3 }, 0)
+        .to(leftRef.current, { opacity: 1, x: 0, ease: "power2.out", duration: 0.42 }, 0.18)
+        .to(lines, { opacity: 1, y: 0, rotate: 0, ease: "power3.out", duration: 0.35, stagger: 0.07 }, 0.24)
+        .to(rightRef.current, { opacity: 1, x: 0, ease: "power2.out", duration: 0.5 }, 0.34)
     }, pinRef)
 
     return () => ctx.revert()
@@ -102,12 +113,25 @@ export function Hero() {
                 <span className="label-mono">Fiverr Landing Page Specialists</span>
               </div>
 
-              <h1 className="font-display font-semibold leading-[1.08] mb-6" style={{ fontSize: "clamp(2.4rem, 4.5vw, 4rem)", color: "var(--color-ink)" }}>
-                We Build Pages
-                <br />
-                <em className="not-italic" style={{ color: "var(--color-rose)" }}>That Convert</em>
-                <br />
-                Clicks to Clients
+              <h1
+                ref={headlineRef}
+                className="font-display font-semibold leading-[1.08] mb-6"
+                style={{ fontSize: "clamp(2.4rem, 4.5vw, 4rem)", color: "var(--color-ink)" }}
+              >
+                {["We Build Pages", "That Convert", "Clicks to Clients"].map((line, i) => (
+                  <span
+                    key={line}
+                    className="hero-line block"
+                    style={{
+                      color: i === 1 ? "var(--color-rose)" : undefined,
+                      opacity: reduce ? 1 : 0,
+                      transform: reduce ? "none" : "translateY(22px) rotate(-2deg)",
+                      transformOrigin: "left center",
+                    }}
+                  >
+                    {line}
+                  </span>
+                ))}
               </h1>
 
               <p className="text-base md:text-lg leading-relaxed mb-10 max-w-lg" style={{ color: "var(--color-ink-muted)" }}>

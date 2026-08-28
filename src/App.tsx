@@ -1,4 +1,5 @@
 import { MotionConfig } from "framer-motion"
+import { SmoothScroll } from "@/components/SmoothScroll"
 import { PageIntro } from "@/components/PageIntro"
 import { Nav } from "@/components/Nav"
 import { Hero } from "@/components/Hero"
@@ -12,6 +13,7 @@ export default function App() {
   return (
     <MotionConfig reducedMotion="user">
       <div className="relative">
+        <SmoothScroll />
         <PageIntro />
         <Nav />
         <Hero />
