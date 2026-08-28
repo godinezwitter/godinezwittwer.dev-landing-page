@@ -24,6 +24,7 @@ export function Hero() {
   const reduce = useReducedMotion()
   const pinRef = useRef<HTMLDivElement>(null)
   const scene1Ref = useRef<HTMLDivElement>(null)
+  const transitionGlowRef = useRef<HTMLDivElement>(null)
   const leftRef = useRef<HTMLDivElement>(null)
   const headlineRef = useRef<HTMLHeadingElement>(null)
   const rightRef = useRef<HTMLDivElement>(null)
@@ -53,8 +54,13 @@ export function Hero() {
 
       // One continuous, overlapping sequence rather than disjoint blocks —
       // scene 1 is still receding while scene 2 starts arriving, so the
-      // handoff reads as a single fluid motion instead of a cut.
+      // handoff reads as a single fluid motion instead of a cut. A soft
+      // gradient wash builds up right as scene 1 fades and clears once
+      // scene 2 has arrived, veiling the swap instead of letting the two
+      // states read as a hard cross-cut.
       tl.to(scene1Ref.current, { opacity: 0, scale: 0.9, ease: "power2.in", duration: 0.3 }, 0)
+        .to(transitionGlowRef.current, { opacity: 1, ease: "power1.inOut", duration: 0.22 }, 0.06)
+        .to(transitionGlowRef.current, { opacity: 0, ease: "power1.inOut", duration: 0.3 }, 0.3)
         .to(leftRef.current, { opacity: 1, x: 0, ease: "power2.out", duration: 0.42 }, 0.18)
         .to(lines, { opacity: 1, y: 0, rotate: 0, ease: "power3.out", duration: 0.35, stagger: 0.07 }, 0.24)
         .to(rightRef.current, { opacity: 1, x: 0, ease: "power2.out", duration: 0.5 }, 0.34)
@@ -98,6 +104,18 @@ export function Hero() {
           <div className="w-px h-12 rounded-full mb-2" style={{ background: "linear-gradient(to bottom, var(--color-rose), transparent)" }} />
           <span className="label-mono">[ Scroll ]</span>
         </div>
+      )}
+
+      {/* Transition wash — builds as scene 1 recedes, clears once scene 2 has settled in, softening the handoff into a veil instead of a cut */}
+      {!reduce && (
+        <div
+          ref={transitionGlowRef}
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: "radial-gradient(ellipse at center, rgba(184,48,92,0.3) 0%, rgba(18,6,10,0.8) 55%, var(--color-void) 100%)",
+            opacity: 0,
+          }}
+        />
       )}
 
       {/* Scene 2: the actual hero content — left half slides in from the left, right half from the right */}
