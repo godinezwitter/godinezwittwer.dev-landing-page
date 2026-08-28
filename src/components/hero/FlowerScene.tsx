@@ -66,14 +66,11 @@ function ResponsiveCamera() {
   return null
 }
 
-/** Multi-hued translucent glass, cycled per mesh — matches the wine/rose glass reference look. */
-const GLASS_HUES = [0xb8305c, 0xe0567f, 0xf2b8ca]
-
 type FlowerModelProps = {
   progressRef: React.RefObject<number>
 }
 
-/** Rotation/position/scale are a pure function of scroll progress (0 when unset, e.g. reduced motion) — no ambient idle animation. */
+/** Rotation/position/scale are a pure function of scroll progress (0 when unset, e.g. reduced motion) — no ambient idle animation. Renders the model's own textured materials as-is (no glass override). */
 function FlowerModel({ progressRef }: FlowerModelProps) {
   const { scene } = useGLTF("/models/flower.glb")
   const wrapperRef = useRef<THREE.Group>(null)
@@ -88,27 +85,6 @@ function FlowerModel({ progressRef }: FlowerModelProps) {
     const scale = 2.0 / maxDim
     scene.scale.setScalar(scale)
     scene.position.set(-center.x * scale, -center.y * scale, -center.z * scale)
-
-    let i = 0
-    scene.traverse((child) => {
-      const mesh = child as THREE.Mesh
-      if (!mesh.isMesh) return
-      const color = new THREE.Color(GLASS_HUES[i % GLASS_HUES.length])
-      i += 1
-      mesh.material = new THREE.MeshPhysicalMaterial({
-        color,
-        emissive: color,
-        emissiveIntensity: 0.4,
-        transparent: true,
-        opacity: 0.6,
-        roughness: 0.2,
-        metalness: 0,
-        clearcoat: 0.6,
-        clearcoatRoughness: 0.2,
-        side: THREE.DoubleSide,
-        depthWrite: false,
-      })
-    })
   }, [scene])
 
   useFrame(() => {
