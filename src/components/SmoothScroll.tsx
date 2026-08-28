@@ -22,7 +22,20 @@ export function SmoothScroll() {
     gsap.ticker.add(onTick)
     gsap.ticker.lagSmoothing(0)
 
+    // Pinned sections (Hero, Portfolio) insert/resize pin-spacers, which
+    // changes document height — without telling Lenis to re-measure its
+    // scroll bounds on every ScrollTrigger refresh, Lenis's cached limit
+    // can drift out of sync with the real layout. That desync is what let
+    // the scrubbed animations "stick" after a full scroll-down/scroll-up
+    // cycle: Lenis's stale bounds clamped its reported scroll position, so
+    // ScrollTrigger never saw it re-enter a trigger's range on the next
+    // scroll-down.
+    const onRefresh = () => lenis.resize()
+    ScrollTrigger.addEventListener("refresh", onRefresh)
+    ScrollTrigger.refresh()
+
     return () => {
+      ScrollTrigger.removeEventListener("refresh", onRefresh)
       gsap.ticker.remove(onTick)
       lenis.destroy()
     }
