@@ -56,15 +56,6 @@ export function Process() {
         </motion.div>
 
         <div className="relative">
-          {/* connecting line (desktop) — draws in from left as steps reveal */}
-          <motion.div
-            className="hidden lg:block absolute top-[2.75rem] left-[calc(12.5%+16px)] right-[calc(12.5%+16px)] h-px origin-left"
-            style={{ background: "linear-gradient(to right, transparent, var(--color-rose), transparent)" }}
-            initial={{ scaleX: 0 }}
-            animate={inView ? { scaleX: 1 } : {}}
-            transition={{ duration: 1.1, delay: 0.3, ease: [0.65, 0, 0.35, 1] }}
-          />
-
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {steps.map((step, i) => (
               <motion.div
