@@ -3,9 +3,9 @@ import { useLayoutEffect, useRef } from "react"
 import { useSection } from "@/hooks/useSection"
 import { gsap } from "@/lib/gsap"
 import { TiltCard } from "@/components/TiltCard"
-import heroPortfolio1 from "@/imports/78cb4ddb73065348eb902584821acd94.jpg"
+import heroPortfolio1 from "@/imports/greenmotive-hero.webp"
 import heroPortfolio2 from "@/imports/0569e0ae4f0c254626ea1e061e84132a.jpg"
-import heroPortfolio3 from "@/imports/e627535f5235de08f6fd1340b45b5ee7.jpg"
+import heroPortfolio3 from "@/imports/terrava-hero.webp"
 
 const portfolioItems = [
   {
