@@ -59,7 +59,7 @@ const icons = {
   ),
 }
 
-const HUES = ["var(--color-glass-teal)", "var(--color-glass-purple)", "var(--color-glass-pink)"]
+const HUES = ["var(--color-rose)", "var(--color-wine)", "var(--color-blush)"]
 
 const services = [
   {
@@ -118,7 +118,7 @@ export function Services() {
       {/* background glow */}
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full opacity-10 blur-[120px] pointer-events-none"
-        style={{ background: "var(--color-glass-teal)" }}
+        style={{ background: "var(--color-rose)" }}
       />
 
       <div className="relative max-w-7xl mx-auto px-6">
@@ -154,7 +154,7 @@ export function Services() {
                 className={`lab-panel glass rounded-2xl p-7 group cursor-default relative overflow-hidden ${
                   s.featured ? "md:col-span-2 lg:col-span-1 lg:row-span-2 flex flex-col justify-between" : ""
                 }`}
-                style={s.featured ? { background: "rgba(110,231,216,0.06)" } : undefined}
+                style={s.featured ? { background: "rgba(224,86,127,0.06)" } : undefined}
                 motionProps={{
                   variants: fadeUp,
                   custom: i * 0.05,

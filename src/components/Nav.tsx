@@ -32,7 +32,7 @@ export function Nav() {
           style={{ color: "var(--color-ink)" }}
           whileHover={{ scale: 1.02 }}
         >
-          Page<span style={{ color: "var(--color-glass-teal)" }}>Craft</span>
+          Page<span style={{ color: "var(--color-rose)" }}>Craft</span>
         </motion.div>
 
         {/* desktop links */}
@@ -44,15 +44,15 @@ export function Nav() {
                 key={l}
                 href={`#${sectionIds[i]}`}
                 className="relative text-sm font-medium tracking-wide transition-colors pb-1"
-                style={{ color: isActive ? "var(--color-glass-teal)" : "var(--color-ink-muted)" }}
-                whileHover={{ color: "var(--color-glass-teal)", y: -1 }}
+                style={{ color: isActive ? "var(--color-rose)" : "var(--color-ink-muted)" }}
+                whileHover={{ color: "var(--color-rose)", y: -1 }}
               >
                 {l}
                 {isActive && (
                   <motion.span
                     layoutId="nav-active"
                     className="absolute left-0 right-0 -bottom-0.5 h-px"
-                    style={{ background: "var(--color-glass-teal)" }}
+                    style={{ background: "var(--color-rose)" }}
                     transition={{ duration: 0.3, ease: "easeOut" }}
                   />
                 )}
@@ -64,7 +64,7 @@ export function Nav() {
         <MagneticButton
           href="#contact"
           className="hidden md:block text-sm font-semibold px-5 py-2 rounded-full transition-colors"
-          style={{ background: "var(--color-glass-teal)", color: "var(--color-void)" }}
+          style={{ background: "var(--color-rose)", color: "var(--color-void)" }}
           whileHover={{ scale: 1.05 }}
         >
           Get Started

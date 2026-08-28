@@ -16,8 +16,8 @@ function StudioEnvironment() {
     const ctx = canvas.getContext("2d")!
     const gradient = ctx.createLinearGradient(0, 0, 0, 32)
     gradient.addColorStop(0, "#ffffff")
-    gradient.addColorStop(0.5, "#d9f0ec")
-    gradient.addColorStop(1, "#242038")
+    gradient.addColorStop(0.5, "#f0d5dd")
+    gradient.addColorStop(1, "#2a0f16")
     ctx.fillStyle = gradient
     ctx.fillRect(0, 0, 64, 32)
 
@@ -42,8 +42,8 @@ function StudioEnvironment() {
   return null
 }
 
-/** Multi-hued translucent glass, cycled per mesh — matches the x-ray/lab-glass reference look. */
-const GLASS_HUES = [0x6ee7d8, 0xb39dfb, 0xf68fc1]
+/** Multi-hued translucent glass, cycled per mesh — matches the wine/rose glass reference look. */
+const GLASS_HUES = [0xb8305c, 0xe0567f, 0xf2b8ca]
 
 type FlowerModelProps = {
   progressRef: React.RefObject<number>
@@ -61,7 +61,7 @@ function FlowerModel({ progressRef }: FlowerModelProps) {
     const center = new THREE.Vector3()
     box.getCenter(center)
     const maxDim = Math.max(size.x, size.y, size.z) || 1
-    const scale = 2.4 / maxDim
+    const scale = 3.6 / maxDim
     scene.scale.setScalar(scale)
     scene.position.set(-center.x * scale, -center.y * scale, -center.z * scale)
 
@@ -92,8 +92,9 @@ function FlowerModel({ progressRef }: FlowerModelProps) {
     if (!wrapper) return
     const p = progressRef.current
     wrapper.rotation.y = p * Math.PI * 2.2
-    wrapper.position.y = -p * 1.3
-    wrapper.scale.setScalar(1 - p * 0.4)
+    wrapper.position.y = -p * 0.9
+    wrapper.position.x = p * 0.6
+    wrapper.scale.setScalar(1 - p * 0.15)
   })
 
   return (
@@ -117,9 +118,9 @@ export function FlowerScene({ progressRef }: FlowerSceneProps) {
       dpr={[1, 2]}
     >
       <StudioEnvironment />
-      <hemisphereLight args={[0xffffff, 0x1a1830, 0.5]} />
+      <hemisphereLight args={[0xffffff, 0x2a0f16, 0.5]} />
       <directionalLight color={0xffffff} intensity={1.1} position={[-3, 5, 10]} />
-      <directionalLight color={0x9d7bf0} intensity={0.35} position={[5, -1, 4]} />
+      <directionalLight color={0xf0a8bd} intensity={0.35} position={[5, -1, 4]} />
       <Suspense fallback={null}>
         <FlowerModel progressRef={progressRef} />
       </Suspense>

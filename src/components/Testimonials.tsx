@@ -45,7 +45,7 @@ export function Testimonials() {
       {/* decorative depth orb */}
       <div
         className="absolute -bottom-32 -left-32 w-[28rem] h-[28rem] rounded-full opacity-15 blur-[110px] pointer-events-none"
-        style={{ background: "var(--color-glass-pink)" }}
+        style={{ background: "var(--color-blush)" }}
       />
 
       <div className="relative max-w-7xl mx-auto px-6">
@@ -77,7 +77,7 @@ export function Testimonials() {
             >
               <div className="flex mb-4">
                 {Array.from({ length: t.rating }).map((_, j) => (
-                  <span key={j} style={{ color: "var(--color-glass-teal)" }}>★</span>
+                  <span key={j} style={{ color: "var(--color-rose)" }}>★</span>
                 ))}
               </div>
               <p
@@ -110,7 +110,7 @@ export function Testimonials() {
           <div className="relative p-10 md:p-16">
             <div
               className="absolute top-0 right-0 w-80 h-80 rounded-full opacity-15 blur-[80px] pointer-events-none"
-              style={{ background: "var(--color-glass-purple)" }}
+              style={{ background: "var(--color-wine)" }}
             />
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div>
@@ -130,7 +130,7 @@ export function Testimonials() {
                     <div key={p} className="flex items-center gap-3">
                       <span
                         className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
-                        style={{ background: "var(--color-glass-teal)", color: "var(--color-void)" }}
+                        style={{ background: "var(--color-rose)", color: "var(--color-void)" }}
                       >
                         ✓
                       </span>
@@ -165,7 +165,7 @@ export function Testimonials() {
                           border: "1px solid rgba(255,255,255,0.12)",
                           color: "var(--color-ink-muted)",
                         }}
-                        onFocus={(e) => (e.target.style.borderColor = "var(--color-glass-teal)")}
+                        onFocus={(e) => (e.target.style.borderColor = "var(--color-rose)")}
                         onBlur={(e) => (e.target.style.borderColor = "rgba(255,255,255,0.12)")}
                       />
                     </div>
@@ -185,7 +185,7 @@ export function Testimonials() {
                         border: "1px solid rgba(255,255,255,0.12)",
                         color: "var(--color-ink-muted)",
                       }}
-                      onFocus={(e) => (e.target.style.borderColor = "var(--color-glass-teal)")}
+                      onFocus={(e) => (e.target.style.borderColor = "var(--color-rose)")}
                       onBlur={(e) => (e.target.style.borderColor = "rgba(255,255,255,0.12)")}
                     />
                   </div>
@@ -193,7 +193,7 @@ export function Testimonials() {
                     as="button"
                     type="submit"
                     className="w-full py-3.5 rounded-xl font-semibold text-sm mt-1"
-                    style={{ background: "var(--color-glass-teal)", color: "var(--color-void)" }}
+                    style={{ background: "var(--color-rose)", color: "var(--color-void)" }}
                     whileHover={{ scale: 1.02 }}
                   >
                     Send My Brief →
@@ -209,7 +209,7 @@ export function Testimonials() {
       <div className="max-w-7xl mx-auto px-6 mt-16 pt-8 flex flex-col md:flex-row items-center justify-between gap-4"
         style={{ borderTop: "1px solid var(--color-line)" }}>
         <span className="font-display text-lg" style={{ color: "var(--color-ink)" }}>
-          Page<span style={{ color: "var(--color-glass-teal)" }}>Craft</span>
+          Page<span style={{ color: "var(--color-rose)" }}>Craft</span>
         </span>
         <p className="text-xs" style={{ color: "var(--color-ink-muted)" }}>
           © 2026 PageCraft. All rights reserved.
@@ -221,7 +221,7 @@ export function Testimonials() {
               href="#"
               className="text-xs transition-colors"
               style={{ color: "var(--color-ink-muted)" }}
-              onMouseEnter={(e) => ((e.target as HTMLElement).style.color = "#6ee7d8")}
+              onMouseEnter={(e) => ((e.target as HTMLElement).style.color = "#e0567f")}
               onMouseLeave={(e) => ((e.target as HTMLElement).style.color = "#9b98a8")}
             >
               {l}

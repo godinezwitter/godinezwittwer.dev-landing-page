@@ -72,7 +72,7 @@ function PinnedSlides() {
           <div className="absolute bottom-0 left-0 right-0 p-10 md:p-16 max-w-3xl">
             <span
               className="block text-xs font-mono font-medium tracking-widest uppercase mb-2"
-              style={{ color: "var(--color-glass-teal)" }}
+              style={{ color: "var(--color-rose)" }}
             >
               {item.category}
             </span>
@@ -81,7 +81,7 @@ function PinnedSlides() {
             </h3>
             <span
               className="inline-block text-sm font-semibold px-4 py-1.5 rounded-full"
-              style={{ background: "rgba(255,255,255,0.08)", color: "var(--color-glass-teal)" }}
+              style={{ background: "rgba(255,255,255,0.08)", color: "var(--color-rose)" }}
             >
               {item.result}
             </span>
@@ -116,7 +116,7 @@ function GridFallback() {
             style={{ background: "linear-gradient(to top, rgba(8,8,12,0.9) 0%, transparent 50%)" }}
           />
           <div className="absolute bottom-0 left-0 right-0 p-6">
-            <span className="block text-xs font-mono font-medium tracking-widest uppercase mb-1" style={{ color: "var(--color-glass-teal)" }}>
+            <span className="block text-xs font-mono font-medium tracking-widest uppercase mb-1" style={{ color: "var(--color-rose)" }}>
               {item.category}
             </span>
             <h3 className="font-display text-xl mb-2" style={{ color: "var(--color-ink)" }}>
@@ -124,7 +124,7 @@ function GridFallback() {
             </h3>
             <span
               className="text-xs font-semibold px-3 py-1 rounded-full"
-              style={{ background: "rgba(255,255,255,0.08)", color: "var(--color-glass-teal)" }}
+              style={{ background: "rgba(255,255,255,0.08)", color: "var(--color-rose)" }}
             >
               {item.result}
             </span>
@@ -149,7 +149,7 @@ export function Portfolio() {
           transition={{ duration: 0.7 }}
         >
           <div>
-            <p className="text-xs font-mono font-medium tracking-widest uppercase mb-3" style={{ color: "var(--color-glass-teal)" }}>
+            <p className="text-xs font-mono font-medium tracking-widest uppercase mb-3" style={{ color: "var(--color-rose)" }}>
               Selected Work
             </p>
             <h2

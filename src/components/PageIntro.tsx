@@ -17,19 +17,19 @@ export function PageIntro() {
       {show && (
         <motion.div
           className="fixed inset-0 z-[100] flex items-center justify-center pointer-events-none"
-          style={{ background: "#252640" }}
+          style={{ background: "var(--color-void)" }}
           initial={{ opacity: 1 }}
           exit={{ clipPath: "inset(0 0 100% 0)" }}
           transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
         >
           <motion.span
             className="font-display text-2xl tracking-tight"
-            style={{ color: "#ada49a" }}
+            style={{ color: "var(--color-ink)" }}
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.15 }}
           >
-            Page<span style={{ color: "#828e73" }}>Craft</span>
+            Page<span style={{ color: "var(--color-rose)" }}>Craft</span>
           </motion.span>
         </motion.div>
       )}

@@ -60,7 +60,7 @@ export function Process() {
           {/* connecting line (desktop) — draws in from left as steps reveal */}
           <motion.div
             className="hidden lg:block absolute top-[2.75rem] left-[calc(12.5%+16px)] right-[calc(12.5%+16px)] h-px origin-left"
-            style={{ background: "linear-gradient(to right, transparent, var(--color-glass-teal), transparent)" }}
+            style={{ background: "linear-gradient(to right, transparent, var(--color-rose), transparent)" }}
             initial={{ scaleX: 0 }}
             animate={inView ? { scaleX: 1 } : {}}
             transition={{ duration: 1.1, delay: 0.3, ease: [0.65, 0, 0.35, 1] }}
@@ -77,7 +77,7 @@ export function Process() {
               >
                 <motion.div
                   className="lab-panel w-14 h-14 rounded-xl flex items-center justify-center font-mono text-sm font-semibold mb-5 relative z-10"
-                  style={{ background: "rgba(110,231,216,0.06)", color: "var(--color-glass-teal)" }}
+                  style={{ background: "rgba(224,86,127,0.06)", color: "var(--color-rose)" }}
                   whileHover={{ scale: 1.1, rotate: 3 }}
                   transition={{ duration: 0.2 }}
                 >
@@ -113,7 +113,7 @@ export function Process() {
           <MagneticButton
             href="#contact"
             className="shrink-0 px-7 py-3 rounded-full font-semibold text-sm"
-            style={{ background: "var(--color-glass-teal)", color: "var(--color-void)" }}
+            style={{ background: "var(--color-rose)", color: "var(--color-void)" }}
             whileHover={{ scale: 1.05 }}
           >
             Claim Your Page →

@@ -21,7 +21,7 @@ export function About() {
       {/* decorative depth orb */}
       <div
         className="absolute -top-24 -right-24 w-96 h-96 rounded-full opacity-15 blur-[100px] pointer-events-none"
-        style={{ background: "var(--color-glass-purple)" }}
+        style={{ background: "var(--color-wine)" }}
       />
 
       <div className="relative max-w-7xl mx-auto px-6">
@@ -44,7 +44,7 @@ export function About() {
             <ScrollRevealText
               text="Most Fiverr buyers scroll past forgettable pages in seconds. We craft landing pages that stop the scroll — combining conversion psychology, high-end design, and persuasive copy into pages that consistently outperform."
               className="text-base md:text-lg leading-relaxed mb-8"
-              fromColor="#4a4858"
+              fromColor="#4a3238"
               toColor="#f4f2ef"
             />
             <motion.div variants={fadeUp} className="flex flex-col gap-4">
@@ -57,7 +57,7 @@ export function About() {
                 <div key={item} className="flex items-start gap-3">
                   <span
                     className="mt-1 w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-xs font-bold"
-                    style={{ background: "var(--color-glass-teal)", color: "var(--color-void)" }}
+                    style={{ background: "var(--color-rose)", color: "var(--color-void)" }}
                   >
                     ✓
                   </span>
