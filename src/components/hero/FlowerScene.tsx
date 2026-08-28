@@ -42,6 +42,30 @@ function StudioEnvironment() {
   return null
 }
 
+/** Vertical FOV is fixed, so on wide desktop viewports the extra horizontal
+ * FOV that comes along with it makes a fixed-size object look small relative
+ * to the width even though its height fraction is unchanged. Pin the
+ * horizontal FOV to the aspect=1 baseline (clamped so ultra-wide monitors
+ * don't over-zoom) so the flower reads as the same size on wide screens as
+ * it does on a square-ish viewport. */
+const BASE_FOV_DEG = 38
+
+function ResponsiveCamera() {
+  const { camera, size } = useThree()
+
+  useEffect(() => {
+    const aspect = size.width / size.height
+    const clampedAspect = Math.min(Math.max(aspect, 1), 1.8)
+    const baseFovRad = (BASE_FOV_DEG * Math.PI) / 180
+    const vFovRad = 2 * Math.atan(Math.tan(baseFovRad / 2) / clampedAspect)
+    const cam = camera as THREE.PerspectiveCamera
+    cam.fov = (vFovRad * 180) / Math.PI
+    cam.updateProjectionMatrix()
+  }, [camera, size])
+
+  return null
+}
+
 /** Multi-hued translucent glass, cycled per mesh — matches the wine/rose glass reference look. */
 const GLASS_HUES = [0xb8305c, 0xe0567f, 0xf2b8ca]
 
@@ -114,9 +138,10 @@ export function FlowerScene({ progressRef }: FlowerSceneProps) {
     <Canvas
       className="!absolute inset-0"
       gl={{ alpha: true, antialias: true }}
-      camera={{ position: [0, 0, 5], fov: 38 }}
+      camera={{ position: [0, 0, 5], fov: BASE_FOV_DEG }}
       dpr={[1, 2]}
     >
+      <ResponsiveCamera />
       <StudioEnvironment />
       <hemisphereLight args={[0xffffff, 0x2a0f16, 0.5]} />
       <directionalLight color={0xffffff} intensity={1.1} position={[-3, 5, 10]} />
