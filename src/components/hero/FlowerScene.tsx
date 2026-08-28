@@ -55,7 +55,7 @@ function ResponsiveCamera() {
 
   useEffect(() => {
     const aspect = size.width / size.height
-    const clampedAspect = Math.min(Math.max(aspect, 1), 1.35)
+    const clampedAspect = Math.min(Math.max(aspect, 1), 1.0)
     const baseFovRad = (BASE_FOV_DEG * Math.PI) / 180
     const vFovRad = 2 * Math.atan(Math.tan(baseFovRad / 2) / clampedAspect)
     const cam = camera as THREE.PerspectiveCamera
