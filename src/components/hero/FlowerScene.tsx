@@ -85,7 +85,7 @@ function FlowerModel({ progressRef }: FlowerModelProps) {
     const center = new THREE.Vector3()
     box.getCenter(center)
     const maxDim = Math.max(size.x, size.y, size.z) || 1
-    const scale = 2.3 / maxDim
+    const scale = 2.0 / maxDim
     scene.scale.setScalar(scale)
     scene.position.set(-center.x * scale, -center.y * scale, -center.z * scale)
 
