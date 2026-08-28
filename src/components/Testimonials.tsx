@@ -37,15 +37,15 @@ export function Testimonials() {
       ref={ref}
       id="testimonials"
       className="relative py-28 overflow-hidden"
-      style={{ background: "#ada49a" }}
+      style={{ background: "var(--color-void)" }}
       variants={reduce ? undefined : wipeReveal}
       initial={reduce ? false : "hidden"}
       animate={inView ? "visible" : "hidden"}
     >
       {/* decorative depth orb */}
       <div
-        className="absolute -bottom-32 -left-32 w-[28rem] h-[28rem] rounded-full opacity-10 blur-[110px] pointer-events-none"
-        style={{ background: "#828e73" }}
+        className="absolute -bottom-32 -left-32 w-[28rem] h-[28rem] rounded-full opacity-15 blur-[110px] pointer-events-none"
+        style={{ background: "var(--color-glass-pink)" }}
       />
 
       <div className="relative max-w-7xl mx-auto px-6">
@@ -56,12 +56,10 @@ export function Testimonials() {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7 }}
         >
-          <p className="text-xs font-medium tracking-widest uppercase mb-3" style={{ color: "#252640" }}>
-            Client Results
-          </p>
+          <p className="label-mono mb-3">[ Client Results ]</p>
           <h2
             className="font-display leading-tight"
-            style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", color: "#3b3d66" }}
+            style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", color: "var(--color-ink)" }}
           >
             Heard from real sellers
           </h2>
@@ -71,7 +69,7 @@ export function Testimonials() {
           {testimonials.map((t, i) => (
             <motion.div
               key={t.name}
-              className="glass-taupe rounded-2xl p-7"
+              className="lab-panel glass-taupe rounded-2xl p-7"
               initial={{ opacity: 0, y: 40 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.1 * i }}
@@ -79,20 +77,20 @@ export function Testimonials() {
             >
               <div className="flex mb-4">
                 {Array.from({ length: t.rating }).map((_, j) => (
-                  <span key={j} style={{ color: "#252640" }}>★</span>
+                  <span key={j} style={{ color: "var(--color-glass-teal)" }}>★</span>
                 ))}
               </div>
               <p
                 className="text-base leading-relaxed mb-6 font-display italic"
-                style={{ color: "#252640" }}
+                style={{ color: "var(--color-ink)" }}
               >
                 "{t.quote}"
               </p>
               <div>
-                <p className="text-sm font-semibold" style={{ color: "#252640" }}>
+                <p className="text-sm font-semibold" style={{ color: "var(--color-ink)" }}>
                   {t.name}
                 </p>
-                <p className="text-xs" style={{ color: "#252640" }}>
+                <p className="text-xs" style={{ color: "var(--color-ink-muted)" }}>
                   {t.role}
                 </p>
               </div>
@@ -103,29 +101,27 @@ export function Testimonials() {
         {/* CTA + Contact form */}
         <motion.div
           id="contact"
-          className="rounded-3xl overflow-hidden"
-          style={{ background: "#3b3d66" }}
+          className="lab-panel rounded-3xl overflow-hidden"
+          style={{ background: "var(--color-void-light)" }}
           initial={{ opacity: 0, y: 40 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.5 }}
         >
           <div className="relative p-10 md:p-16">
             <div
-              className="absolute top-0 right-0 w-80 h-80 rounded-full opacity-10 blur-[80px] pointer-events-none"
-              style={{ background: "#828e73" }}
+              className="absolute top-0 right-0 w-80 h-80 rounded-full opacity-15 blur-[80px] pointer-events-none"
+              style={{ background: "var(--color-glass-purple)" }}
             />
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div>
-                <p className="text-xs font-medium tracking-widest uppercase mb-4" style={{ color: "#b4c2a3" }}>
-                  Start Today
-                </p>
+                <p className="label-mono mb-4">[ Start Today ]</p>
                 <h2
                   className="font-display leading-tight mb-5"
-                  style={{ fontSize: "clamp(1.8rem, 3.5vw, 3rem)", color: "#ada49a" }}
+                  style={{ fontSize: "clamp(1.8rem, 3.5vw, 3rem)", color: "var(--color-ink)" }}
                 >
                   Ready to build a page that actually works?
                 </h2>
-                <p className="text-base leading-relaxed" style={{ color: "#c8c0b8" }}>
+                <p className="text-base leading-relaxed" style={{ color: "var(--color-ink-muted)" }}>
                   Tell us about your Fiverr gig and we'll come back within 24 hours with
                   a strategy and a clear quote.
                 </p>
@@ -134,11 +130,11 @@ export function Testimonials() {
                     <div key={p} className="flex items-center gap-3">
                       <span
                         className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
-                        style={{ background: "#5e6853", color: "#fff" }}
+                        style={{ background: "var(--color-glass-teal)", color: "var(--color-void)" }}
                       >
                         ✓
                       </span>
-                      <span className="text-base" style={{ color: "#c8c0b8" }}>
+                      <span className="text-base" style={{ color: "var(--color-ink-muted)" }}>
                         {p}
                       </span>
                     </div>
@@ -155,7 +151,7 @@ export function Testimonials() {
                     { key: "service", label: "Fiverr Category", type: "text", placeholder: "e.g. Logo Design, SEO, Writing" },
                   ].map((field) => (
                     <div key={field.key}>
-                      <label className="block text-xs font-medium mb-1.5" style={{ color: "#c8c0b8" }}>
+                      <label className="block text-xs font-medium mb-1.5" style={{ color: "var(--color-ink-muted)" }}>
                         {field.label}
                       </label>
                       <input
@@ -165,17 +161,17 @@ export function Testimonials() {
                         onChange={(e) => setActiveForm((prev) => ({ ...prev, [field.key]: e.target.value }))}
                         className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all"
                         style={{
-                          background: "rgba(255,255,255,0.06)",
+                          background: "rgba(255,255,255,0.04)",
                           border: "1px solid rgba(255,255,255,0.12)",
-                          color: "#c8c0b8",
+                          color: "var(--color-ink-muted)",
                         }}
-                        onFocus={(e) => (e.target.style.borderColor = "#828e73")}
+                        onFocus={(e) => (e.target.style.borderColor = "var(--color-glass-teal)")}
                         onBlur={(e) => (e.target.style.borderColor = "rgba(255,255,255,0.12)")}
                       />
                     </div>
                   ))}
                   <div>
-                    <label className="block text-xs font-medium mb-1.5" style={{ color: "#c8c0b8" }}>
+                    <label className="block text-xs font-medium mb-1.5" style={{ color: "var(--color-ink-muted)" }}>
                       Tell Us About Your Gig
                     </label>
                     <textarea
@@ -185,11 +181,11 @@ export function Testimonials() {
                       onChange={(e) => setActiveForm((prev) => ({ ...prev, message: e.target.value }))}
                       className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all resize-none"
                       style={{
-                        background: "rgba(255,255,255,0.06)",
+                        background: "rgba(255,255,255,0.04)",
                         border: "1px solid rgba(255,255,255,0.12)",
-                        color: "#c8c0b8",
+                        color: "var(--color-ink-muted)",
                       }}
-                      onFocus={(e) => (e.target.style.borderColor = "#828e73")}
+                      onFocus={(e) => (e.target.style.borderColor = "var(--color-glass-teal)")}
                       onBlur={(e) => (e.target.style.borderColor = "rgba(255,255,255,0.12)")}
                     />
                   </div>
@@ -197,8 +193,8 @@ export function Testimonials() {
                     as="button"
                     type="submit"
                     className="w-full py-3.5 rounded-xl font-semibold text-sm mt-1"
-                    style={{ background: "#5e6853", color: "#fff" }}
-                    whileHover={{ scale: 1.02, background: "#4d5744" }}
+                    style={{ background: "var(--color-glass-teal)", color: "var(--color-void)" }}
+                    whileHover={{ scale: 1.02 }}
                   >
                     Send My Brief →
                   </MagneticButton>
@@ -211,11 +207,11 @@ export function Testimonials() {
 
       {/* Footer */}
       <div className="max-w-7xl mx-auto px-6 mt-16 pt-8 flex flex-col md:flex-row items-center justify-between gap-4"
-        style={{ borderTop: "1px solid rgba(59,61,102,0.15)" }}>
-        <span className="font-display text-lg" style={{ color: "#3b3d66" }}>
-          Page<span style={{ color: "#828e73" }}>Craft</span>
+        style={{ borderTop: "1px solid var(--color-line)" }}>
+        <span className="font-display text-lg" style={{ color: "var(--color-ink)" }}>
+          Page<span style={{ color: "var(--color-glass-teal)" }}>Craft</span>
         </span>
-        <p className="text-xs" style={{ color: "#252640" }}>
+        <p className="text-xs" style={{ color: "var(--color-ink-muted)" }}>
           © 2026 PageCraft. All rights reserved.
         </p>
         <div className="flex gap-6">
@@ -224,9 +220,9 @@ export function Testimonials() {
               key={l}
               href="#"
               className="text-xs transition-colors"
-              style={{ color: "#252640" }}
-              onMouseEnter={(e) => ((e.target as HTMLElement).style.color = "#828e73")}
-              onMouseLeave={(e) => ((e.target as HTMLElement).style.color = "#252640")}
+              style={{ color: "var(--color-ink-muted)" }}
+              onMouseEnter={(e) => ((e.target as HTMLElement).style.color = "#6ee7d8")}
+              onMouseLeave={(e) => ((e.target as HTMLElement).style.color = "#9b98a8")}
             >
               {l}
             </a>

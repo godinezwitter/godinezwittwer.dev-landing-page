@@ -59,6 +59,8 @@ const icons = {
   ),
 }
 
+const HUES = ["var(--color-glass-teal)", "var(--color-glass-purple)", "var(--color-glass-pink)"]
+
 const services = [
   {
     icon: icons.browser,
@@ -108,7 +110,7 @@ export function Services() {
       ref={ref}
       id="services"
       className="relative py-28 overflow-hidden"
-      style={{ background: "#3b3d66" }}
+      style={{ background: "var(--color-void)" }}
       variants={reduce ? undefined : wipeReveal}
       initial={reduce ? false : "hidden"}
       animate={inView ? "visible" : "hidden"}
@@ -116,7 +118,7 @@ export function Services() {
       {/* background glow */}
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full opacity-10 blur-[120px] pointer-events-none"
-        style={{ background: "#828e73" }}
+        style={{ background: "var(--color-glass-teal)" }}
       />
 
       <div className="relative max-w-7xl mx-auto px-6">
@@ -126,17 +128,13 @@ export function Services() {
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
         >
-          <motion.p
-            variants={fadeUp}
-            className="text-xs font-medium tracking-widest uppercase mb-3"
-            style={{ color: "#b4c2a3" }}
-          >
-            What We Offer
+          <motion.p variants={fadeUp} className="label-mono mb-3">
+            [ What We Offer ]
           </motion.p>
           <motion.h2
             variants={fadeUp}
             className="font-display leading-tight"
-            style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", color: "#ada49a" }}
+            style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", color: "var(--color-ink)" }}
           >
             Everything a winning page needs
           </motion.h2>
@@ -148,59 +146,57 @@ export function Services() {
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
         >
-          {services.map((s, i) => (
-            <TiltCard
-              key={s.title}
-              className={`glass rounded-2xl p-7 group cursor-default relative overflow-hidden ${
-                s.featured ? "md:col-span-2 lg:col-span-1 lg:row-span-2 flex flex-col justify-between" : ""
-              }`}
-              style={s.featured ? { background: "rgba(130,142,115,0.12)", borderColor: "rgba(163,176,144,0.35)" } : undefined}
-              motionProps={{
-                variants: fadeUp,
-                custom: i * 0.05,
-                whileHover: { y: -6, transition: { duration: 0.25 } },
-              }}
-            >
-              <motion.div
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-                style={{
-                  background: "linear-gradient(135deg, rgba(130,142,115,0.08) 0%, transparent 100%)",
+          {services.map((s, i) => {
+            const hue = HUES[i % HUES.length]
+            return (
+              <TiltCard
+                key={s.title}
+                className={`lab-panel glass rounded-2xl p-7 group cursor-default relative overflow-hidden ${
+                  s.featured ? "md:col-span-2 lg:col-span-1 lg:row-span-2 flex flex-col justify-between" : ""
+                }`}
+                style={s.featured ? { background: "rgba(110,231,216,0.06)" } : undefined}
+                motionProps={{
+                  variants: fadeUp,
+                  custom: i * 0.05,
+                  whileHover: { y: -6, transition: { duration: 0.25 } },
                 }}
-              />
-              <div>
-                <span
-                  className="block mb-5 transition-transform duration-300 group-hover:scale-110"
-                  style={{ color: "#b4c2a3" }}
-                >
-                  {s.icon}
-                </span>
-                <h3
-                  className={`font-display mb-3 ${s.featured ? "text-2xl" : "text-xl"}`}
-                  style={{ color: "#ada49a" }}
-                >
-                  {s.title}
-                </h3>
-                <p className="text-base leading-relaxed mb-5" style={{ color: "#c8c0b8" }}>
-                  {s.desc}
-                </p>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {s.tags.map((t) => (
+              >
+                <motion.div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                  style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 100%)" }}
+                />
+                <div>
                   <span
-                    key={t}
-                    className="px-3 py-1 rounded-full text-xs font-medium"
-                    style={{
-                      background: "rgba(163,176,144,0.18)",
-                      color: "#c3d0b3",
-                      border: "1px solid rgba(163,176,144,0.3)",
-                    }}
+                    className="block mb-5 transition-transform duration-300 group-hover:scale-110"
+                    style={{ color: hue }}
                   >
-                    {t}
+                    {s.icon}
                   </span>
-                ))}
-              </div>
-            </TiltCard>
-          ))}
+                  <h3 className={`font-display mb-3 ${s.featured ? "text-2xl" : "text-xl"}`} style={{ color: "var(--color-ink)" }}>
+                    {s.title}
+                  </h3>
+                  <p className="text-base leading-relaxed mb-5" style={{ color: "var(--color-ink-muted)" }}>
+                    {s.desc}
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {s.tags.map((t) => (
+                    <span
+                      key={t}
+                      className="font-mono px-3 py-1 rounded-full text-xs font-medium"
+                      style={{
+                        background: "rgba(255,255,255,0.05)",
+                        color: hue,
+                        border: "1px solid rgba(255,255,255,0.12)",
+                      }}
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </TiltCard>
+            )
+          })}
         </motion.div>
       </div>
     </motion.section>

@@ -16,8 +16,8 @@ function StudioEnvironment() {
     const ctx = canvas.getContext("2d")!
     const gradient = ctx.createLinearGradient(0, 0, 0, 32)
     gradient.addColorStop(0, "#ffffff")
-    gradient.addColorStop(0.5, "#f3ece2")
-    gradient.addColorStop(1, "#cbbfae")
+    gradient.addColorStop(0.5, "#d9f0ec")
+    gradient.addColorStop(1, "#242038")
     ctx.fillStyle = gradient
     ctx.fillRect(0, 0, 64, 32)
 
@@ -42,6 +42,9 @@ function StudioEnvironment() {
   return null
 }
 
+/** Multi-hued translucent glass, cycled per mesh — matches the x-ray/lab-glass reference look. */
+const GLASS_HUES = [0x6ee7d8, 0xb39dfb, 0xf68fc1]
+
 type FlowerModelProps = {
   progressRef: React.RefObject<number>
 }
@@ -61,6 +64,27 @@ function FlowerModel({ progressRef }: FlowerModelProps) {
     const scale = 2.4 / maxDim
     scene.scale.setScalar(scale)
     scene.position.set(-center.x * scale, -center.y * scale, -center.z * scale)
+
+    let i = 0
+    scene.traverse((child) => {
+      const mesh = child as THREE.Mesh
+      if (!mesh.isMesh) return
+      const color = new THREE.Color(GLASS_HUES[i % GLASS_HUES.length])
+      i += 1
+      mesh.material = new THREE.MeshPhysicalMaterial({
+        color,
+        emissive: color,
+        emissiveIntensity: 0.4,
+        transparent: true,
+        opacity: 0.6,
+        roughness: 0.2,
+        metalness: 0,
+        clearcoat: 0.6,
+        clearcoatRoughness: 0.2,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+      })
+    })
   }, [scene])
 
   useFrame(() => {
@@ -93,9 +117,9 @@ export function FlowerScene({ progressRef }: FlowerSceneProps) {
       dpr={[1, 2]}
     >
       <StudioEnvironment />
-      <hemisphereLight args={[0xffffff, 0xd9c4ad, 0.55]} />
+      <hemisphereLight args={[0xffffff, 0x1a1830, 0.5]} />
       <directionalLight color={0xffffff} intensity={1.1} position={[-3, 5, 10]} />
-      <directionalLight color={0xffb56b} intensity={0.28} position={[5, -1, 4]} />
+      <directionalLight color={0x9d7bf0} intensity={0.35} position={[5, -1, 4]} />
       <Suspense fallback={null}>
         <FlowerModel progressRef={progressRef} />
       </Suspense>
