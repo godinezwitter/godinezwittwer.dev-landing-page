@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from "framer-motion"
+import { useLayoutEffect, useRef } from "react"
 import { useSection } from "@/hooks/useSection"
-import { wipeReveal } from "@/lib/motion"
+import { gsap } from "@/lib/gsap"
 import { TiltCard } from "@/components/TiltCard"
 import heroPortfolio1 from "@/imports/78cb4ddb73065348eb902584821acd94.jpg"
 import heroPortfolio2 from "@/imports/0569e0ae4f0c254626ea1e061e84132a.jpg"
@@ -27,30 +28,122 @@ const portfolioItems = [
   },
 ]
 
+/** Pinned, scroll-scrubbed slide sequence — each project holds the viewport while the next one crossfades in underneath. */
+function PinnedSlides() {
+  const pinRef = useRef<HTMLDivElement>(null)
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      const slides = gsap.utils.toArray<HTMLElement>(".portfolio-slide")
+      if (slides.length < 2) return
+
+      gsap.set(slides.slice(1), { autoAlpha: 0, scale: 0.96 })
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: pinRef.current,
+          start: "top top",
+          end: () => `+=${(slides.length - 1) * window.innerHeight}`,
+          pin: true,
+          scrub: 1,
+          anticipatePin: 1,
+        },
+      })
+
+      slides.forEach((slide, i) => {
+        if (i === 0) return
+        tl.to(slides[i - 1], { autoAlpha: 0, scale: 0.96, duration: 1 }, i - 1)
+        tl.to(slide, { autoAlpha: 1, scale: 1, duration: 1 }, i - 1)
+      })
+    }, pinRef)
+
+    return () => ctx.revert()
+  }, [])
+
+  return (
+    <div ref={pinRef} className="relative w-full h-screen overflow-hidden">
+      {portfolioItems.map((item) => (
+        <div key={item.title} className="portfolio-slide absolute inset-0">
+          <img src={item.img} alt={item.title} className="w-full h-full object-cover" />
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{ background: "linear-gradient(to top, rgba(37,38,64,0.92) 0%, transparent 55%)" }}
+          />
+          <div className="absolute bottom-0 left-0 right-0 p-10 md:p-16 max-w-3xl">
+            <span
+              className="block text-xs font-medium tracking-widest uppercase mb-2"
+              style={{ color: "#b4c2a3" }}
+            >
+              {item.category}
+            </span>
+            <h3 className="font-display mb-3" style={{ fontSize: "clamp(2rem, 4vw, 3.4rem)", color: "#ada49a" }}>
+              {item.title}
+            </h3>
+            <span
+              className="inline-block text-sm font-semibold px-4 py-1.5 rounded-full"
+              style={{ background: "rgba(130,142,115,0.3)", color: "#b4c2a3" }}
+            >
+              {item.result}
+            </span>
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+/** Static grid fallback for reduced-motion — no pinning, no scroll-scrub. */
+function GridFallback() {
+  return (
+    <div className="grid md:grid-cols-3 gap-6">
+      {portfolioItems.map((item) => (
+        <TiltCard
+          key={item.title}
+          className="group relative rounded-2xl overflow-hidden cursor-pointer"
+          style={{ aspectRatio: "4/5" }}
+          maxTilt={5}
+          motionProps={{ whileHover: "hovered" }}
+        >
+          <motion.img
+            src={item.img}
+            alt={item.title}
+            className="w-full h-full object-cover"
+            variants={{ hovered: { scale: 1.06 } }}
+            transition={{ duration: 0.5 }}
+          />
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{ background: "linear-gradient(to top, rgba(37,38,64,0.9) 0%, transparent 50%)" }}
+          />
+          <div className="absolute bottom-0 left-0 right-0 p-6">
+            <span className="block text-xs font-medium tracking-widest uppercase mb-1" style={{ color: "#b4c2a3" }}>
+              {item.category}
+            </span>
+            <h3 className="font-display text-xl mb-2" style={{ color: "#ada49a" }}>
+              {item.title}
+            </h3>
+            <span
+              className="text-xs font-semibold px-3 py-1 rounded-full"
+              style={{ background: "rgba(130,142,115,0.3)", color: "#b4c2a3" }}
+            >
+              {item.result}
+            </span>
+          </div>
+        </TiltCard>
+      ))}
+    </div>
+  )
+}
+
 export function Portfolio() {
   const { ref, inView } = useSection()
   const reduce = useReducedMotion()
 
   return (
-    <motion.section
-      ref={ref}
-      id="work"
-      className="relative py-28 overflow-hidden"
-      style={{ background: "#252640" }}
-      variants={reduce ? undefined : wipeReveal}
-      initial={reduce ? false : "hidden"}
-      animate={inView ? "visible" : "hidden"}
-    >
-      <div
-        className="absolute bottom-0 left-0 right-0 h-64 pointer-events-none"
-        style={{
-          background: "linear-gradient(to top, rgba(37,38,64,0) 0%, transparent 100%)",
-        }}
-      />
-
-      <div className="relative max-w-7xl mx-auto px-6">
+    <section id="work" ref={ref} className="relative overflow-hidden" style={{ background: "#252640" }}>
+      <div className="relative max-w-7xl mx-auto px-6 pt-28 pb-14">
         <motion.div
-          className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14"
+          className="flex flex-col md:flex-row md:items-end justify-between gap-6"
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7 }}
@@ -70,76 +163,15 @@ export function Portfolio() {
             Each project starts with a clear conversion goal and ends with measurable results.
           </p>
         </motion.div>
-
-        <div className="grid md:grid-cols-3 gap-6">
-          {portfolioItems.map((item, i) => (
-            <TiltCard
-              key={item.title}
-              className="group relative rounded-2xl overflow-hidden cursor-pointer"
-              style={{ aspectRatio: "4/5" }}
-              maxTilt={5}
-              motionProps={{
-                initial: { opacity: 0, y: 50 },
-                animate: inView ? { opacity: 1, y: 0 } : {},
-                transition: { duration: 0.7, delay: 0.1 * i },
-                whileHover: "hovered",
-              }}
-            >
-              {/* image */}
-              <motion.img
-                src={item.img}
-                alt={item.title}
-                className="w-full h-full object-cover"
-                variants={{ hovered: { scale: 1.06 } }}
-                transition={{ duration: 0.5 }}
-              />
-
-              {/* gradient overlay always */}
-              <div
-                className="absolute inset-0 pointer-events-none"
-                style={{
-                  background: "linear-gradient(to top, rgba(37,38,64,0.9) 0%, transparent 50%)",
-                }}
-              />
-
-              {/* hover tint */}
-              <motion.div
-                className="absolute inset-0 pointer-events-none"
-                style={{ background: "rgba(130,142,115,0.12)" }}
-                initial={{ opacity: 0 }}
-                variants={{ hovered: { opacity: 1 } }}
-                transition={{ duration: 0.3 }}
-              />
-
-              {/* text */}
-              <div className="absolute bottom-0 left-0 right-0 p-6">
-                <motion.span
-                  className="block text-xs font-medium tracking-widest uppercase mb-1"
-                  style={{ color: "#b4c2a3" }}
-                >
-                  {item.category}
-                </motion.span>
-                <h3 className="font-display text-xl mb-2" style={{ color: "#ada49a" }}>
-                  {item.title}
-                </h3>
-                <motion.div
-                  className="flex items-center gap-2 overflow-hidden"
-                  initial={{ height: 0, opacity: 0 }}
-                  variants={{ hovered: { height: "auto", opacity: 1 } }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <span
-                    className="text-xs font-semibold px-3 py-1 rounded-full"
-                    style={{ background: "rgba(130,142,115,0.3)", color: "#b4c2a3" }}
-                  >
-                    {item.result}
-                  </span>
-                </motion.div>
-              </div>
-            </TiltCard>
-          ))}
-        </div>
       </div>
-    </motion.section>
+
+      {reduce ? (
+        <div className="relative max-w-7xl mx-auto px-6 pb-28">
+          <GridFallback />
+        </div>
+      ) : (
+        <PinnedSlides />
+      )}
+    </section>
   )
 }

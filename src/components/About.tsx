@@ -2,6 +2,7 @@ import { motion, useReducedMotion } from "framer-motion"
 import { useSection } from "@/hooks/useSection"
 import { fadeUp, staggerContainer, wipeReveal } from "@/lib/motion"
 import { Counter } from "@/components/Counter"
+import { ScrollRevealText } from "@/components/ScrollRevealText"
 
 export function About() {
   const { ref, inView } = useSection()
@@ -44,15 +45,12 @@ export function About() {
             >
               Your Fiverr listing deserves a page as sharp as your skills
             </motion.h2>
-            <motion.p
-              variants={fadeUp}
+            <ScrollRevealText
+              text="Most Fiverr buyers scroll past forgettable pages in seconds. We craft landing pages that stop the scroll — combining conversion psychology, high-end design, and persuasive copy into pages that consistently outperform."
               className="text-base md:text-lg leading-relaxed mb-8"
-              style={{ color: "#252640" }}
-            >
-              Most Fiverr buyers scroll past forgettable pages in seconds. We craft landing pages
-              that stop the scroll — combining conversion psychology, high-end design, and
-              persuasive copy into pages that consistently outperform.
-            </motion.p>
+              fromColor="#8a8178"
+              toColor="#252640"
+            />
             <motion.div variants={fadeUp} className="flex flex-col gap-4">
               {[
                 "Conversion-first design rooted in buyer psychology",
