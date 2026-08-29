@@ -70,7 +70,7 @@ export function Hero() {
   }, [reduce])
 
   return (
-    <section id="home" ref={pinRef} className="relative h-screen overflow-hidden" style={{ background: "var(--color-void)" }}>
+    <section id="home" ref={pinRef} className="relative min-h-[100dvh] overflow-hidden" style={{ background: "var(--color-void)" }}>
       {/* Liquid-glass background */}
       <div
         className="absolute inset-0"

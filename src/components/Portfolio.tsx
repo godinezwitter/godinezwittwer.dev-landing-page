@@ -62,7 +62,7 @@ function PinnedSlides() {
   }, [])
 
   return (
-    <div ref={pinRef} className="relative w-full h-screen overflow-hidden">
+    <div ref={pinRef} className="relative w-full h-[100dvh] overflow-hidden">
       {portfolioItems.map((item) => (
         <div key={item.title} className="portfolio-slide absolute inset-0">
           <img src={item.img} alt={`${item.title} — ${item.category} landing page`} className="w-full h-full object-cover" />

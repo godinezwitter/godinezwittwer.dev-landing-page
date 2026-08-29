@@ -1,5 +1,5 @@
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
-import { useEffect, useState } from "react"
+import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll } from "framer-motion"
+import { useState } from "react"
 import { useActiveSection } from "@/hooks/useActiveSection"
 import { MagneticButton } from "@/components/MagneticButton"
 
@@ -12,11 +12,8 @@ export function Nav() {
   const active = useActiveSection(sectionIds)
   const reduce = useReducedMotion()
 
-  useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 60)
-    window.addEventListener("scroll", fn)
-    return () => window.removeEventListener("scroll", fn)
-  }, [])
+  const { scrollY } = useScroll()
+  useMotionValueEvent(scrollY, "change", (y) => setScrolled(y > 60))
 
   return (
     <motion.nav

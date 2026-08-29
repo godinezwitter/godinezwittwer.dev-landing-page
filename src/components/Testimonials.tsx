@@ -3,6 +3,7 @@ import { useState, type FormEvent } from "react"
 import { useSection } from "@/hooks/useSection"
 import { wipeReveal } from "@/lib/motion"
 import { MagneticButton } from "@/components/MagneticButton"
+import { SilkBackground } from "@/components/Silk"
 import { CheckIcon, StarIcon } from "@/components/icons"
 
 const testimonials = [
@@ -42,10 +43,22 @@ export function Testimonials() {
   const [activeForm, setActiveForm] = useState<{ name: string; email: string; service: string; message: string }>({
     name: "", email: "", service: "", message: "",
   })
+  const [errors, setErrors] = useState<{ name?: string; email?: string }>({})
   const [submitted, setSubmitted] = useState(false)
+
+  const validate = () => {
+    const next: { name?: string; email?: string } = {}
+    if (!activeForm.name.trim()) next.name = "Please enter your name."
+    if (!activeForm.email.trim()) next.email = "Please enter your email address."
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(activeForm.email)) next.email = "That email address doesn't look right."
+    return next
+  }
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
+    const found = validate()
+    setErrors(found)
+    if (Object.keys(found).length > 0) return
     setSubmitted(true)
   }
 
@@ -60,7 +73,9 @@ export function Testimonials() {
       initial={reduce ? false : "hidden"}
       animate={inView ? "visible" : "hidden"}
     >
-      <div className="relative max-w-7xl mx-auto px-6">
+      <SilkBackground />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-6">
         <motion.div
           className="mb-14 max-w-xl"
           initial={{ opacity: 0, y: 30 }}
@@ -206,6 +221,7 @@ export function Testimonials() {
                     <motion.form
                       key="form"
                       onSubmit={handleSubmit}
+                      noValidate
                       className="flex flex-col gap-4"
                       exit={reduce ? undefined : { opacity: 0 }}
                       transition={{ duration: 0.2 }}
@@ -214,33 +230,46 @@ export function Testimonials() {
                         { key: "name", label: "Your name", type: "text", placeholder: "Sofia Reyes", required: true },
                         { key: "email", label: "Email address", type: "email", placeholder: "sofia@email.com", required: true },
                         { key: "service", label: "Fiverr category", type: "text", placeholder: "e.g. Logo Design, SEO, Writing", required: false },
-                      ].map((field) => (
-                        <div key={field.key}>
-                          <label
-                            htmlFor={`contact-${field.key}`}
-                            className="block text-xs font-semibold mb-1.5"
-                            style={{ color: "var(--color-ink-soft)" }}
-                          >
-                            {field.label}
-                          </label>
-                          <input
-                            id={`contact-${field.key}`}
-                            type={field.type}
-                            required={field.required}
-                            placeholder={field.placeholder}
-                            value={activeForm[field.key as keyof typeof activeForm]}
-                            onChange={(e) => setActiveForm((prev) => ({ ...prev, [field.key]: e.target.value }))}
-                            className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all"
-                            style={{
-                              background: "var(--color-paper)",
-                              border: "1px solid var(--color-line-ink)",
-                              color: "var(--color-ink-deep)",
-                            }}
-                            onFocus={(e) => (e.target.style.borderColor = "var(--color-wine)")}
-                            onBlur={(e) => (e.target.style.borderColor = "var(--color-line-ink)")}
-                          />
-                        </div>
-                      ))}
+                      ].map((field) => {
+                        const err = errors[field.key as "name" | "email"]
+                        return (
+                          <div key={field.key}>
+                            <label
+                              htmlFor={`contact-${field.key}`}
+                              className="block text-xs font-semibold mb-1.5"
+                              style={{ color: "var(--color-ink-soft)" }}
+                            >
+                              {field.label}
+                            </label>
+                            <input
+                              id={`contact-${field.key}`}
+                              type={field.type}
+                              required={field.required}
+                              placeholder={field.placeholder}
+                              value={activeForm[field.key as keyof typeof activeForm]}
+                              aria-invalid={err ? true : undefined}
+                              aria-describedby={err ? `contact-${field.key}-error` : undefined}
+                              onChange={(e) => {
+                                setActiveForm((prev) => ({ ...prev, [field.key]: e.target.value }))
+                                if (field.key === "name" || field.key === "email") {
+                                  setErrors((prev) => ({ ...prev, [field.key]: undefined }))
+                                }
+                              }}
+                              className={`field-input w-full px-4 py-3 rounded-xl text-sm outline-none${err ? " field-input--error" : ""}`}
+                              style={{ background: "var(--color-paper)", color: "var(--color-ink-deep)" }}
+                            />
+                            {err && (
+                              <p
+                                id={`contact-${field.key}-error`}
+                                className="mt-1.5 text-xs"
+                                style={{ color: "var(--color-wine-deep)" }}
+                              >
+                                {err}
+                              </p>
+                            )}
+                          </div>
+                        )
+                      })}
                       <div>
                         <label
                           htmlFor="contact-message"
@@ -255,14 +284,8 @@ export function Testimonials() {
                           placeholder="Briefly describe what you sell and your goal for the page…"
                           value={activeForm.message}
                           onChange={(e) => setActiveForm((prev) => ({ ...prev, message: e.target.value }))}
-                          className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all resize-none"
-                          style={{
-                            background: "var(--color-paper)",
-                            border: "1px solid var(--color-line-ink)",
-                            color: "var(--color-ink-deep)",
-                          }}
-                          onFocus={(e) => (e.target.style.borderColor = "var(--color-wine)")}
-                          onBlur={(e) => (e.target.style.borderColor = "var(--color-line-ink)")}
+                          className="field-input w-full px-4 py-3 rounded-xl text-sm outline-none resize-none"
+                          style={{ background: "var(--color-paper)", color: "var(--color-ink-deep)" }}
                         />
                       </div>
                       <MagneticButton
@@ -284,7 +307,7 @@ export function Testimonials() {
       </div>
 
       {/* Footer */}
-      <div className="max-w-7xl mx-auto px-6 mt-16 pt-8 flex flex-col md:flex-row items-center justify-between gap-4"
+      <div className="relative z-10 max-w-7xl mx-auto px-6 mt-16 pt-8 flex flex-col md:flex-row items-center justify-between gap-4"
         style={{ borderTop: "1px solid var(--color-line-ink)" }}>
         <span className="font-display text-lg tracking-tight" style={{ color: "var(--color-ink-deep)" }}>
           Page<span style={{ color: "var(--color-wine)" }}>Craft</span>
@@ -294,8 +317,8 @@ export function Testimonials() {
         </p>
         <div className="flex gap-6">
           {[
-            { label: "Privacy", href: "#" },
-            { label: "Terms", href: "#" },
+            { label: "Privacy", href: "/privacy.html" },
+            { label: "Terms", href: "/terms.html" },
             { label: "Contact", href: "#contact" },
           ].map((l) => (
             <a

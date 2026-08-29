@@ -219,6 +219,20 @@ textarea {
   background: var(--color-paper-2);
 }
 
+/* Contact form fields — real CSS so focus/error borders don't depend on Tailwind JIT. */
+.field-input {
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--color-line-ink);
+  transition: border-color 0.2s ease;
+}
+.field-input:focus {
+  border-color: var(--color-wine);
+}
+.field-input.field-input--error {
+  border-color: var(--color-wine-deep);
+}
+
 /* The soft hero → paper seam: a burgundy wash that resolves into warm white. */
 .hero-seam {
   background: linear-gradient(to bottom, var(--color-void) 0%, rgba(18, 6, 10, 0.55) 30%, var(--color-paper) 100%);

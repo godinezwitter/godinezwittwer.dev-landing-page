@@ -1,7 +1,7 @@
 import { motion, useReducedMotion } from "framer-motion"
 import { useSection } from "@/hooks/useSection"
 import { fadeUp, staggerContainer, wipeReveal } from "@/lib/motion"
-import { TiltCard } from "@/components/TiltCard"
+import { MagicBentoGrid, MagicBentoCard } from "@/components/MagicBento"
 
 const iconProps = {
   width: 26,
@@ -131,29 +131,19 @@ export function Services() {
           </motion.h2>
         </motion.div>
 
-        <motion.div
+        <MagicBentoGrid
           className="grid md:grid-cols-2 lg:grid-cols-3 gap-5"
           variants={staggerContainer}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
         >
           {services.map((s, i) => (
-            <TiltCard
+            <MagicBentoCard
               key={s.title}
-              maxTilt={4}
-              className={`surface rounded-2xl p-7 group cursor-default flex flex-col justify-between ${
-                s.featured ? "md:col-span-2 lg:col-span-1 lg:row-span-2" : ""
-              }`}
-              style={
-                s.featured
-                  ? { background: "rgba(184,48,92,0.055)", borderColor: "rgba(184,48,92,0.28)" }
-                  : undefined
-              }
-              motionProps={{
-                variants: fadeUp,
-                custom: i * 0.05,
-                whileHover: { y: -6, transition: { duration: 0.25 } },
-              }}
+              className="group cursor-default flex flex-col justify-between p-7"
+              variants={fadeUp}
+              custom={i * 0.05}
+              whileHover={reduce ? undefined : { y: -6, transition: { duration: 0.25 } }}
             >
               <div>
                 <span
@@ -191,9 +181,9 @@ export function Services() {
                   </span>
                 ))}
               </div>
-            </TiltCard>
+            </MagicBentoCard>
           ))}
-        </motion.div>
+        </MagicBentoGrid>
       </div>
     </motion.section>
   )
