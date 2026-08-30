@@ -10,7 +10,9 @@ import { useLang } from "@/i18n/language"
 export function Testimonials() {
   const { ref, inView } = useSection()
   const reduce = useReducedMotion()
-  const { t } = useLang()
+  const { t, lang } = useLang()
+  // Serve the language-matched legal stub (…de.html for German, …html for English).
+  const legalSuffix = lang === "de" ? ".de.html" : ".html"
   const [activeForm, setActiveForm] = useState<{ name: string; email: string; service: string; message: string }>({
     name: "", email: "", service: "", message: "",
   })
@@ -279,8 +281,8 @@ export function Testimonials() {
         </p>
         <div className="flex gap-6">
           {[
-            { label: t.footer.privacy, href: "/privacy.html" },
-            { label: t.footer.terms, href: "/terms.html" },
+            { label: t.footer.privacy, href: `/privacy${legalSuffix}` },
+            { label: t.footer.terms, href: `/terms${legalSuffix}` },
             { label: t.footer.contact, href: "#contact" },
           ].map((l) => (
             <a
