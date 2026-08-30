@@ -1,6 +1,6 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber"
 import { useInView, useReducedMotion } from "framer-motion"
-import { forwardRef, useEffect, useLayoutEffect, useMemo, useRef, type RefObject } from "react"
+import { forwardRef, useEffect, useLayoutEffect, useMemo, useRef, useState, type RefObject } from "react"
 import { Color, type Mesh, type ShaderMaterial } from "three"
 
 /* Adapted from React Bits "Silk" — a flowing silk shader on a full-viewport plane.
@@ -107,9 +107,11 @@ type SilkProps = {
   color?: string
   noiseIntensity?: number
   rotation?: number
+  /** Fires once the first frame has painted, so the caller can fade the canvas in. */
+  onReady?: () => void
 }
 
-function Silk({ speed = 5, scale = 1, color = "#7B7481", noiseIntensity = 1.5, rotation = 0 }: SilkProps) {
+function Silk({ speed = 5, scale = 1, color = "#7B7481", noiseIntensity = 1.5, rotation = 0, onReady }: SilkProps) {
   const meshRef = useRef<Mesh>(null)
 
   const uniforms = useMemo<Uniforms>(
@@ -135,7 +137,12 @@ function Silk({ speed = 5, scale = 1, color = "#7B7481", noiseIntensity = 1.5, r
   }, [speed, scale, noiseIntensity, color, rotation, uniforms])
 
   return (
-    <Canvas dpr={[1, 1.5]} frameloop="always">
+    <Canvas
+      dpr={[1, 1.25]}
+      frameloop="always"
+      gl={{ antialias: false, powerPreference: "low-power" }}
+      onCreated={() => requestAnimationFrame(() => onReady?.())}
+    >
       <SilkPlane ref={meshRef} uniforms={uniforms} />
     </Canvas>
   )
@@ -149,7 +156,17 @@ function Silk({ speed = 5, scale = 1, color = "#7B7481", noiseIntensity = 1.5, r
 export function SilkBackground() {
   const reduce = useReducedMotion()
   const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: false, margin: "200px 0px" })
+  // Mount the canvas well before the section is on screen so WebGL init and the
+  // first frame finish off-screen — by the time it scrolls into view it's already
+  // painted, so there's no late pop-in.
+  const inView = useInView(ref, { once: false, margin: "900px 0px" })
+  const [ready, setReady] = useState(false)
+
+  // If the section scrolls far away and the canvas unmounts, re-arm the fade so
+  // a fresh mount fades in cleanly instead of flashing.
+  useEffect(() => {
+    if (!inView) setReady(false)
+  }, [inView])
 
   return (
     <div
@@ -158,19 +175,34 @@ export function SilkBackground() {
       className="absolute inset-0 pointer-events-none"
       style={{
         zIndex: 0,
-        opacity: 0.12,
         mixBlendMode: "multiply",
-        maskImage: "linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent)",
-        WebkitMaskImage: "linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent)",
+        maskImage: "linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent)",
+        WebkitMaskImage: "linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent)",
       }}
     >
-      {!reduce && inView ? (
-        <Silk color="#a35d70" speed={2.4} scale={1} noiseIntensity={1.1} rotation={0.12} />
-      ) : (
+      {/* Always-present static wash — the reduced-motion experience, and the base
+          that guarantees there's never an empty flash before the silk fades in. */}
+      <div
+        className="absolute inset-0"
+        style={{ background: "radial-gradient(130% 85% at 80% 0%, rgba(184,48,92,0.05), transparent 64%)" }}
+      />
+
+      {/* Animated silk — quieter than before, and fades in over the wash only once
+          its first frame is ready. */}
+      {!reduce && inView && (
         <div
           className="absolute inset-0"
-          style={{ background: "radial-gradient(120% 80% at 80% 0%, rgba(184,48,92,0.06), transparent 62%)" }}
-        />
+          style={{ opacity: ready ? 0.07 : 0, transition: "opacity 1s ease" }}
+        >
+          <Silk
+            color="#a35d70"
+            speed={1.6}
+            scale={1}
+            noiseIntensity={0.8}
+            rotation={0.12}
+            onReady={() => setReady(true)}
+          />
+        </div>
       )}
     </div>
   )

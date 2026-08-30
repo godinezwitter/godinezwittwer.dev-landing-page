@@ -6,23 +6,23 @@ import { MagneticButton } from "@/components/MagneticButton"
 const steps = [
   {
     n: "01",
-    title: "Discovery call",
-    desc: "We start with a focused 30-minute brief: your offer, audience, competitors, and goal. No fluff, all signal.",
+    title: "Discovery",
+    desc: "A focused brief: your offer, audience, and goal. No fluff — just what the page needs to do.",
   },
   {
     n: "02",
     title: "Strategy & wireframe",
-    desc: "We map the page architecture — above-the-fold, value stack, objection handling, CTA flow. Every section earns its place.",
+    desc: "We map the structure — hero, value, objections, CTA. Every section earns its place before we design.",
   },
   {
     n: "03",
-    title: "Design & copywriting",
-    desc: "Simultaneous design and copy sprints. Visual hierarchy, persuasive words, and brand consistency delivered together.",
+    title: "Design & build",
+    desc: "Design and code happen together. Real components, real content, tested as we go — not a flat mockup.",
   },
   {
     n: "04",
     title: "Review & launch",
-    desc: "Two revision rounds, final QA across devices, and hand-off with code or direct platform publishing.",
+    desc: "We revise until you're happy, QA across devices, and hand off clean — code or published live.",
   },
 ]
 

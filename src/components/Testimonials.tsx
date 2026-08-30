@@ -4,38 +4,32 @@ import { useSection } from "@/hooks/useSection"
 import { wipeReveal } from "@/lib/motion"
 import { MagneticButton } from "@/components/MagneticButton"
 import { SilkBackground } from "@/components/Silk"
-import { CheckIcon, StarIcon } from "@/components/icons"
+import { CheckIcon } from "@/components/icons"
 
-const testimonials = [
+const reasons = [
   {
-    quote: "My Fiverr impressions doubled in three weeks. The page PageCraft built is genuinely the best investment I made as a seller.",
-    name: "Sofia Reyes",
-    role: "Top Rated Seller · Graphic Design",
-    rating: 5,
+    n: "01",
+    title: "Professional engineers",
+    desc: "We build production software for Swiss Post by day. Your site gets the same standards — clean, tested, maintainable code, not a drag-and-drop template.",
   },
   {
-    quote: "I went from 2–3 orders a month to fully booked within 30 days of launching my new page. The copy alone was worth every cent.",
-    name: "Marcus Obi",
-    role: "Pro Seller · Video Editing",
-    rating: 5,
+    n: "02",
+    title: "Two sets of eyes",
+    desc: "Everything is built by one of us and reviewed by the other before it ships. Two people means fewer misses and a second opinion baked into every page.",
   },
   {
-    quote: "Clean, fast, and actually converts. I've worked with three other page designers before — PageCraft is on another level.",
-    name: "Yuki Tanaka",
-    role: "Level 2 Seller · SEO Services",
-    rating: 5,
+    n: "03",
+    title: "Revisions until you're happy",
+    desc: "We iterate until the page is genuinely right — not until a revision counter runs out. Clear, fast communication the whole way through.",
   },
 ]
 
-function Stars({ n }: { n: number }) {
-  return (
-    <div className="flex gap-0.5 mb-4" role="img" aria-label={`Rated ${n} out of 5`} style={{ color: "var(--color-wine)" }}>
-      {Array.from({ length: n }).map((_, j) => (
-        <StarIcon key={j} />
-      ))}
-    </div>
-  )
-}
+const proofPoints = [
+  "Real code, not templates",
+  "Honest scope & pricing",
+  "Clear, fast communication",
+  "Delivery in 2–5 days",
+]
 
 export function Testimonials() {
   const { ref, inView } = useSection()
@@ -62,8 +56,6 @@ export function Testimonials() {
     setSubmitted(true)
   }
 
-  const [lead, ...rest] = testimonials
-
   return (
     <motion.section
       ref={ref}
@@ -77,76 +69,71 @@ export function Testimonials() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-6">
         <motion.div
-          className="mb-14 max-w-xl"
+          className="mb-14 max-w-2xl"
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7 }}
         >
-          <span className="kicker mb-3">Client results</span>
+          <span className="kicker mb-3">Why trust us</span>
           <h2
-            className="font-serif leading-[1.05]"
+            className="font-serif leading-[1.05] mb-5"
             style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.4rem)", color: "var(--color-ink-deep)", textWrap: "balance" }}
           >
-            Heard from real sellers
+            No hype. Just how we work.
           </h2>
+          <p className="text-lg leading-relaxed" style={{ color: "var(--color-ink-soft)" }}>
+            We're a new studio and we won't pad this page with invented numbers. Here's the honest
+            case for handing us your project.
+          </p>
         </motion.div>
 
-        {/* Quote-led wall: one lead quote, two supporting. */}
-        <div className="grid lg:grid-cols-5 gap-6 mb-24">
-          <motion.figure
-            className="surface rounded-3xl p-9 md:p-11 lg:col-span-3 flex flex-col justify-between"
-            initial={{ opacity: 0, y: 40 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6 }}
-            whileHover={{ y: -4, transition: { duration: 0.2 } }}
-          >
-            <div>
-              <Stars n={lead.rating} />
-              <blockquote
-                className="font-serif leading-snug mb-8"
-                style={{ fontSize: "clamp(1.5rem, 2.6vw, 2.1rem)", color: "var(--color-ink-deep)", textWrap: "pretty" }}
+        {/* Honest reasons — no fabricated social proof. */}
+        <div className="grid md:grid-cols-3 gap-6 mb-10">
+          {reasons.map((r, i) => (
+            <motion.div
+              key={r.n}
+              className="surface rounded-3xl p-8 flex flex-col"
+              initial={{ opacity: 0, y: 40 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.12 * i }}
+              whileHover={{ y: -4, transition: { duration: 0.2 } }}
+            >
+              <div
+                className="font-serif font-semibold mb-5 tabular-nums"
+                style={{ fontSize: "1.6rem", lineHeight: 1, color: "var(--color-wine)" }}
               >
-                “{lead.quote}”
-              </blockquote>
-            </div>
-            <figcaption>
-              <p className="text-sm font-semibold" style={{ color: "var(--color-ink-deep)" }}>
-                {lead.name}
+                {r.n}
+              </div>
+              <h3 className="font-serif text-xl mb-3" style={{ color: "var(--color-ink-deep)" }}>
+                {r.title}
+              </h3>
+              <p className="text-base leading-relaxed" style={{ color: "var(--color-ink-soft)" }}>
+                {r.desc}
               </p>
-              <p className="text-xs" style={{ color: "var(--color-ink-soft)" }}>
-                {lead.role}
-              </p>
-            </figcaption>
-          </motion.figure>
-
-          <div className="lg:col-span-2 flex flex-col gap-6">
-            {rest.map((t, i) => (
-              <motion.figure
-                key={t.name}
-                className="surface surface-2 rounded-3xl p-7 flex-1 flex flex-col justify-between"
-                initial={{ opacity: 0, y: 40 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: 0.12 * (i + 1) }}
-                whileHover={{ y: -4, transition: { duration: 0.2 } }}
-              >
-                <blockquote
-                  className="text-base leading-relaxed mb-5"
-                  style={{ color: "var(--color-ink-deep)", textWrap: "pretty" }}
-                >
-                  “{t.quote}”
-                </blockquote>
-                <figcaption>
-                  <p className="text-sm font-semibold" style={{ color: "var(--color-ink-deep)" }}>
-                    {t.name}
-                  </p>
-                  <p className="text-xs" style={{ color: "var(--color-ink-soft)" }}>
-                    {t.role}
-                  </p>
-                </figcaption>
-              </motion.figure>
-            ))}
-          </div>
+            </motion.div>
+          ))}
         </div>
+
+        <motion.div
+          className="flex flex-wrap gap-3 mb-24"
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          {proofPoints.map((p) => (
+            <span
+              key={p}
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm"
+              style={{
+                background: "var(--color-paper-2)",
+                border: "1px solid var(--color-line-ink)",
+                color: "var(--color-ink-deep)",
+              }}
+            >
+              <span style={{ color: "var(--color-wine)" }}>✓</span> {p}
+            </span>
+          ))}
+        </motion.div>
 
         {/* CTA + Contact form */}
         <motion.div
@@ -227,8 +214,8 @@ export function Testimonials() {
                       transition={{ duration: 0.2 }}
                     >
                       {[
-                        { key: "name", label: "Your name", type: "text", placeholder: "Sofia Reyes", required: true },
-                        { key: "email", label: "Email address", type: "email", placeholder: "sofia@email.com", required: true },
+                        { key: "name", label: "Your name", type: "text", placeholder: "Jordan Rivera", required: true },
+                        { key: "email", label: "Email address", type: "email", placeholder: "jordan@email.com", required: true },
                         { key: "service", label: "Fiverr category", type: "text", placeholder: "e.g. Logo Design, SEO, Writing", required: false },
                       ].map((field) => {
                         const err = errors[field.key as "name" | "email"]
@@ -310,10 +297,10 @@ export function Testimonials() {
       <div className="relative z-10 max-w-7xl mx-auto px-6 mt-16 pt-8 flex flex-col md:flex-row items-center justify-between gap-4"
         style={{ borderTop: "1px solid var(--color-line-ink)" }}>
         <span className="font-display text-lg tracking-tight" style={{ color: "var(--color-ink-deep)" }}>
-          Page<span style={{ color: "var(--color-wine)" }}>Craft</span>
+          Godinez <span style={{ color: "var(--color-wine)" }}>&amp; Witter</span>
         </span>
         <p className="text-xs" style={{ color: "var(--color-ink-soft)" }}>
-          © 2026 PageCraft. All rights reserved.
+          © 2026 Godinez &amp; Witter — Web Studio. Switzerland.
         </p>
         <div className="flex gap-6">
           {[

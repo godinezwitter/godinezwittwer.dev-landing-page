@@ -1,6 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion"
-import { lazy, Suspense, useLayoutEffect, useRef } from "react"
-import { Counter } from "@/components/Counter"
+import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from "react"
 import { MagneticButton } from "@/components/MagneticButton"
 import { gsap } from "@/lib/gsap"
 
@@ -10,6 +9,9 @@ const heroBg = "/hero-bg-burgundy.webp"
 
 // Three.js is heavy — keep it out of the main bundle and load it after first paint.
 const FlowerScene = lazy(() => import("@/components/hero/FlowerScene").then((m) => ({ default: m.FlowerScene })))
+
+// The headline's last word cycles through the outcomes a good page earns.
+const rotatingWords = ["convert.", "load fast.", "earn trust.", "sell."]
 
 /** Pinned two-scene hero: scene one is the translucent flower model over the
  * liquid-glass background, scrolling scrubs it into scene two (the actual
@@ -22,6 +24,7 @@ const FlowerScene = lazy(() => import("@/components/hero/FlowerScene").then((m) 
  * (SmoothScroll) keep the handoff itself feeling continuous rather than cut. */
 export function Hero() {
   const reduce = useReducedMotion()
+  const [wordIndex, setWordIndex] = useState(0)
   const pinRef = useRef<HTMLDivElement>(null)
   const scene1Ref = useRef<HTMLDivElement>(null)
   const transitionGlowRef = useRef<HTMLDivElement>(null)
@@ -67,6 +70,13 @@ export function Hero() {
     }, pinRef)
 
     return () => ctx.revert()
+  }, [reduce])
+
+  // Cycle the headline's last word. Reduced-motion users get a single static word.
+  useEffect(() => {
+    if (reduce) return
+    const id = setInterval(() => setWordIndex((i) => (i + 1) % rotatingWords.length), 2200)
+    return () => clearInterval(id)
   }, [reduce])
 
   return (
@@ -133,7 +143,7 @@ export function Hero() {
             >
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8">
                 <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: "var(--color-rose)" }} />
-                <span className="label-mono">Fiverr Landing Page Specialists</span>
+                <span className="label-mono">Two full-stack engineers</span>
               </div>
 
               <h1
@@ -141,12 +151,11 @@ export function Hero() {
                 className="font-display font-semibold leading-[1.08] mb-6"
                 style={{ fontSize: "clamp(2.4rem, 4.5vw, 4rem)", color: "var(--color-ink)" }}
               >
-                {["We Build Pages", "That Convert", "Clicks to Clients"].map((line, i) => (
+                {["Clean websites,", "engineered to"].map((line) => (
                   <span
                     key={line}
                     className="hero-line block"
                     style={{
-                      color: i === 1 ? "var(--color-rose)" : undefined,
                       opacity: reduce ? 1 : 0,
                       transform: reduce ? "none" : "translateY(22px) rotate(-2deg)",
                       transformOrigin: "left center",
@@ -155,11 +164,42 @@ export function Hero() {
                     {line}
                   </span>
                 ))}
+                {/* The final word rotates through outcomes every couple of seconds. The words
+                    are stacked absolutely and cross-fade by toggling opacity, so the line height
+                    stays fixed and no layout shifts as it cycles. */}
+                <span
+                  className="hero-line relative block"
+                  style={{
+                    color: "var(--color-rose)",
+                    height: "1.15em",
+                    opacity: reduce ? 1 : 0,
+                    transform: reduce ? "none" : "translateY(22px) rotate(-2deg)",
+                    transformOrigin: "left center",
+                  }}
+                >
+                  {rotatingWords.map((word, i) => {
+                    const active = i === wordIndex
+                    return (
+                      <span
+                        key={word}
+                        aria-hidden={active ? undefined : true}
+                        className="absolute left-0 top-0 whitespace-nowrap"
+                        style={{
+                          opacity: active ? 1 : 0,
+                          transform: reduce ? "none" : `translateY(${active ? 0 : 14}px)`,
+                          transition: reduce ? undefined : "opacity 0.5s ease, transform 0.5s ease",
+                        }}
+                      >
+                        {word}
+                      </span>
+                    )
+                  })}
+                </span>
               </h1>
 
               <p className="text-base md:text-lg leading-relaxed mb-10 max-w-lg" style={{ color: "var(--color-ink-muted)" }}>
-                Premium landing page design for Fiverr sellers and buyers. We craft high-converting
-                pages that turn traffic into revenue — fast, strategic, and cinematic.
+                We're Joel and Dee — two engineers who design and build high-converting landing
+                pages and sites for Fiverr sellers. Real code, real testing, no templates.
               </p>
 
               <div className="flex flex-wrap gap-4">
@@ -189,21 +229,21 @@ export function Hero() {
               style={{ opacity: reduce ? 1 : 0, transform: reduce ? "none" : "translateX(48px)" }}
             >
               <div className="glass-dark lab-panel rounded-2xl p-6 w-full max-w-xs">
-                <p className="label-mono mb-4">[ Proven Results ]</p>
-                <div className="grid grid-cols-2 gap-5">
+                <p className="label-mono mb-5">[ How we work ]</p>
+                <div className="flex flex-col gap-4">
                   {[
-                    { n: 340, suf: "+", label: "Pages Delivered" },
-                    { n: 98, suf: "%", label: "Client Satisfaction" },
-                    { n: 4, suf: ".9★", label: "Fiverr Rating" },
-                    { n: 2, suf: "d", label: "Turnaround" },
-                  ].map(({ n, suf, label }) => (
-                    <div key={label}>
-                      <div className="font-display text-2xl font-bold mb-1" style={{ color: "var(--color-ink)" }}>
-                        <Counter to={n} suffix={suf} />
-                      </div>
-                      <div className="text-xs" style={{ color: "var(--color-ink-muted)" }}>
-                        {label}
-                      </div>
+                    { title: "Real code, not templates", detail: "React · Angular · TypeScript · .NET" },
+                    { title: "Two sets of eyes", detail: "Built by one, reviewed by the other" },
+                    { title: "Fast turnaround", detail: "Most pages live in 2–5 days" },
+                  ].map(({ title, detail }, i) => (
+                    <div key={title}>
+                      {i > 0 && <div className="h-px mb-4" style={{ background: "rgba(255,255,255,0.08)" }} />}
+                      <p className="text-sm font-semibold mb-1" style={{ color: "var(--color-ink)" }}>
+                        {title}
+                      </p>
+                      <p className="text-xs" style={{ color: "var(--color-ink-muted)" }}>
+                        {detail}
+                      </p>
                     </div>
                   ))}
                 </div>

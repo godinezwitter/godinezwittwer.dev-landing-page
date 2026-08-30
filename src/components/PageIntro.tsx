@@ -29,7 +29,7 @@ export function PageIntro() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.15 }}
           >
-            Page<span style={{ color: "var(--color-rose)" }}>Craft</span>
+            Godinez <span style={{ color: "var(--color-rose)" }}>&amp; Witter</span>
           </motion.span>
         </motion.div>
       )}
