@@ -1,4 +1,5 @@
 import { MotionConfig } from "framer-motion"
+import { LanguageProvider } from "@/i18n/language"
 import { SmoothScroll } from "@/components/SmoothScroll"
 import { PageIntro } from "@/components/PageIntro"
 import { Nav } from "@/components/Nav"
@@ -12,6 +13,7 @@ import { Testimonials } from "@/components/Testimonials"
 export default function App() {
   return (
     <MotionConfig reducedMotion="user">
+      <LanguageProvider>
       <div className="relative">
         <SmoothScroll />
         <PageIntro />
@@ -32,6 +34,7 @@ export default function App() {
           </div>
         </div>
       </div>
+      </LanguageProvider>
     </MotionConfig>
   )
 }

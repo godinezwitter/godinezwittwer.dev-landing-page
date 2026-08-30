@@ -2,6 +2,7 @@ import { motion, useReducedMotion } from "framer-motion"
 import { useSection } from "@/hooks/useSection"
 import { fadeUp, staggerContainer, wipeReveal } from "@/lib/motion"
 import { MagicBentoGrid, MagicBentoCard } from "@/components/MagicBento"
+import { useLang } from "@/i18n/language"
 
 const iconProps = {
   width: 26,
@@ -59,49 +60,21 @@ const icons = {
   ),
 }
 
-const services = [
-  {
-    icon: icons.browser,
-    title: "Landing page design",
-    desc: "Pixel-perfect, single-purpose pages built to turn one click into one customer. Fast, responsive, on-brand.",
-    tags: ["UI/UX", "Responsive", "Figma"],
-    featured: true,
-  },
-  {
-    icon: icons.pen,
-    title: "Conversion copywriting",
-    desc: "Words and structure that guide people to the click — headlines, hooks, and a flow that answers objections in order.",
-    tags: ["SEO", "Psychology", "A/B tested"],
-  },
-  {
-    icon: icons.storefront,
-    title: "Fiverr gig pages",
-    desc: "Purpose-built for the Fiverr ecosystem — trust signals, clear offers, and structure that helps buyers say yes.",
-    tags: ["Fiverr SEO", "Social proof", "Trust signals"],
-  },
-  {
-    icon: icons.funnel,
-    title: "Full website builds",
-    desc: "Multi-page sites coded from scratch — home, services, about, contact — structured to scale as you grow.",
-    tags: ["Multi-page", "React", "CMS"],
-  },
-  {
-    icon: icons.audit,
-    title: "Page refresh & audit",
-    desc: "Already have a page? We audit it, find what's quietly costing you conversions, and rebuild it properly.",
-    tags: ["Audit", "Optimisation", "CRO"],
-  },
-  {
-    icon: icons.palette,
-    title: "Brand identity add-on",
-    desc: "A tidy starter kit — logo, colour system, and type — so your page looks like a business, not a hobby.",
-    tags: ["Branding", "Logo", "Style guide"],
-  },
+// Icon, keyword tags, and the featured flag are language-independent; the title
+// and description come from the dictionary, matched to this list by index.
+const serviceMeta = [
+  { icon: icons.browser, tags: ["UI/UX", "Responsive", "Figma"], featured: true },
+  { icon: icons.pen, tags: ["SEO", "Psychology", "A/B tested"] },
+  { icon: icons.storefront, tags: ["Fiverr SEO", "Social proof", "Trust signals"] },
+  { icon: icons.funnel, tags: ["Multi-page", "React", "CMS"] },
+  { icon: icons.audit, tags: ["Audit", "Optimisation", "CRO"] },
+  { icon: icons.palette, tags: ["Branding", "Logo", "Style guide"] },
 ]
 
 export function Services() {
   const { ref, inView } = useSection()
   const reduce = useReducedMotion()
+  const { t } = useLang()
 
   return (
     <motion.section
@@ -120,14 +93,14 @@ export function Services() {
           animate={inView ? "visible" : "hidden"}
         >
           <motion.span variants={fadeUp} className="kicker mb-4">
-            What we offer
+            {t.services.kicker}
           </motion.span>
           <motion.h2
             variants={fadeUp}
             className="font-serif leading-[1.05]"
             style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.4rem)", color: "var(--color-ink-deep)", textWrap: "balance" }}
           >
-            Everything a winning page needs
+            {t.services.heading}
           </motion.h2>
         </motion.div>
 
@@ -137,9 +110,9 @@ export function Services() {
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
         >
-          {services.map((s, i) => (
+          {serviceMeta.map((s, i) => (
             <MagicBentoCard
-              key={s.title}
+              key={i}
               className="group cursor-default flex flex-col justify-between p-7"
               variants={fadeUp}
               custom={i * 0.05}
@@ -160,16 +133,16 @@ export function Services() {
                   className={`font-serif mb-3 ${s.featured ? "text-2xl" : "text-xl"}`}
                   style={{ color: "var(--color-ink-deep)" }}
                 >
-                  {s.title}
+                  {t.services.items[i].title}
                 </h3>
                 <p className="text-base leading-relaxed mb-6" style={{ color: "var(--color-ink-soft)" }}>
-                  {s.desc}
+                  {t.services.items[i].desc}
                 </p>
               </div>
               <div className="flex flex-wrap gap-2">
-                {s.tags.map((t) => (
+                {s.tags.map((tag) => (
                   <span
-                    key={t}
+                    key={tag}
                     className="px-3 py-1 rounded-full text-xs font-medium"
                     style={{
                       background: "var(--color-paper-2)",
@@ -177,7 +150,7 @@ export function Services() {
                       border: "1px solid var(--color-line-ink)",
                     }}
                   >
-                    {t}
+                    {tag}
                   </span>
                 ))}
               </div>

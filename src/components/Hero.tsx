@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from "framer-motion"
 import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from "react"
 import { MagneticButton } from "@/components/MagneticButton"
+import { useLang } from "@/i18n/language"
 import { gsap } from "@/lib/gsap"
 
 // Same file the site-wide fixed background in index.css uses — referenced from
@@ -9,9 +10,6 @@ const heroBg = "/hero-bg-burgundy.webp"
 
 // Three.js is heavy — keep it out of the main bundle and load it after first paint.
 const FlowerScene = lazy(() => import("@/components/hero/FlowerScene").then((m) => ({ default: m.FlowerScene })))
-
-// The headline's last word cycles through the outcomes a good page earns.
-const rotatingWords = ["convert.", "load fast.", "earn trust.", "sell."]
 
 /** Pinned two-scene hero: scene one is the translucent flower model over the
  * liquid-glass background, scrolling scrubs it into scene two (the actual
@@ -24,6 +22,8 @@ const rotatingWords = ["convert.", "load fast.", "earn trust.", "sell."]
  * (SmoothScroll) keep the handoff itself feeling continuous rather than cut. */
 export function Hero() {
   const reduce = useReducedMotion()
+  const { t } = useLang()
+  const rotatingWords = t.hero.rotating
   const [wordIndex, setWordIndex] = useState(0)
   const pinRef = useRef<HTMLDivElement>(null)
   const scene1Ref = useRef<HTMLDivElement>(null)
@@ -73,11 +73,12 @@ export function Hero() {
   }, [reduce])
 
   // Cycle the headline's last word. Reduced-motion users get a single static word.
+  // Re-keyed on word count so switching language restarts cleanly.
   useEffect(() => {
     if (reduce) return
     const id = setInterval(() => setWordIndex((i) => (i + 1) % rotatingWords.length), 2200)
     return () => clearInterval(id)
-  }, [reduce])
+  }, [reduce, rotatingWords.length])
 
   return (
     <section id="home" ref={pinRef} className="relative min-h-[100dvh] overflow-hidden" style={{ background: "var(--color-void)" }}>
@@ -94,10 +95,10 @@ export function Hero() {
       {/* Corner chrome badges */}
       <div className="hidden md:flex absolute bottom-6 left-6 items-center gap-2 z-10 pointer-events-none">
         <span className="corner-stripe" />
-        <span className="label-mono">Digital Pages, Made Smarter</span>
+        <span className="label-mono">{t.hero.cornerLeft}</span>
       </div>
       <div className="hidden md:flex absolute top-24 right-6 items-center gap-2 z-10 pointer-events-none">
-        <span className="label-mono">Fiverr Studio</span>
+        <span className="label-mono">{t.hero.cornerRight}</span>
         <span className="corner-stripe" style={{ transform: "scaleX(-1)" }} />
       </div>
 
@@ -117,7 +118,7 @@ export function Hero() {
             animate={{ transform: ["translateY(0px)", "translateY(6px)", "translateY(0px)"], opacity: [0.55, 1, 0.55] }}
             transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
           />
-          <span className="label-mono">[ Scroll ]</span>
+          <span className="label-mono">{t.hero.scroll}</span>
         </div>
       )}
 
@@ -143,7 +144,7 @@ export function Hero() {
             >
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8">
                 <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: "var(--color-rose)" }} />
-                <span className="label-mono">Two full-stack engineers</span>
+                <span className="label-mono">{t.hero.badge}</span>
               </div>
 
               <h1
@@ -151,7 +152,7 @@ export function Hero() {
                 className="font-display font-semibold leading-[1.08] mb-6"
                 style={{ fontSize: "clamp(2.4rem, 4.5vw, 4rem)", color: "var(--color-ink)" }}
               >
-                {["Clean websites,", "engineered to"].map((line) => (
+                {[t.hero.line1, t.hero.line2].map((line) => (
                   <span
                     key={line}
                     className="hero-line block"
@@ -198,8 +199,7 @@ export function Hero() {
               </h1>
 
               <p className="text-base md:text-lg leading-relaxed mb-10 max-w-lg" style={{ color: "var(--color-ink-muted)" }}>
-                We're Joel and Dee — two engineers who design and build high-converting landing
-                pages and sites for Fiverr sellers. Real code, real testing, no templates.
+                {t.hero.subhead}
               </p>
 
               <div className="flex flex-wrap gap-4">
@@ -209,7 +209,7 @@ export function Hero() {
                   style={{ background: "var(--color-rose)", color: "var(--color-void)" }}
                   whileHover={{ scale: 1.05 }}
                 >
-                  Start Your Project →
+                  {t.hero.ctaPrimary}
                 </MagneticButton>
                 <MagneticButton
                   href="#work"
@@ -217,7 +217,7 @@ export function Hero() {
                   style={{ color: "var(--color-ink)" }}
                   whileHover={{ scale: 1.05, background: "rgba(255,255,255,0.1)" }}
                 >
-                  See Our Work
+                  {t.hero.ctaSecondary}
                 </MagneticButton>
               </div>
             </div>
@@ -229,13 +229,9 @@ export function Hero() {
               style={{ opacity: reduce ? 1 : 0, transform: reduce ? "none" : "translateX(48px)" }}
             >
               <div className="glass-dark lab-panel rounded-2xl p-6 w-full max-w-xs">
-                <p className="label-mono mb-5">[ How we work ]</p>
+                <p className="label-mono mb-5">{t.hero.panelTitle}</p>
                 <div className="flex flex-col gap-4">
-                  {[
-                    { title: "Real code, not templates", detail: "React · Angular · TypeScript · .NET" },
-                    { title: "Two sets of eyes", detail: "Built by one, reviewed by the other" },
-                    { title: "Fast turnaround", detail: "Most pages live in 2–5 days" },
-                  ].map(({ title, detail }, i) => (
+                  {t.hero.panel.map(({ title, detail }, i) => (
                     <div key={title}>
                       {i > 0 && <div className="h-px mb-4" style={{ background: "rgba(255,255,255,0.08)" }} />}
                       <p className="text-sm font-semibold mb-1" style={{ color: "var(--color-ink)" }}>

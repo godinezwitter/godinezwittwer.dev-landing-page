@@ -4,34 +4,23 @@ import { useSection } from "@/hooks/useSection"
 import { useIsMobile } from "@/hooks/useIsMobile"
 import { gsap } from "@/lib/gsap"
 import { TiltCard } from "@/components/TiltCard"
+import { useLang } from "@/i18n/language"
 import heroPortfolio1 from "@/imports/greenmotive-hero.webp"
 import heroPortfolio2 from "@/imports/0569e0ae4f0c254626ea1e061e84132a.jpg"
 import heroPortfolio3 from "@/imports/terrava-hero.webp"
 
+// Image and project name are language-independent; the category label and the
+// "Concept" tag come from the dictionary (matched by index).
 const portfolioItems = [
-  {
-    img: heroPortfolio1,
-    title: "GreenMotive",
-    category: "Eco-tech · Landing page",
-    tag: "Concept",
-  },
-  {
-    img: heroPortfolio2,
-    title: "Helious",
-    category: "Editorial · Portfolio",
-    tag: "Concept",
-  },
-  {
-    img: heroPortfolio3,
-    title: "Terrava",
-    category: "SaaS · Marketing site",
-    tag: "Concept",
-  },
+  { img: heroPortfolio1, title: "GreenMotive" },
+  { img: heroPortfolio2, title: "Helious" },
+  { img: heroPortfolio3, title: "Terrava" },
 ]
 
 /** Pinned, scroll-scrubbed slide sequence — each project holds the viewport while the next one crossfades in underneath. */
 function PinnedSlides() {
   const pinRef = useRef<HTMLDivElement>(null)
+  const { t } = useLang()
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
@@ -64,9 +53,9 @@ function PinnedSlides() {
 
   return (
     <div ref={pinRef} className="relative w-full h-[100dvh] overflow-hidden">
-      {portfolioItems.map((item) => (
+      {portfolioItems.map((item, i) => (
         <div key={item.title} className="portfolio-slide absolute inset-0">
-          <img src={item.img} alt={`${item.title} — ${item.category} landing page`} className="w-full h-full object-cover" />
+          <img src={item.img} alt={`${item.title} — ${t.work.categories[i]}`} className="w-full h-full object-cover" />
           <div
             className="absolute inset-0 pointer-events-none"
             style={{ background: "linear-gradient(to top, rgba(12,4,7,0.94) 0%, rgba(12,4,7,0.2) 45%, transparent 70%)" }}
@@ -76,7 +65,7 @@ function PinnedSlides() {
               className="block text-xs font-semibold tracking-[0.16em] uppercase mb-2"
               style={{ color: "var(--color-rose)" }}
             >
-              {item.category}
+              {t.work.categories[i]}
             </span>
             <h3 className="font-serif mb-4" style={{ fontSize: "clamp(2rem, 4vw, 3.4rem)", color: "#fff" }}>
               {item.title}
@@ -85,7 +74,7 @@ function PinnedSlides() {
               className="inline-block text-xs font-semibold uppercase tracking-[0.12em] px-3.5 py-1.5 rounded-full"
               style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.25)", color: "#fff" }}
             >
-              {item.tag}
+              {t.work.tag}
             </span>
           </div>
         </div>
@@ -96,9 +85,10 @@ function PinnedSlides() {
 
 /** Static grid fallback for reduced-motion — no pinning, no scroll-scrub. */
 function GridFallback() {
+  const { t } = useLang()
   return (
     <div className="grid md:grid-cols-3 gap-6">
-      {portfolioItems.map((item) => (
+      {portfolioItems.map((item, i) => (
         <TiltCard
           key={item.title}
           className="group relative rounded-2xl overflow-hidden cursor-pointer"
@@ -108,7 +98,7 @@ function GridFallback() {
         >
           <motion.img
             src={item.img}
-            alt={`${item.title} — ${item.category} landing page`}
+            alt={`${item.title} — ${t.work.categories[i]}`}
             className="w-full h-full object-cover"
             variants={{ hovered: { scale: 1.06 } }}
             transition={{ duration: 0.5 }}
@@ -119,7 +109,7 @@ function GridFallback() {
           />
           <div className="absolute bottom-0 left-0 right-0 p-6">
             <span className="block text-xs font-semibold tracking-[0.16em] uppercase mb-1" style={{ color: "var(--color-rose)" }}>
-              {item.category}
+              {t.work.categories[i]}
             </span>
             <h3 className="font-serif text-2xl mb-2" style={{ color: "#fff" }}>
               {item.title}
@@ -128,7 +118,7 @@ function GridFallback() {
               className="text-xs font-semibold uppercase tracking-[0.12em] px-3 py-1 rounded-full"
               style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.25)", color: "#fff" }}
             >
-              {item.tag}
+              {t.work.tag}
             </span>
           </div>
         </TiltCard>
@@ -141,6 +131,7 @@ function GridFallback() {
  *  spring + dot indicators), styled with the project cards. Replaces the heavy pinned
  *  scroll-scrub on phones, where GSAP pinning feels janky and isn't touch-native. */
 function PortfolioCarousel() {
+  const { t } = useLang()
   const containerRef = useRef<HTMLDivElement>(null)
   const [width, setWidth] = useState(0)
   const [index, setIndex] = useState(0)
@@ -196,7 +187,7 @@ function PortfolioCarousel() {
             >
               <img
                 src={item.img}
-                alt={`${item.title} — ${item.category} landing page`}
+                alt={`${item.title} — ${t.work.categories[i]}`}
                 className="w-full h-full object-cover pointer-events-none"
                 draggable={false}
               />
@@ -209,7 +200,7 @@ function PortfolioCarousel() {
                   className="block text-xs font-semibold tracking-[0.16em] uppercase mb-1"
                   style={{ color: "var(--color-rose)" }}
                 >
-                  {item.category}
+                  {t.work.categories[i]}
                 </span>
                 <h3 className="font-serif text-2xl mb-2" style={{ color: "#fff" }}>
                   {item.title}
@@ -218,7 +209,7 @@ function PortfolioCarousel() {
                   className="inline-block text-xs font-semibold uppercase tracking-[0.12em] px-3 py-1 rounded-full"
                   style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.25)", color: "#fff" }}
                 >
-                  {item.tag}
+                  {t.work.tag}
                 </span>
               </div>
             </motion.article>
@@ -251,6 +242,7 @@ export function Portfolio() {
   const { ref, inView } = useSection()
   const reduce = useReducedMotion()
   const isMobile = useIsMobile()
+  const { t } = useLang()
 
   return (
     <section id="work" ref={ref} className="relative overflow-hidden">
@@ -262,17 +254,16 @@ export function Portfolio() {
           transition={{ duration: 0.7 }}
         >
           <div>
-            <span className="kicker mb-3">Selected work</span>
+            <span className="kicker mb-3">{t.work.kicker}</span>
             <h2
               className="font-serif leading-[1.05]"
               style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.4rem)", color: "var(--color-ink-deep)", textWrap: "balance" }}
             >
-              Proof of craft
+              {t.work.heading}
             </h2>
           </div>
           <p className="text-base max-w-xs" style={{ color: "var(--color-ink-soft)" }}>
-            Client work is just getting started — so here's what we've built to show range: concept
-            pages designed and coded end to end.
+            {t.work.subhead}
           </p>
         </motion.div>
       </div>

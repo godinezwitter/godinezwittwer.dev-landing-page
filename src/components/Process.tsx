@@ -2,33 +2,13 @@ import { motion, useReducedMotion } from "framer-motion"
 import { useSection } from "@/hooks/useSection"
 import { wipeReveal } from "@/lib/motion"
 import { MagneticButton } from "@/components/MagneticButton"
-
-const steps = [
-  {
-    n: "01",
-    title: "Discovery",
-    desc: "A focused brief: your offer, audience, and goal. No fluff — just what the page needs to do.",
-  },
-  {
-    n: "02",
-    title: "Strategy & wireframe",
-    desc: "We map the structure — hero, value, objections, CTA. Every section earns its place before we design.",
-  },
-  {
-    n: "03",
-    title: "Design & build",
-    desc: "Design and code happen together. Real components, real content, tested as we go — not a flat mockup.",
-  },
-  {
-    n: "04",
-    title: "Review & launch",
-    desc: "We revise until you're happy, QA across devices, and hand off clean — code or published live.",
-  },
-]
+import { useLang } from "@/i18n/language"
 
 export function Process() {
   const { ref, inView } = useSection()
   const reduce = useReducedMotion()
+  const { t } = useLang()
+  const steps = t.process.steps
 
   return (
     <motion.section
@@ -46,12 +26,12 @@ export function Process() {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7 }}
         >
-          <span className="kicker mb-4">How we work</span>
+          <span className="kicker mb-4">{t.process.kicker}</span>
           <h2
             className="font-serif leading-[1.05]"
             style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.4rem)", color: "var(--color-ink-deep)", textWrap: "balance" }}
           >
-            From idea to live page — four clean steps
+            {t.process.heading}
           </h2>
         </motion.div>
 
@@ -106,10 +86,10 @@ export function Process() {
           />
           <div className="relative">
             <p className="font-serif text-2xl md:text-3xl mb-1" style={{ color: "var(--color-ink)" }}>
-              100% satisfaction guarantee
+              {t.process.guaranteeTitle}
             </p>
             <p className="text-sm md:text-base" style={{ color: "var(--color-ink-muted)" }}>
-              Not happy after two revisions? You get a full refund — no questions asked.
+              {t.process.guaranteeDesc}
             </p>
           </div>
           <MagneticButton
@@ -118,7 +98,7 @@ export function Process() {
             style={{ background: "var(--color-rose)", color: "var(--color-void)" }}
             whileHover={{ scale: 1.05 }}
           >
-            Claim your page →
+            {t.process.guaranteeCta}
           </MagneticButton>
         </motion.div>
       </div>

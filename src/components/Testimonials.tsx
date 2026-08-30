@@ -5,35 +5,12 @@ import { wipeReveal } from "@/lib/motion"
 import { MagneticButton } from "@/components/MagneticButton"
 import { SilkBackground } from "@/components/Silk"
 import { CheckIcon } from "@/components/icons"
-
-const reasons = [
-  {
-    n: "01",
-    title: "Professional engineers",
-    desc: "We build production software for Swiss Post by day. Your site gets the same standards — clean, tested, maintainable code, not a drag-and-drop template.",
-  },
-  {
-    n: "02",
-    title: "Two sets of eyes",
-    desc: "Everything is built by one of us and reviewed by the other before it ships. Two people means fewer misses and a second opinion baked into every page.",
-  },
-  {
-    n: "03",
-    title: "Revisions until you're happy",
-    desc: "We iterate until the page is genuinely right — not until a revision counter runs out. Clear, fast communication the whole way through.",
-  },
-]
-
-const proofPoints = [
-  "Real code, not templates",
-  "Honest scope & pricing",
-  "Clear, fast communication",
-  "Delivery in 2–5 days",
-]
+import { useLang } from "@/i18n/language"
 
 export function Testimonials() {
   const { ref, inView } = useSection()
   const reduce = useReducedMotion()
+  const { t } = useLang()
   const [activeForm, setActiveForm] = useState<{ name: string; email: string; service: string; message: string }>({
     name: "", email: "", service: "", message: "",
   })
@@ -42,9 +19,9 @@ export function Testimonials() {
 
   const validate = () => {
     const next: { name?: string; email?: string } = {}
-    if (!activeForm.name.trim()) next.name = "Please enter your name."
-    if (!activeForm.email.trim()) next.email = "Please enter your email address."
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(activeForm.email)) next.email = "That email address doesn't look right."
+    if (!activeForm.name.trim()) next.name = t.contact.errName
+    if (!activeForm.email.trim()) next.email = t.contact.errEmailReq
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(activeForm.email)) next.email = t.contact.errEmailInvalid
     return next
   }
 
@@ -74,22 +51,21 @@ export function Testimonials() {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7 }}
         >
-          <span className="kicker mb-3">Why trust us</span>
+          <span className="kicker mb-3">{t.why.kicker}</span>
           <h2
             className="font-serif leading-[1.05] mb-5"
             style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.4rem)", color: "var(--color-ink-deep)", textWrap: "balance" }}
           >
-            No hype. Just how we work.
+            {t.why.heading}
           </h2>
           <p className="text-lg leading-relaxed" style={{ color: "var(--color-ink-soft)" }}>
-            We're a new studio and we won't pad this page with invented numbers. Here's the honest
-            case for handing us your project.
+            {t.why.subtext}
           </p>
         </motion.div>
 
         {/* Honest reasons — no fabricated social proof. */}
         <div className="grid md:grid-cols-3 gap-6 mb-10">
-          {reasons.map((r, i) => (
+          {t.why.reasons.map((r, i) => (
             <motion.div
               key={r.n}
               className="surface rounded-3xl p-8 flex flex-col"
@@ -120,7 +96,7 @@ export function Testimonials() {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          {proofPoints.map((p) => (
+          {t.why.proofPoints.map((p) => (
             <span
               key={p}
               className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm"
@@ -151,19 +127,18 @@ export function Testimonials() {
             />
             <div className="relative grid lg:grid-cols-2 gap-12 items-center">
               <div>
-                <span className="kicker mb-4">Start today</span>
+                <span className="kicker mb-4">{t.contact.kicker}</span>
                 <h2
                   className="font-serif leading-[1.05] mb-5"
                   style={{ fontSize: "clamp(1.9rem, 3.5vw, 2.8rem)", color: "var(--color-ink-deep)", textWrap: "balance" }}
                 >
-                  Ready to build a page that actually works?
+                  {t.contact.heading}
                 </h2>
                 <p className="text-base leading-relaxed max-w-[46ch]" style={{ color: "var(--color-ink-soft)" }}>
-                  Tell us about your Fiverr gig and we'll come back within 24 hours with
-                  a strategy and a clear quote.
+                  {t.contact.paragraph}
                 </p>
                 <div className="mt-8 flex flex-col gap-3">
-                  {["Free initial consultation", "Clear pricing — no surprises", "Delivery within 2–5 days"].map((p) => (
+                  {t.contact.checks.map((p) => (
                     <div key={p} className="flex items-center gap-3">
                       <span
                         className="w-5 h-5 rounded-full flex items-center justify-center shrink-0"
@@ -198,10 +173,10 @@ export function Testimonials() {
                         <CheckIcon size={26} />
                       </span>
                       <p className="font-serif text-2xl mb-2" style={{ color: "var(--color-ink-deep)" }}>
-                        Brief received{activeForm.name ? `, ${activeForm.name.split(" ")[0]}` : ""}
+                        {t.contact.successTitle}{activeForm.name ? `, ${activeForm.name.split(" ")[0]}` : ""}
                       </p>
                       <p className="text-sm leading-relaxed max-w-xs" style={{ color: "var(--color-ink-soft)" }}>
-                        We'll review your gig and reply with a strategy and quote within 24 hours.
+                        {t.contact.successBody}
                       </p>
                     </motion.div>
                   ) : (
@@ -214,9 +189,9 @@ export function Testimonials() {
                       transition={{ duration: 0.2 }}
                     >
                       {[
-                        { key: "name", label: "Your name", type: "text", placeholder: "Jordan Rivera", required: true },
-                        { key: "email", label: "Email address", type: "email", placeholder: "jordan@email.com", required: true },
-                        { key: "service", label: "Fiverr category", type: "text", placeholder: "e.g. Logo Design, SEO, Writing", required: false },
+                        { key: "name", label: t.contact.nameLabel, type: "text", placeholder: t.contact.namePlaceholder, required: true },
+                        { key: "email", label: t.contact.emailLabel, type: "email", placeholder: t.contact.emailPlaceholder, required: true },
+                        { key: "service", label: t.contact.serviceLabel, type: "text", placeholder: t.contact.servicePlaceholder, required: false },
                       ].map((field) => {
                         const err = errors[field.key as "name" | "email"]
                         return (
@@ -263,12 +238,12 @@ export function Testimonials() {
                           className="block text-xs font-semibold mb-1.5"
                           style={{ color: "var(--color-ink-soft)" }}
                         >
-                          Tell us about your gig
+                          {t.contact.messageLabel}
                         </label>
                         <textarea
                           id="contact-message"
                           rows={3}
-                          placeholder="Briefly describe what you sell and your goal for the page…"
+                          placeholder={t.contact.messagePlaceholder}
                           value={activeForm.message}
                           onChange={(e) => setActiveForm((prev) => ({ ...prev, message: e.target.value }))}
                           className="field-input w-full px-4 py-3 rounded-xl text-sm outline-none resize-none"
@@ -282,7 +257,7 @@ export function Testimonials() {
                         style={{ background: "var(--color-wine)", color: "#fff" }}
                         whileHover={{ scale: 1.02 }}
                       >
-                        Send my brief →
+                        {t.contact.submit}
                       </MagneticButton>
                     </motion.form>
                   )}
@@ -297,16 +272,16 @@ export function Testimonials() {
       <div className="relative z-10 max-w-7xl mx-auto px-6 mt-16 pt-8 flex flex-col md:flex-row items-center justify-between gap-4"
         style={{ borderTop: "1px solid var(--color-line-ink)" }}>
         <span className="font-display text-lg tracking-tight" style={{ color: "var(--color-ink-deep)" }}>
-          Godinez <span style={{ color: "var(--color-wine)" }}>&amp; Witter</span>
+          Godinez <span style={{ color: "var(--color-wine)" }}>&amp; Wittwer</span>
         </span>
         <p className="text-xs" style={{ color: "var(--color-ink-soft)" }}>
-          © 2026 Godinez &amp; Witter — Web Studio. Switzerland.
+          {t.footer.copyright}
         </p>
         <div className="flex gap-6">
           {[
-            { label: "Privacy", href: "/privacy.html" },
-            { label: "Terms", href: "/terms.html" },
-            { label: "Contact", href: "#contact" },
+            { label: t.footer.privacy, href: "/privacy.html" },
+            { label: t.footer.terms, href: "/terms.html" },
+            { label: t.footer.contact, href: "#contact" },
           ].map((l) => (
             <a
               key={l.label}

@@ -2,24 +2,21 @@ import { motion, useReducedMotion } from "framer-motion"
 import { useSection } from "@/hooks/useSection"
 import { fadeUp, staggerContainer, wipeReveal } from "@/lib/motion"
 import { ScrollRevealText } from "@/components/ScrollRevealText"
+import { useLang } from "@/i18n/language"
 
+// Non-translatable per-founder data. The role, bio, and off-the-clock lines are
+// pulled from the language dictionary by index.
 const founders = [
   {
     initials: "JG",
     name: "Joel Godinez",
-    role: "Full-stack engineer",
-    bio: "Front-end and motion lead. Comfortable across the stack — from React interfaces down to Spring Boot and .NET services.",
     tags: ["TypeScript", "React", "Angular", ".NET", "Java"],
-    off: "Off the clock — skiing, gym, music, food.",
     linkedin: "https://www.linkedin.com/in/joel-godinez-868085362",
   },
   {
     initials: "DW",
-    name: "Dee Witter",
-    role: "Full-stack engineer",
-    bio: "Design and back-end lead. Sweats the details on layout and copy, then makes the whole thing run on solid, tested code.",
+    name: "Dee Wittwer",
     tags: ["JavaScript", "C#", "Spring Boot", "React", "Angular"],
-    off: "Off the clock — football, cooking, music, fashion.",
     linkedin: "https://www.linkedin.com/in/dee-wittwer-30719a323/",
   },
 ]
@@ -27,6 +24,7 @@ const founders = [
 export function About() {
   const { ref, inView } = useSection()
   const reduce = useReducedMotion()
+  const { t } = useLang()
 
   return (
     <motion.section
@@ -46,20 +44,21 @@ export function About() {
           animate={inView ? "visible" : "hidden"}
         >
           <motion.span variants={fadeUp} className="kicker mb-5">
-            Who we are
+            {t.about.kicker}
           </motion.span>
           <motion.h2
             variants={fadeUp}
             className="font-serif leading-[1.05] mb-7"
             style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", color: "var(--color-ink-deep)", textWrap: "balance" }}
           >
-            Two engineers who'd rather{" "}
+            {t.about.headingPre}
             <em className="not-italic" style={{ color: "var(--color-wine)" }}>
-              build than talk
+              {t.about.headingEm}
             </em>
           </motion.h2>
           <ScrollRevealText
-            text="We're Joel Godinez and Dee Witter — third-year full-stack apprentices at Swiss Post by day, a two-person web studio the rest of the time. We build client sites the same way we ship production software: clean code, real testing, no shortcuts."
+            key={t.about.intro}
+            text={t.about.intro}
             className="text-lg leading-relaxed max-w-[64ch]"
             fromColor="#cabdb4"
             toColor="#3a2b30"
@@ -73,7 +72,7 @@ export function About() {
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
         >
-          {founders.map((f) => (
+          {founders.map((f, i) => (
             <motion.div
               key={f.name}
               variants={fadeUp}
@@ -101,14 +100,14 @@ export function About() {
                     className="font-mono text-xs uppercase tracking-wider"
                     style={{ color: "var(--color-wine)" }}
                   >
-                    {f.role}
+                    {t.about.role}
                   </p>
                 </div>
                 <a
                   href={f.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={`${f.name} on LinkedIn`}
+                  aria-label={`${f.name} ${t.about.linkedin}`}
                   className="ml-auto self-start w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors"
                   style={{ background: "var(--color-paper-2)", border: "1px solid var(--color-line-ink)", color: "var(--color-wine)" }}
                   onMouseEnter={(e) => {
@@ -126,12 +125,12 @@ export function About() {
                 </a>
               </div>
               <p className="text-base leading-relaxed mb-6" style={{ color: "var(--color-ink-soft)" }}>
-                {f.bio}
+                {t.about.bios[i]}
               </p>
               <div className="flex flex-wrap gap-2 mb-5">
-                {f.tags.map((t) => (
+                {f.tags.map((tag) => (
                   <span
-                    key={t}
+                    key={tag}
                     className="px-3 py-1 rounded-full text-xs font-medium"
                     style={{
                       background: "var(--color-paper-2)",
@@ -139,12 +138,12 @@ export function About() {
                       border: "1px solid var(--color-line-ink)",
                     }}
                   >
-                    {t}
+                    {tag}
                   </span>
                 ))}
               </div>
               <p className="text-sm" style={{ color: "var(--color-ink-soft)", opacity: 0.8 }}>
-                {f.off}
+                {t.about.offs[i]}
               </p>
             </motion.div>
           ))}
