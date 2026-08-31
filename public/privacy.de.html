@@ -16,42 +16,62 @@
       :root {
         --wine: #b8305c;
         --wine-deep: #8a2244;
-        --paper: #faf6f2;
-        --paper-2: #f2eae3;
         --ink-deep: #1e1216;
         --ink-soft: #6b545a;
-        --line: rgba(30, 18, 22, 0.12);
+        --line: rgba(30, 18, 22, 0.1);
+        --sheet: #fffdfb;
       }
       * { box-sizing: border-box; }
       body {
         margin: 0;
-        background: var(--paper);
-        color: var(--ink-deep);
+        min-height: 100vh;
+        background: radial-gradient(125% 85% at 50% -10%, #2a0f18 0%, #14070b 55%, #0c0407 100%);
+        color: #f5ece9;
         font-family: "DM Sans", system-ui, sans-serif;
         -webkit-font-smoothing: antialiased;
-        line-height: 1.65;
+        line-height: 1.7;
+        padding: clamp(1.5rem, 5vw, 4rem) 1.25rem;
       }
-      .wrap { max-width: 46rem; margin: 0 auto; padding: 4rem 1.5rem 6rem; }
       a { color: var(--wine); text-decoration: none; }
       a:hover { color: var(--wine-deep); }
-      .back {
-        display: inline-flex; align-items: center; gap: 0.5rem;
-        font-size: 0.85rem; font-weight: 600; margin-bottom: 3rem;
+      /* The legal text sits on a clean warm-white document sheet over the brand's
+         dark burgundy world — a deliberate document surface, not a flat fill. */
+      .wrap {
+        max-width: 44rem; margin: 0 auto;
+        background: var(--sheet); color: var(--ink-deep);
+        border-top: 3px solid var(--wine); border-radius: 0.9rem;
+        box-shadow: 0 30px 70px -30px rgba(8, 2, 6, 0.65);
+        padding: clamp(2rem, 5vw, 4rem) clamp(1.5rem, 5vw, 3.5rem) 3.5rem;
       }
-      .brand { font-family: "DM Sans", sans-serif; font-weight: 600; font-size: 1.1rem; letter-spacing: -0.01em; }
+      .back {
+        display: inline-flex; align-items: center; gap: 0.4rem;
+        font-size: 0.8rem; font-weight: 600; margin-bottom: 2.5rem;
+      }
+      .brand {
+        font-size: 0.8rem; font-weight: 600; text-transform: uppercase;
+        letter-spacing: 0.16em; color: var(--ink-soft); margin-bottom: 0.85rem;
+      }
       .brand span { color: var(--wine); }
-      h1 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: clamp(2rem, 5vw, 2.9rem); line-height: 1.1; margin: 0 0 0.5rem; }
-      .updated { color: var(--ink-soft); font-size: 0.85rem; margin: 0 0 1rem; }
+      h1 {
+        font-family: "Fraunces", Georgia, serif; font-weight: 600;
+        font-size: clamp(2.5rem, 7vw, 3.75rem); line-height: 1.03;
+        letter-spacing: -0.02em; margin: 0 0 0.75rem;
+      }
+      .updated { color: var(--ink-soft); font-size: 0.8rem; margin: 0 0 1.75rem; }
       .note {
-        background: var(--paper-2); border: 1px solid var(--line);
-        border-radius: 0.9rem; padding: 1rem 1.25rem; font-size: 0.85rem;
+        background: #f6efe9; border: 1px solid var(--line); border-left: 3px solid var(--wine);
+        border-radius: 0.5rem; padding: 0.9rem 1.15rem; font-size: 0.8rem;
         color: var(--ink-soft); margin: 0 0 3rem;
       }
-      h2 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 1.4rem; margin: 2.75rem 0 0.75rem; }
+      h2 {
+        font-family: "Fraunces", Georgia, serif; font-weight: 600;
+        font-size: 1.5rem; line-height: 1.15; letter-spacing: -0.01em;
+        margin: 2.75rem 0 0.6rem;
+      }
       p { margin: 0 0 1rem; color: var(--ink-deep); }
       ul { margin: 0 0 1rem; padding-left: 1.25rem; }
-      li { margin-bottom: 0.4rem; }
-      footer { margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid var(--line); font-size: 0.8rem; color: var(--ink-soft); }
+      li { margin-bottom: 0.45rem; }
+      footer { margin-top: 3.5rem; padding-top: 1.5rem; border-top: 1px solid var(--line); font-size: 0.8rem; color: var(--ink-soft); }
     </style>
   </head>
   <body>

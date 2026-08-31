@@ -152,8 +152,10 @@ function Silk({ speed = 5, scale = 1, color = "#7B7481", noiseIntensity = 1.5, r
  * Positioned, restrained wrapper for the closing sections: a faint desaturated-wine
  * silk that multiplies into the paper for ambient depth. The WebGL canvas mounts
  * only while the section is on screen, and reduced-motion users get a static wash.
+ * `pauseAnimation` drops back to the static wash on demand — used to still the
+ * background once the contact form is in view.
  */
-export function SilkBackground() {
+export function SilkBackground({ pauseAnimation = false }: { pauseAnimation?: boolean }) {
   const reduce = useReducedMotion()
   const ref = useRef<HTMLDivElement>(null)
   // Mount the canvas well before the section is on screen so WebGL init and the
@@ -189,7 +191,7 @@ export function SilkBackground() {
 
       {/* Animated silk — quieter than before, and fades in over the wash only once
           its first frame is ready. */}
-      {!reduce && inView && (
+      {!reduce && inView && !pauseAnimation && (
         <div
           className="absolute inset-0"
           style={{ opacity: ready ? 0.07 : 0, transition: "opacity 1s ease" }}

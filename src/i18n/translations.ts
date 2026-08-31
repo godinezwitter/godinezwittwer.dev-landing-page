@@ -5,21 +5,21 @@
 
 const en = {
   nav: {
-    links: ["About", "Services", "Process", "Work", "Why us"],
+    tabs: { work: "Work", about: "About Us" },
     cta: "Get Started",
+    skip: "Skip to content",
     home: "Godinez & Wittwer — back to top",
     openMenu: "Open menu",
     closeMenu: "Close menu",
     language: "Language",
   },
   hero: {
-    badge: "Two full-stack engineers",
     line1: "Clean websites,",
     line2: "engineered to",
     rotating: ["convert.", "load fast.", "earn trust.", "sell."],
     subhead:
       "We're Joel and Dee — two engineers who design and build high-converting landing pages and sites for Fiverr sellers. Real code, real testing, no templates.",
-    ctaPrimary: "Start Your Project →",
+    ctaPrimary: "Start Your Project",
     ctaSecondary: "See Our Work",
     cornerLeft: "Digital Pages, Made Smarter",
     cornerRight: "Fiverr Studio",
@@ -49,8 +49,9 @@ const en = {
     linkedin: "on LinkedIn",
   },
   services: {
-    kicker: "What we offer",
+    kicker: "Six services, one goal",
     heading: "Everything a winning page needs",
+    cardAction: "Get started",
     items: [
       {
         title: "Landing page design",
@@ -79,7 +80,7 @@ const en = {
     ],
   },
   process: {
-    kicker: "How we work",
+    kicker: "The process",
     heading: "From idea to live page — four clean steps",
     steps: [
       { n: "01", title: "Discovery", desc: "A focused brief: your offer, audience, and goal. No fluff — just what the page needs to do." },
@@ -89,7 +90,7 @@ const en = {
     ],
     guaranteeTitle: "100% satisfaction guarantee",
     guaranteeDesc: "Not happy after two revisions? You get a full refund — no questions asked.",
-    guaranteeCta: "Claim your page →",
+    guaranteeCta: "Claim your page",
   },
   work: {
     kicker: "Selected work",
@@ -142,7 +143,8 @@ const en = {
     servicePlaceholder: "e.g. Logo Design, SEO, Writing",
     messageLabel: "Tell us about your gig",
     messagePlaceholder: "Briefly describe what you sell and your goal for the page…",
-    submit: "Send my brief →",
+    submit: "Send my brief",
+    submitting: "Sending…",
     successTitle: "Brief received",
     successBody: "We'll review your gig and reply with a strategy and quote within 24 hours.",
     errName: "Please enter your name.",
@@ -155,6 +157,21 @@ const en = {
     terms: "Terms",
     contact: "Contact",
   },
+  meta: {
+    titleHome: "Godinez & Wittwer — Landing Pages & Websites, Engineered",
+    titleAbout: "About — Godinez & Wittwer",
+    titleNotFound: "Page not found — Godinez & Wittwer",
+  },
+  error: {
+    title: "Something went wrong.",
+    reload: "Reload",
+  },
+  notFound: {
+    code: "404",
+    title: "This page took a wrong turn.",
+    body: "The link is broken or the page has moved. Let's get you back to solid ground.",
+    cta: "Back to home",
+  },
 }
 
 export type Lang = "en" | "de"
@@ -162,21 +179,21 @@ export type Content = typeof en
 
 const de: Content = {
   nav: {
-    links: ["Über uns", "Leistungen", "Ablauf", "Arbeiten", "Warum wir"],
+    tabs: { work: "Arbeiten", about: "Über uns" },
     cta: "Loslegen",
+    skip: "Zum Inhalt springen",
     home: "Godinez & Wittwer — nach oben",
     openMenu: "Menü öffnen",
     closeMenu: "Menü schließen",
     language: "Sprache",
   },
   hero: {
-    badge: "Zwei Full-Stack-Entwickler",
     line1: "Saubere Websites,",
     line2: "gebaut, um zu",
     rotating: ["überzeugen.", "begeistern.", "verkaufen.", "konvertieren."],
     subhead:
       "Wir sind Joel und Dee — zwei Entwickler, die hochkonvertierende Landingpages und Websites für Fiverr-Anbieter gestalten und bauen. Echter Code, echte Tests, keine Templates.",
-    ctaPrimary: "Projekt starten →",
+    ctaPrimary: "Projekt starten",
     ctaSecondary: "Unsere Arbeiten",
     cornerLeft: "Digitale Seiten, klüger gemacht",
     cornerRight: "Fiverr Studio",
@@ -206,8 +223,9 @@ const de: Content = {
     linkedin: "auf LinkedIn",
   },
   services: {
-    kicker: "Was wir bieten",
+    kicker: "Sechs Leistungen, ein Ziel",
     heading: "Alles, was eine überzeugende Seite braucht",
+    cardAction: "Loslegen",
     items: [
       {
         title: "Landingpage-Design",
@@ -236,7 +254,7 @@ const de: Content = {
     ],
   },
   process: {
-    kicker: "So arbeiten wir",
+    kicker: "Der Ablauf",
     heading: "Von der Idee zur Live-Seite — vier klare Schritte",
     steps: [
       { n: "01", title: "Briefing", desc: "Ein fokussiertes Briefing: dein Angebot, deine Zielgruppe, dein Ziel. Kein Füllstoff — nur, was die Seite leisten muss." },
@@ -246,7 +264,7 @@ const de: Content = {
     ],
     guaranteeTitle: "100% Zufriedenheitsgarantie",
     guaranteeDesc: "Nach zwei Überarbeitungen nicht zufrieden? Du bekommst dein Geld zurück — ohne Wenn und Aber.",
-    guaranteeCta: "Seite sichern →",
+    guaranteeCta: "Seite sichern",
   },
   work: {
     kicker: "Ausgewählte Arbeiten",
@@ -299,7 +317,8 @@ const de: Content = {
     servicePlaceholder: "z. B. Logo-Design, SEO, Texte",
     messageLabel: "Erzähl uns von deinem Gig",
     messagePlaceholder: "Beschreibe kurz, was du verkaufst und dein Ziel für die Seite …",
-    submit: "Briefing senden →",
+    submit: "Briefing senden",
+    submitting: "Wird gesendet…",
     successTitle: "Briefing erhalten",
     successBody: "Wir schauen uns deinen Gig an und antworten innerhalb von 24 Stunden mit Strategie und Angebot.",
     errName: "Bitte gib deinen Namen ein.",
@@ -311,6 +330,21 @@ const de: Content = {
     privacy: "Datenschutz",
     terms: "AGB",
     contact: "Kontakt",
+  },
+  meta: {
+    titleHome: "Godinez & Wittwer — Landingpages & Websites, sauber gebaut",
+    titleAbout: "Über uns — Godinez & Wittwer",
+    titleNotFound: "Seite nicht gefunden — Godinez & Wittwer",
+  },
+  error: {
+    title: "Etwas ist schiefgelaufen.",
+    reload: "Neu laden",
+  },
+  notFound: {
+    code: "404",
+    title: "Diese Seite hat sich verlaufen.",
+    body: "Der Link ist defekt oder die Seite wurde verschoben. Bringen wir dich zurück auf festen Boden.",
+    cta: "Zur Startseite",
   },
 }
 

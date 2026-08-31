@@ -1,39 +1,45 @@
 import { MotionConfig } from "framer-motion"
-import { LanguageProvider } from "@/i18n/language"
+import { useEffect } from "react"
+import { LanguageProvider, useLang } from "@/i18n/language"
+import { useRoute } from "@/router"
 import { SmoothScroll } from "@/components/SmoothScroll"
 import { PageIntro } from "@/components/PageIntro"
 import { Nav } from "@/components/Nav"
-import { Hero } from "@/components/Hero"
-import { About } from "@/components/About"
-import { Services } from "@/components/Services"
-import { Process } from "@/components/Process"
-import { Portfolio } from "@/components/Portfolio"
-import { Testimonials } from "@/components/Testimonials"
+import { MainPage } from "@/pages/MainPage"
+import { AboutPage } from "@/pages/AboutPage"
+import { NotFound } from "@/pages/NotFound"
+
+/** Everything that needs the language context: the page itself, its landmark
+ * and skip link, and the per-route document title. */
+function SiteChrome() {
+  const route = useRoute()
+  const { t } = useLang()
+
+  useEffect(() => {
+    document.title =
+      route === "/about" ? t.meta.titleAbout : route === "/" ? t.meta.titleHome : t.meta.titleNotFound
+  }, [route, t])
+
+  return (
+    <div className="relative">
+      <a href="#main-content" className="skip-link">
+        {t.nav.skip}
+      </a>
+      <SmoothScroll />
+      <PageIntro />
+      <Nav />
+      <main id="main-content" tabIndex={-1}>
+        {route === "/about" ? <AboutPage /> : route === "/" ? <MainPage /> : <NotFound />}
+      </main>
+    </div>
+  )
+}
 
 export default function App() {
   return (
     <MotionConfig reducedMotion="user">
       <LanguageProvider>
-      <div className="relative">
-        <SmoothScroll />
-        <PageIntro />
-        <Nav />
-        <Hero />
-
-        {/* Light world — the page breathes out of the dark hero into warm paper. */}
-        <div className="relative" style={{ background: "var(--color-paper)" }}>
-          <div className="grain-overlay" aria-hidden="true" />
-          {/* Authored seam: the burgundy hero resolves into paper instead of cutting. */}
-          <div className="hero-seam h-24 md:h-36" aria-hidden="true" />
-          <div className="relative" style={{ zIndex: 1 }}>
-            <About />
-            <Services />
-            <Process />
-            <Portfolio />
-            <Testimonials />
-          </div>
-        </div>
-      </div>
+        <SiteChrome />
       </LanguageProvider>
     </MotionConfig>
   )

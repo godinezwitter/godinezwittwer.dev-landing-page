@@ -26,10 +26,14 @@ type ScrollRevealTextProps = {
   fromColor: string
   /** Color words settle into once revealed. */
   toColor: string
+  /** Render fully revealed (final color) with no scroll scrubbing — for a
+   * paragraph that sits at the top of its own page, where there's no scroll
+   * runway to drive the effect. */
+  immediate?: boolean
 }
 
 /** Words transition from fromColor to toColor as the paragraph scrolls through view, scrubbed to scroll position in both directions. */
-export function ScrollRevealText({ text, className, style, fromColor, toColor }: ScrollRevealTextProps) {
+export function ScrollRevealText({ text, className, style, fromColor, toColor, immediate }: ScrollRevealTextProps) {
   const ref = useRef<HTMLParagraphElement>(null)
   const reduce = useReducedMotion()
   const { scrollYProgress } = useScroll({
@@ -38,7 +42,7 @@ export function ScrollRevealText({ text, className, style, fromColor, toColor }:
   })
   const words = text.split(" ")
 
-  if (reduce) {
+  if (reduce || immediate) {
     return (
       <p ref={ref} className={className} style={{ ...style, color: toColor }}>
         {text}

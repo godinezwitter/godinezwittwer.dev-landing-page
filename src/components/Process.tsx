@@ -26,10 +26,9 @@ export function Process() {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7 }}
         >
-          <span className="kicker mb-4">{t.process.kicker}</span>
           <h2
-            className="font-serif leading-[1.05]"
-            style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.4rem)", color: "var(--color-ink-deep)", textWrap: "balance" }}
+            className="section-title"
+            style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.4rem)" }}
           >
             {t.process.heading}
           </h2>
@@ -53,12 +52,12 @@ export function Process() {
                 />
               )}
               <div
-                className="font-serif font-semibold mb-5 tabular-nums"
+                className="font-body font-semibold mb-5 tabular-nums"
                 style={{ fontSize: "2.4rem", lineHeight: 1, color: "var(--color-wine)" }}
               >
                 {step.n}
               </div>
-              <h3 className="font-serif text-xl mb-3" style={{ color: "var(--color-ink-deep)" }}>
+              <h3 className="font-body text-xl mb-3" style={{ color: "var(--color-ink-deep)" }}>
                 {step.title}
               </h3>
               <p className="text-base leading-relaxed max-w-[34ch]" style={{ color: "var(--color-ink-soft)" }}>
@@ -85,7 +84,7 @@ export function Process() {
             aria-hidden="true"
           />
           <div className="relative">
-            <p className="font-serif text-2xl md:text-3xl mb-1" style={{ color: "var(--color-ink)" }}>
+            <p className="font-body text-2xl md:text-3xl mb-1" style={{ color: "var(--color-ink)" }}>
               {t.process.guaranteeTitle}
             </p>
             <p className="text-sm md:text-base" style={{ color: "var(--color-ink-muted)" }}>
@@ -94,7 +93,7 @@ export function Process() {
           </div>
           <MagneticButton
             href="#contact"
-            className="relative shrink-0 px-7 py-3 rounded-full font-semibold text-sm"
+            className="relative shrink-0 px-7 py-3 rounded-lg font-semibold text-sm"
             style={{ background: "var(--color-rose)", color: "var(--color-void)" }}
             whileHover={{ scale: 1.05 }}
           >

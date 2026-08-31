@@ -11,10 +11,13 @@ type MagneticButtonProps = {
   as?: "a" | "button"
   href?: string
   type?: "button" | "submit"
-  onClick?: () => void
+  onClick?: (e: MouseEvent<HTMLElement>) => void
   className?: string
   style?: CSSProperties
   whileHover?: TargetAndTransition
+  /** Button variant only: disables the control and stops the magnetic pull. */
+  disabled?: boolean
+  "aria-busy"?: boolean
   children: ReactNode
 }
 
@@ -27,6 +30,8 @@ export function MagneticButton({
   className,
   style,
   whileHover,
+  disabled,
+  "aria-busy": ariaBusy,
   children,
 }: MagneticButtonProps) {
   const reduce = useReducedMotion()
@@ -36,7 +41,7 @@ export function MagneticButton({
   const springY = useSpring(y, { stiffness: 200, damping: 15, mass: 0.25 })
 
   const handleMove = (e: MouseEvent<HTMLElement>) => {
-    if (reduce) return
+    if (reduce || disabled) return
     const rect = e.currentTarget.getBoundingClientRect()
     x.set((e.clientX - rect.left - rect.width / 2) * 0.3)
     y.set((e.clientY - rect.top - rect.height / 2) * 0.3)
@@ -54,12 +59,14 @@ export function MagneticButton({
       <motion.button
         type={type ?? "button"}
         onClick={onClick}
+        disabled={disabled}
+        aria-busy={ariaBusy}
         className={className}
         style={motionStyle}
         onMouseMove={handleMove}
         onMouseLeave={handleLeave}
-        whileHover={whileHover}
-        whileTap={{ scale: 0.96 }}
+        whileHover={disabled ? undefined : whileHover}
+        whileTap={disabled ? undefined : { scale: 0.96 }}
       >
         {children}
       </motion.button>

@@ -1,75 +1,57 @@
 import { motion, useReducedMotion } from "framer-motion"
+import type { CSSProperties } from "react"
 import { useSection } from "@/hooks/useSection"
 import { fadeUp, staggerContainer, wipeReveal } from "@/lib/motion"
-import { MagicBentoGrid, MagicBentoCard } from "@/components/MagicBento"
+import { ServiceVisual } from "@/components/service-visuals"
+import { navigate } from "@/router"
 import { useLang } from "@/i18n/language"
 
-const iconProps = {
-  width: 26,
-  height: 26,
-  viewBox: "0 0 24 24",
-  fill: "none",
-  stroke: "currentColor",
-  strokeWidth: 1.5,
-  strokeLinecap: "round" as const,
-  strokeLinejoin: "round" as const,
+type Variant = "accent" | "paper" | "dark"
+
+// Per-card background treatment, matched by index. A diagonal rhythm of
+// wine-gradient / paper / dark so no two identical cards sit adjacent, with the
+// lead service (Landing page design) carried on the accent card.
+const variants: Variant[] = ["accent", "paper", "dark", "paper", "accent", "dark"]
+
+type VariantStyle = {
+  card: CSSProperties
+  lead: string
+  tail: string
+  action: string
 }
 
-const icons = {
-  browser: (
-    <svg {...iconProps}>
-      <rect x="3" y="4" width="18" height="16" rx="2" />
-      <path d="M3 9h18" />
-      <circle cx="6.5" cy="6.5" r="0.5" fill="currentColor" />
-      <circle cx="9" cy="6.5" r="0.5" fill="currentColor" />
-    </svg>
-  ),
-  pen: (
-    <svg {...iconProps}>
-      <path d="M12 20h9" />
-      <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
-    </svg>
-  ),
-  storefront: (
-    <svg {...iconProps}>
-      <path d="M3 9l1.5-5h15L21 9" />
-      <path d="M3 9a2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0 5 0" />
-      <path d="M5 9v10h14V9" />
-      <path d="M9.5 19v-5h5v5" />
-    </svg>
-  ),
-  funnel: (
-    <svg {...iconProps}>
-      <path d="M4 4h16l-6 8v6l-4 2v-8z" />
-    </svg>
-  ),
-  audit: (
-    <svg {...iconProps}>
-      <circle cx="10.5" cy="10.5" r="6.5" />
-      <path d="m20 20-4.35-4.35" />
-      <path d="m8 10.5 1.8 1.8L13.5 8" />
-    </svg>
-  ),
-  palette: (
-    <svg {...iconProps}>
-      <path d="M12 21a9 9 0 1 1 0-18c4.5 0 8.5 3 8.5 6.5 0 2-1.5 3.5-3.5 3.5h-2a1.5 1.5 0 0 0-1 2.6c.4.4.6.9.6 1.4 0 1.1-1 2-2.6 2Z" />
-      <circle cx="7.5" cy="11.5" r="1" fill="currentColor" stroke="none" />
-      <circle cx="9.5" cy="7.5" r="1" fill="currentColor" stroke="none" />
-      <circle cx="14.5" cy="7" r="1" fill="currentColor" stroke="none" />
-    </svg>
-  ),
+const styles: Record<Variant, VariantStyle> = {
+  paper: {
+    card: {
+      background: "var(--color-paper)",
+      border: "1px solid var(--color-line-ink)",
+      boxShadow: "0 1px 2px rgba(120,20,50,0.05), 0 22px 44px -28px var(--color-shadow-wine)",
+    },
+    lead: "var(--color-ink-deep)",
+    tail: "var(--color-ink-soft)",
+    action: "var(--color-ink-soft)",
+  },
+  accent: {
+    card: {
+      background: "linear-gradient(135deg, var(--color-wine) 0%, var(--color-wine-deep) 100%)",
+      border: "1px solid rgba(255,255,255,0.14)",
+      boxShadow: "0 22px 48px -24px rgba(120,20,50,0.6)",
+    },
+    lead: "#ffffff",
+    tail: "rgba(255,255,255,0.72)",
+    action: "rgba(255,255,255,0.75)",
+  },
+  dark: {
+    card: {
+      background: "linear-gradient(140deg, var(--color-void-lighter) 0%, var(--color-void) 78%)",
+      border: "1px solid rgba(255,255,255,0.08)",
+      boxShadow: "0 22px 48px -24px rgba(120,20,50,0.5)",
+    },
+    lead: "var(--color-ink)",
+    tail: "var(--color-ink-muted)",
+    action: "var(--color-ink-muted)",
+  },
 }
-
-// Icon, keyword tags, and the featured flag are language-independent; the title
-// and description come from the dictionary, matched to this list by index.
-const serviceMeta = [
-  { icon: icons.browser, tags: ["UI/UX", "Responsive", "Figma"], featured: true },
-  { icon: icons.pen, tags: ["SEO", "Psychology", "A/B tested"] },
-  { icon: icons.storefront, tags: ["Fiverr SEO", "Social proof", "Trust signals"] },
-  { icon: icons.funnel, tags: ["Multi-page", "React", "CMS"] },
-  { icon: icons.audit, tags: ["Audit", "Optimisation", "CRO"] },
-  { icon: icons.palette, tags: ["Branding", "Logo", "Style guide"] },
-]
 
 export function Services() {
   const { ref, inView } = useSection()
@@ -87,76 +69,68 @@ export function Services() {
     >
       <div className="relative max-w-7xl mx-auto px-6">
         <motion.div
-          className="max-w-2xl mb-16"
+          className="max-w-2xl mb-14"
           variants={staggerContainer}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
         >
-          <motion.span variants={fadeUp} className="kicker mb-4">
-            {t.services.kicker}
-          </motion.span>
-          <motion.h2
-            variants={fadeUp}
-            className="font-serif leading-[1.05]"
-            style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.4rem)", color: "var(--color-ink-deep)", textWrap: "balance" }}
-          >
+          <motion.h2 variants={fadeUp} className="section-title" style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.4rem)" }}>
             {t.services.heading}
           </motion.h2>
         </motion.div>
 
-        <MagicBentoGrid
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-5"
+        <motion.div
+          className="grid md:grid-cols-2 gap-5"
           variants={staggerContainer}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
         >
-          {serviceMeta.map((s, i) => (
-            <MagicBentoCard
-              key={i}
-              className="group cursor-default flex flex-col justify-between p-7"
-              variants={fadeUp}
-              custom={i * 0.05}
-              whileHover={reduce ? undefined : { y: -6, transition: { duration: 0.25 } }}
-            >
-              <div>
-                <span
-                  className="inline-flex items-center justify-center w-12 h-12 rounded-xl mb-6 transition-transform duration-300 group-hover:scale-105"
-                  style={{
-                    background: s.featured ? "var(--color-wine)" : "var(--color-paper-2)",
-                    color: s.featured ? "#fff" : "var(--color-wine)",
-                    border: s.featured ? "none" : "1px solid var(--color-line-ink)",
-                  }}
+          {t.services.items.map((item, i) => {
+            const v = styles[variants[i]]
+            // First word carries the strong tone, the rest the muted tone —
+            // the reference's two-line title. Single-token titles (common in
+            // German) simply render one strong line.
+            const [leadWord, ...restWords] = item.title.split(" ")
+            const tailText = restWords.join(" ")
+            return (
+              <motion.a
+                key={i}
+                href="/#contact"
+                onClick={(e) => { e.preventDefault(); navigate("/#contact") }}
+                aria-label={`${item.title} — ${t.services.cardAction}`}
+                className="group relative flex flex-col justify-between overflow-hidden rounded-lg p-7 md:p-8 min-h-[13.5rem] md:min-h-[15rem] transition-transform duration-300"
+                style={v.card}
+                variants={fadeUp}
+                custom={i * 0.05}
+                whileHover={reduce ? undefined : { y: -6, transition: { duration: 0.25 } }}
+              >
+                {/* Glossy object, bleeding off the right edge (clipped by the card). */}
+                <div
+                  className="pointer-events-none absolute top-1/2 right-0 -translate-y-1/2 translate-x-[14%] w-[9.5rem] sm:w-[11.5rem] md:w-[13rem] transition-transform duration-500 group-hover:scale-[1.06]"
+                  aria-hidden="true"
                 >
-                  {s.icon}
-                </span>
-                <h3
-                  className={`font-serif mb-3 ${s.featured ? "text-2xl" : "text-xl"}`}
-                  style={{ color: "var(--color-ink-deep)" }}
-                >
-                  {t.services.items[i].title}
-                </h3>
-                <p className="text-base leading-relaxed mb-6" style={{ color: "var(--color-ink-soft)" }}>
-                  {t.services.items[i].desc}
-                </p>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {s.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="px-3 py-1 rounded-full text-xs font-medium"
-                    style={{
-                      background: "var(--color-paper-2)",
-                      color: "var(--color-wine)",
-                      border: "1px solid var(--color-line-ink)",
-                    }}
-                  >
-                    {tag}
+                  <ServiceVisual index={i} className="w-full h-auto" />
+                </div>
+
+                <div className="relative z-10 max-w-[60%]">
+                  <h3 className="font-body font-semibold leading-[1.04]" style={{ fontSize: "clamp(1.45rem, 2.3vw, 2rem)", letterSpacing: "-0.02em" }}>
+                    <span className="block" style={{ color: v.lead }}>{leadWord}</span>
+                    {tailText && <span className="block" style={{ color: v.tail }}>{tailText}</span>}
+                  </h3>
+                  <p className="mt-3 text-sm leading-relaxed line-clamp-2" style={{ color: v.tail }}>
+                    {item.desc}
+                  </p>
+                </div>
+
+                <div className="relative z-10 mt-6 flex items-center gap-3">
+                  <span className="text-[0.7rem] font-semibold uppercase tracking-[0.14em]" style={{ color: v.action }}>
+                    {t.services.cardAction}
                   </span>
-                ))}
-              </div>
-            </MagicBentoCard>
-          ))}
-        </MagicBentoGrid>
+                </div>
+              </motion.a>
+            )
+          })}
+        </motion.div>
       </div>
     </motion.section>
   )

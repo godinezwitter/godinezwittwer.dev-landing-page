@@ -7,7 +7,10 @@ const LanguageContext = createContext<LanguageValue | null>(null)
 
 const STORAGE_KEY = "gw-lang"
 
-function detectInitial(): Lang {
+/** Best guess at the active language from storage / browser preference.
+ * Exported for the ErrorBoundary, which renders above the provider and so
+ * cannot read the context. */
+export function detectInitial(): Lang {
   if (typeof window === "undefined") return "en"
   try {
     const saved = window.localStorage.getItem(STORAGE_KEY)

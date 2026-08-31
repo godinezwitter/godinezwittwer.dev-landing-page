@@ -61,21 +61,20 @@ function PinnedSlides() {
             style={{ background: "linear-gradient(to top, rgba(12,4,7,0.94) 0%, rgba(12,4,7,0.2) 45%, transparent 70%)" }}
           />
           <div className="absolute bottom-0 left-0 right-0 p-10 md:p-16 max-w-3xl">
-            <span
-              className="block text-xs font-semibold tracking-[0.16em] uppercase mb-2"
-              style={{ color: "var(--color-rose)" }}
-            >
-              {t.work.categories[i]}
-            </span>
-            <h3 className="font-serif mb-4" style={{ fontSize: "clamp(2rem, 4vw, 3.4rem)", color: "#fff" }}>
+            <h3 className="font-body mb-4" style={{ fontSize: "clamp(2rem, 4vw, 3.4rem)", color: "#fff" }}>
               {item.title}
             </h3>
-            <span
-              className="inline-block text-xs font-semibold uppercase tracking-[0.12em] px-3.5 py-1.5 rounded-full"
-              style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.25)", color: "#fff" }}
-            >
-              {t.work.tag}
-            </span>
+            <div className="flex flex-wrap items-center gap-3">
+              <span
+                className="inline-block text-xs font-semibold uppercase tracking-[0.12em] px-3.5 py-1.5 rounded-lg"
+                style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.25)", color: "#fff" }}
+              >
+                {t.work.tag}
+              </span>
+              <span className="text-sm" style={{ color: "rgba(255,255,255,0.7)" }}>
+                {t.work.categories[i]}
+              </span>
+            </div>
           </div>
         </div>
       ))}
@@ -108,18 +107,20 @@ function GridFallback() {
             style={{ background: "linear-gradient(to top, rgba(12,4,7,0.92) 0%, transparent 55%)" }}
           />
           <div className="absolute bottom-0 left-0 right-0 p-6">
-            <span className="block text-xs font-semibold tracking-[0.16em] uppercase mb-1" style={{ color: "var(--color-rose)" }}>
-              {t.work.categories[i]}
-            </span>
-            <h3 className="font-serif text-2xl mb-2" style={{ color: "#fff" }}>
+            <h3 className="font-body text-2xl mb-2" style={{ color: "#fff" }}>
               {item.title}
             </h3>
-            <span
-              className="text-xs font-semibold uppercase tracking-[0.12em] px-3 py-1 rounded-full"
-              style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.25)", color: "#fff" }}
-            >
-              {t.work.tag}
-            </span>
+            <div className="flex flex-wrap items-center gap-2.5">
+              <span
+                className="text-xs font-semibold uppercase tracking-[0.12em] px-3 py-1 rounded-lg"
+                style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.25)", color: "#fff" }}
+              >
+                {t.work.tag}
+              </span>
+              <span className="text-xs" style={{ color: "rgba(255,255,255,0.7)" }}>
+                {t.work.categories[i]}
+              </span>
+            </div>
           </div>
         </TiltCard>
       ))}
@@ -196,21 +197,20 @@ function PortfolioCarousel() {
                 style={{ background: "linear-gradient(to top, rgba(12,4,7,0.92) 0%, transparent 58%)" }}
               />
               <div className="absolute bottom-0 left-0 right-0 p-6">
-                <span
-                  className="block text-xs font-semibold tracking-[0.16em] uppercase mb-1"
-                  style={{ color: "var(--color-rose)" }}
-                >
-                  {t.work.categories[i]}
-                </span>
-                <h3 className="font-serif text-2xl mb-2" style={{ color: "#fff" }}>
+                <h3 className="font-body text-2xl mb-2" style={{ color: "#fff" }}>
                   {item.title}
                 </h3>
-                <span
-                  className="inline-block text-xs font-semibold uppercase tracking-[0.12em] px-3 py-1 rounded-full"
-                  style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.25)", color: "#fff" }}
-                >
-                  {t.work.tag}
-                </span>
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <span
+                    className="inline-block text-xs font-semibold uppercase tracking-[0.12em] px-3 py-1 rounded-lg"
+                    style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.25)", color: "#fff" }}
+                  >
+                    {t.work.tag}
+                  </span>
+                  <span className="text-xs" style={{ color: "rgba(255,255,255,0.7)" }}>
+                    {t.work.categories[i]}
+                  </span>
+                </div>
               </div>
             </motion.article>
           ))}
@@ -226,7 +226,7 @@ function PortfolioCarousel() {
             onClick={() => goTo(i)}
             aria-label={`Show ${item.title}`}
             aria-current={i === index}
-            className="h-2 rounded-full transition-all duration-300"
+            className="relative h-2 rounded-full transition-all duration-300 before:absolute before:content-[''] before:-inset-y-[18px] before:-inset-x-1"
             style={{
               width: i === index ? 22 : 8,
               background: i === index ? "var(--color-wine)" : "var(--color-line-ink)",
@@ -254,10 +254,9 @@ export function Portfolio() {
           transition={{ duration: 0.7 }}
         >
           <div>
-            <span className="kicker mb-3">{t.work.kicker}</span>
             <h2
-              className="font-serif leading-[1.05]"
-              style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.4rem)", color: "var(--color-ink-deep)", textWrap: "balance" }}
+              className="section-title"
+              style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.4rem)" }}
             >
               {t.work.heading}
             </h2>

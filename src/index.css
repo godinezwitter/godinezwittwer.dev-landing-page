@@ -30,6 +30,18 @@
   --font-serif: 'Fraunces', Georgia, 'Times New Roman', serif;
   --font-body: 'DM Sans', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* One tight corner everywhere — cards, panels, inputs, buttons, chips, the nav
+     all use the same 10px radius; every `rounded-*` utility resolves to it.
+     `rounded-full` is kept only for things that must read as circles: the
+     blurred glow blobs, check-icon badges, carousel indicator dots, and the
+     hamburger bars. */
+  --radius-sm: 0.625rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.625rem;
+  --radius-xl: 0.625rem;
+  --radius-2xl: 0.625rem;
+  --radius-3xl: 0.625rem;
 }
 
 html {
@@ -48,6 +60,36 @@ body {
   background-color: var(--color-paper);
   color: var(--color-ink-deep);
   -webkit-font-smoothing: antialiased;
+}
+
+/* Keyboard skip link — hidden until focused, then pinned top-left. */
+.skip-link {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 200;
+  margin: 0.5rem;
+  padding: 0.6rem 1rem;
+  border-radius: var(--radius-lg);
+  background: var(--color-wine);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transform: translateY(-160%);
+  transition: transform 0.18s ease;
+}
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+#main-content:focus {
+  outline: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .skip-link {
+    transition: none;
+  }
 }
 
 ::-webkit-scrollbar {
@@ -188,12 +230,6 @@ textarea {
 }
 
 /* --- Nav (spans both worlds: transparent over the dark hero, dark glass over light content). --- */
-.glass-nav {
-  background: rgba(18, 6, 10, 0.82);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border-bottom: 1px solid var(--color-line);
-}
 
 /* Floating pill nav — true glass (inner refraction edge + inset highlight) over a
    burgundy-tinted void, with a wine-tinted drop shadow. Reads on both worlds. */
@@ -222,6 +258,20 @@ textarea {
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--color-wine);
+}
+
+/* Shared display heading — the one typographic voice for every section title.
+   Fraunces at display sizes wants tight leading + a touch of negative tracking
+   and high optical size to read as intentional rather than set-in-a-word-processor.
+   Per-instance font-size stays inline (it varies section to section). */
+.section-title {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  line-height: 1.01;
+  letter-spacing: -0.021em;
+  color: var(--color-ink-deep);
+  font-optical-sizing: auto;
+  text-wrap: balance;
 }
 
 /* Raised light surface with a burgundy-tinted shadow (never flat black). */

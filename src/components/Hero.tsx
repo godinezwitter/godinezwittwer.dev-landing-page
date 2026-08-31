@@ -25,32 +25,58 @@ export function Hero() {
   const { t } = useLang()
   const rotatingWords = t.hero.rotating
   const [wordIndex, setWordIndex] = useState(0)
+  // The pinned two-scene scrub is a desktop-pointer affordance. On touch it's
+  // the exact GSAP-pinning jank the Portfolio carousel already sidesteps, and
+  // below `lg` there's no second column for it to reveal — so coarse pointers
+  // and narrow viewports get the static hero (same path reduced-motion takes).
+  const [coarseOrNarrow, setCoarseOrNarrow] = useState(
+    () => typeof window !== "undefined" && window.matchMedia("(pointer: coarse), (max-width: 1023px)").matches,
+  )
+  useEffect(() => {
+    const mq = window.matchMedia("(pointer: coarse), (max-width: 1023px)")
+    const update = () => setCoarseOrNarrow(mq.matches)
+    update()
+    mq.addEventListener("change", update)
+    return () => mq.removeEventListener("change", update)
+  }, [])
+  const runPinnedHero = !reduce && !coarseOrNarrow
+
   const pinRef = useRef<HTMLDivElement>(null)
   const scene1Ref = useRef<HTMLDivElement>(null)
   const transitionGlowRef = useRef<HTMLDivElement>(null)
+  const progressBarRef = useRef<HTMLDivElement>(null)
   const leftRef = useRef<HTMLDivElement>(null)
   const headlineRef = useRef<HTMLHeadingElement>(null)
   const rightRef = useRef<HTMLDivElement>(null)
   const progressRef = useRef(0)
 
   useLayoutEffect(() => {
-    if (reduce) return
+    if (!runPinnedHero) return
     const ctx = gsap.context(() => {
       const lines = headlineRef.current
         ? Array.from(headlineRef.current.querySelectorAll<HTMLElement>(".hero-line"))
         : []
 
+      // Scene 2 renders visible by default (so a failed/absent animation never
+      // leaves the hero blank or shifted); GSAP owns the hidden "from" state.
+      gsap.set(leftRef.current, { opacity: 0, x: -48 })
+      gsap.set(rightRef.current, { opacity: 0, x: 48 })
+      gsap.set(lines, { opacity: 0, y: 22, rotate: -2 })
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: pinRef.current,
           start: "top top",
-          end: () => `+=${window.innerHeight * 1.2}`,
+          end: () => `+=${window.innerHeight * 0.6}`,
           pin: true,
           scrub: 0.4,
           anticipatePin: 1,
           fastScrollEnd: true,
           onUpdate: (self) => {
             progressRef.current = self.progress
+            if (progressBarRef.current) {
+              progressBarRef.current.style.transform = `scaleX(${self.progress})`
+            }
           },
         },
       })
@@ -70,7 +96,7 @@ export function Hero() {
     }, pinRef)
 
     return () => ctx.revert()
-  }, [reduce])
+  }, [runPinnedHero])
 
   // Cycle the headline's last word. Reduced-motion users get a single static word.
   // Re-keyed on word count so switching language restarts cleanly.
@@ -105,12 +131,24 @@ export function Hero() {
       {/* 3D flower, scroll-driven */}
       <div className="absolute inset-0">
         <Suspense fallback={null}>
-          <FlowerScene progressRef={progressRef} />
+          <FlowerScene progressRef={progressRef} frozen={!runPinnedHero} />
         </Suspense>
       </div>
 
+      {/* Scroll-progress hairline for the pinned transition, so the scrub never
+          reads as a frozen page. */}
+      {runPinnedHero && (
+        <div className="absolute top-0 inset-x-0 h-[2px] z-20 pointer-events-none" style={{ background: "rgba(255,255,255,0.08)" }}>
+          <div
+            ref={progressBarRef}
+            className="h-full origin-left"
+            style={{ transform: "scaleX(0)", background: "linear-gradient(to right, var(--color-wine), var(--color-rose))" }}
+          />
+        </div>
+      )}
+
       {/* Scene 1: minimal intro — just the model and a scroll cue */}
-      {!reduce && (
+      {runPinnedHero && (
         <div ref={scene1Ref} className="absolute inset-0 flex flex-col items-center justify-end pb-14 pointer-events-none">
           <motion.div
             className="w-px h-12 rounded-full mb-2"
@@ -123,7 +161,7 @@ export function Hero() {
       )}
 
       {/* Transition wash — builds as scene 1 recedes, clears once scene 2 has settled in, softening the handoff into a veil instead of a cut */}
-      {!reduce && (
+      {runPinnedHero && (
         <div
           ref={transitionGlowRef}
           className="absolute inset-0 pointer-events-none"
@@ -138,29 +176,22 @@ export function Hero() {
       <div className="absolute inset-0 flex items-center">
         <div className="relative z-10 max-w-7xl mx-auto px-6 w-full">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div
-              ref={leftRef}
-              style={{ opacity: reduce ? 1 : 0, transform: reduce ? "none" : "translateX(-48px)" }}
-            >
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8">
-                <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: "var(--color-rose)" }} />
-                <span className="label-mono">{t.hero.badge}</span>
-              </div>
-
+            <div ref={leftRef}>
               <h1
                 ref={headlineRef}
-                className="font-display font-semibold leading-[1.08] mb-6"
-                style={{ fontSize: "clamp(2.4rem, 4.5vw, 4rem)", color: "var(--color-ink)" }}
+                className="font-display font-bold mb-6"
+                style={{ fontSize: "clamp(2.6rem, 5vw, 4.6rem)", lineHeight: 1.02, letterSpacing: "-0.03em", color: "var(--color-ink)" }}
+                // The headline is split into absolutely-stacked animated spans
+                // with no whitespace between them; give assistive tech one clean
+                // sentence instead of "engineered toconvert.".
+                aria-label={`${t.hero.line1} ${t.hero.line2} ${rotatingWords[wordIndex]}`}
               >
                 {[t.hero.line1, t.hero.line2].map((line) => (
                   <span
                     key={line}
+                    aria-hidden="true"
                     className="hero-line block"
-                    style={{
-                      opacity: reduce ? 1 : 0,
-                      transform: reduce ? "none" : "translateY(22px) rotate(-2deg)",
-                      transformOrigin: "left center",
-                    }}
+                    style={{ transformOrigin: "left center" }}
                   >
                     {line}
                   </span>
@@ -169,12 +200,11 @@ export function Hero() {
                     are stacked absolutely and cross-fade by toggling opacity, so the line height
                     stays fixed and no layout shifts as it cycles. */}
                 <span
+                  aria-hidden="true"
                   className="hero-line relative block"
                   style={{
                     color: "var(--color-rose)",
                     height: "1.15em",
-                    opacity: reduce ? 1 : 0,
-                    transform: reduce ? "none" : "translateY(22px) rotate(-2deg)",
                     transformOrigin: "left center",
                   }}
                 >
@@ -205,7 +235,7 @@ export function Hero() {
               <div className="flex flex-wrap gap-4">
                 <MagneticButton
                   href="#contact"
-                  className="px-8 py-3.5 rounded-full font-semibold text-sm"
+                  className="px-8 py-3.5 rounded-lg font-semibold text-sm"
                   style={{ background: "var(--color-rose)", color: "var(--color-void)" }}
                   whileHover={{ scale: 1.05 }}
                 >
@@ -213,9 +243,12 @@ export function Hero() {
                 </MagneticButton>
                 <MagneticButton
                   href="#work"
-                  className="px-8 py-3.5 rounded-full font-medium text-sm glass"
-                  style={{ color: "var(--color-ink)" }}
-                  whileHover={{ scale: 1.05, background: "rgba(255,255,255,0.1)" }}
+                  className="px-8 py-3.5 rounded-lg font-medium text-sm glass"
+                  // Dark scrim under the glass so the near-white label keeps
+                  // contrast over the flower's light petals, not just the
+                  // dark background.
+                  style={{ color: "var(--color-ink)", background: "rgba(12,4,7,0.42)" }}
+                  whileHover={{ scale: 1.05, background: "rgba(12,4,7,0.58)" }}
                 >
                   {t.hero.ctaSecondary}
                 </MagneticButton>
@@ -223,11 +256,7 @@ export function Hero() {
             </div>
 
             {/* Right: proven-results readout, floating over the flower/background */}
-            <div
-              ref={rightRef}
-              className="hidden lg:flex justify-end"
-              style={{ opacity: reduce ? 1 : 0, transform: reduce ? "none" : "translateX(48px)" }}
-            >
+            <div ref={rightRef} className="hidden lg:flex justify-end">
               <div className="glass-dark lab-panel rounded-2xl p-6 w-full max-w-xs">
                 <p className="label-mono mb-5">{t.hero.panelTitle}</p>
                 <div className="flex flex-col gap-4">

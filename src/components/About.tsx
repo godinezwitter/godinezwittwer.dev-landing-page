@@ -1,5 +1,4 @@
 import { motion, useReducedMotion } from "framer-motion"
-import { useSection } from "@/hooks/useSection"
 import { fadeUp, staggerContainer, wipeReveal } from "@/lib/motion"
 import { ScrollRevealText } from "@/components/ScrollRevealText"
 import { useLang } from "@/i18n/language"
@@ -22,18 +21,20 @@ const founders = [
 ]
 
 export function About() {
-  const { ref, inView } = useSection()
   const reduce = useReducedMotion()
   const { t } = useLang()
 
+  // About is its own page now, always sitting at the very top of the viewport —
+  // there's nothing to scroll it into view, so it reveals on mount rather than
+  // being gated behind a scroll-triggered IntersectionObserver (which would
+  // never fire, leaving the whole page blank).
   return (
     <motion.section
-      ref={ref}
       id="about"
       className="relative py-28"
       variants={reduce ? undefined : wipeReveal}
       initial={reduce ? false : "hidden"}
-      animate={inView ? "visible" : "hidden"}
+      animate="visible"
     >
       <div className="relative max-w-7xl mx-auto px-6">
         {/* Intro */}
@@ -41,27 +42,25 @@ export function About() {
           className="max-w-3xl mb-16"
           variants={staggerContainer}
           initial="hidden"
-          animate={inView ? "visible" : "hidden"}
+          animate="visible"
         >
-          <motion.span variants={fadeUp} className="kicker mb-5">
-            {t.about.kicker}
-          </motion.span>
-          <motion.h2
+          <motion.h1
             variants={fadeUp}
-            className="font-serif leading-[1.05] mb-7"
-            style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", color: "var(--color-ink-deep)", textWrap: "balance" }}
+            className="section-title mb-7"
+            style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)" }}
           >
             {t.about.headingPre}
             <em className="not-italic" style={{ color: "var(--color-wine)" }}>
               {t.about.headingEm}
             </em>
-          </motion.h2>
+          </motion.h1>
           <ScrollRevealText
             key={t.about.intro}
             text={t.about.intro}
             className="text-lg leading-relaxed max-w-[64ch]"
             fromColor="#cabdb4"
             toColor="#3a2b30"
+            immediate
           />
         </motion.div>
 
@@ -70,7 +69,7 @@ export function About() {
           className="grid md:grid-cols-2 gap-6"
           variants={staggerContainer}
           initial="hidden"
-          animate={inView ? "visible" : "hidden"}
+          animate="visible"
         >
           {founders.map((f, i) => (
             <motion.div
@@ -81,7 +80,7 @@ export function About() {
             >
               <div className="flex items-center gap-5 mb-6">
                 <div
-                  className="w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 font-mono font-semibold"
+                  className="w-16 h-16 rounded-lg flex items-center justify-center shrink-0 font-mono font-semibold"
                   style={{
                     background: "var(--color-paper-2)",
                     border: "1px solid var(--color-line-ink)",
@@ -93,9 +92,9 @@ export function About() {
                   {f.initials}
                 </div>
                 <div>
-                  <h3 className="font-serif text-2xl mb-1" style={{ color: "var(--color-ink-deep)" }}>
+                  <h2 className="font-body text-2xl mb-1" style={{ color: "var(--color-ink-deep)" }}>
                     {f.name}
-                  </h3>
+                  </h2>
                   <p
                     className="font-mono text-xs uppercase tracking-wider"
                     style={{ color: "var(--color-wine)" }}
@@ -108,7 +107,7 @@ export function About() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={`${f.name} ${t.about.linkedin}`}
-                  className="ml-auto self-start w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors"
+                  className="ml-auto self-start w-10 h-10 rounded-lg flex items-center justify-center shrink-0 transition-colors"
                   style={{ background: "var(--color-paper-2)", border: "1px solid var(--color-line-ink)", color: "var(--color-wine)" }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.background = "var(--color-wine)"
@@ -131,10 +130,10 @@ export function About() {
                 {f.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="px-3 py-1 rounded-full text-xs font-medium"
+                    className="px-3 py-1 rounded-lg text-xs font-medium"
                     style={{
                       background: "var(--color-paper-2)",
-                      color: "var(--color-wine)",
+                      color: "var(--color-wine-deep)",
                       border: "1px solid var(--color-line-ink)",
                     }}
                   >

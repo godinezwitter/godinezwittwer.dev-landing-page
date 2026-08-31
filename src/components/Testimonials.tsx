@@ -1,22 +1,32 @@
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
-import { useState, type FormEvent } from "react"
+import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion"
+import { lazy, Suspense, useRef, useState, type FormEvent } from "react"
 import { useSection } from "@/hooks/useSection"
 import { wipeReveal } from "@/lib/motion"
 import { MagneticButton } from "@/components/MagneticButton"
-import { SilkBackground } from "@/components/Silk"
+
+// Silk pulls in the three.js / react-three-fiber stack. Load it lazily so that
+// weight stays out of the initial bundle — the static wash covers the gap until
+// the chunk lands.
+const SilkBackground = lazy(() =>
+  import("@/components/Silk").then((m) => ({ default: m.SilkBackground })),
+)
 import { CheckIcon } from "@/components/icons"
+import { Footer } from "@/components/Footer"
 import { useLang } from "@/i18n/language"
 
 export function Testimonials() {
   const { ref, inView } = useSection()
   const reduce = useReducedMotion()
-  const { t, lang } = useLang()
-  // Serve the language-matched legal stub (…de.html for German, …html for English).
-  const legalSuffix = lang === "de" ? ".de.html" : ".html"
+  const { t } = useLang()
+  // Once the contact card is on screen, still the ambient silk so nothing moves
+  // behind the form while the visitor is filling it in.
+  const contactRef = useRef<HTMLDivElement>(null)
+  const contactInView = useInView(contactRef, { margin: "-25% 0px" })
   const [activeForm, setActiveForm] = useState<{ name: string; email: string; service: string; message: string }>({
     name: "", email: "", service: "", message: "",
   })
   const [errors, setErrors] = useState<{ name?: string; email?: string }>({})
+  const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
 
   const validate = () => {
@@ -29,10 +39,17 @@ export function Testimonials() {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
+    if (submitting) return
     const found = validate()
     setErrors(found)
     if (Object.keys(found).length > 0) return
-    setSubmitted(true)
+    // Simulate the network round-trip so the button always shows real pending
+    // feedback; swap this for the actual submit call when the backend lands.
+    setSubmitting(true)
+    window.setTimeout(() => {
+      setSubmitting(false)
+      setSubmitted(true)
+    }, 1100)
   }
 
   return (
@@ -44,7 +61,9 @@ export function Testimonials() {
       initial={reduce ? false : "hidden"}
       animate={inView ? "visible" : "hidden"}
     >
-      <SilkBackground />
+      <Suspense fallback={null}>
+        <SilkBackground pauseAnimation={contactInView} />
+      </Suspense>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6">
         <motion.div
@@ -53,10 +72,9 @@ export function Testimonials() {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7 }}
         >
-          <span className="kicker mb-3">{t.why.kicker}</span>
           <h2
-            className="font-serif leading-[1.05] mb-5"
-            style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.4rem)", color: "var(--color-ink-deep)", textWrap: "balance" }}
+            className="section-title mb-5"
+            style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.4rem)" }}
           >
             {t.why.heading}
           </h2>
@@ -65,32 +83,37 @@ export function Testimonials() {
           </p>
         </motion.div>
 
-        {/* Honest reasons — no fabricated social proof. */}
-        <div className="grid md:grid-cols-3 gap-6 mb-10">
+        {/* Honest reasons — no fabricated social proof. An editorial numbered
+            list rather than three identical cards: the big wine numerals and
+            hairline rows read as a considered argument, not a feature grid. */}
+        <ol className="mb-16 border-t" style={{ borderColor: "var(--color-line-ink)" }}>
           {t.why.reasons.map((r, i) => (
-            <motion.div
+            <motion.li
               key={r.n}
-              className="surface rounded-3xl p-8 flex flex-col"
-              initial={{ opacity: 0, y: 40 }}
+              className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 md:gap-x-12 py-8 md:py-10 border-b"
+              style={{ borderColor: "var(--color-line-ink)" }}
+              initial={{ opacity: 0, y: 24 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.12 * i }}
-              whileHover={{ y: -4, transition: { duration: 0.2 } }}
+              transition={{ duration: 0.6, delay: 0.1 * i }}
             >
-              <div
-                className="font-serif font-semibold mb-5 tabular-nums"
-                style={{ fontSize: "1.6rem", lineHeight: 1, color: "var(--color-wine)" }}
+              <span
+                className="font-body font-semibold tabular-nums leading-none"
+                style={{ fontSize: "clamp(2.4rem, 5vw, 3.6rem)", color: "var(--color-wine)", letterSpacing: "-0.02em" }}
+                aria-hidden="true"
               >
                 {r.n}
+              </span>
+              <div className="max-w-2xl self-center">
+                <h3 className="font-body mb-2" style={{ fontSize: "clamp(1.35rem, 2.4vw, 1.75rem)" }}>
+                  {r.title}
+                </h3>
+                <p className="text-base md:text-lg leading-relaxed" style={{ color: "var(--color-ink-soft)" }}>
+                  {r.desc}
+                </p>
               </div>
-              <h3 className="font-serif text-xl mb-3" style={{ color: "var(--color-ink-deep)" }}>
-                {r.title}
-              </h3>
-              <p className="text-base leading-relaxed" style={{ color: "var(--color-ink-soft)" }}>
-                {r.desc}
-              </p>
-            </motion.div>
+            </motion.li>
           ))}
-        </div>
+        </ol>
 
         <motion.div
           className="flex flex-wrap gap-3 mb-24"
@@ -101,7 +124,7 @@ export function Testimonials() {
           {t.why.proofPoints.map((p) => (
             <span
               key={p}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm"
               style={{
                 background: "var(--color-paper-2)",
                 border: "1px solid var(--color-line-ink)",
@@ -116,6 +139,7 @@ export function Testimonials() {
         {/* CTA + Contact form */}
         <motion.div
           id="contact"
+          ref={contactRef}
           className="surface rounded-3xl overflow-hidden"
           initial={{ opacity: 0, y: 40 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -129,10 +153,9 @@ export function Testimonials() {
             />
             <div className="relative grid lg:grid-cols-2 gap-12 items-center">
               <div>
-                <span className="kicker mb-4">{t.contact.kicker}</span>
                 <h2
-                  className="font-serif leading-[1.05] mb-5"
-                  style={{ fontSize: "clamp(1.9rem, 3.5vw, 2.8rem)", color: "var(--color-ink-deep)", textWrap: "balance" }}
+                  className="section-title mb-5"
+                  style={{ fontSize: "clamp(1.9rem, 3.5vw, 2.8rem)" }}
                 >
                   {t.contact.heading}
                 </h2>
@@ -174,7 +197,7 @@ export function Testimonials() {
                       >
                         <CheckIcon size={26} />
                       </span>
-                      <p className="font-serif text-2xl mb-2" style={{ color: "var(--color-ink-deep)" }}>
+                      <p className="font-body text-2xl mb-2" style={{ color: "var(--color-ink-deep)" }}>
                         {t.contact.successTitle}{activeForm.name ? `, ${activeForm.name.split(" ")[0]}` : ""}
                       </p>
                       <p className="text-sm leading-relaxed max-w-xs" style={{ color: "var(--color-ink-soft)" }}>
@@ -252,14 +275,37 @@ export function Testimonials() {
                           style={{ background: "var(--color-paper)", color: "var(--color-ink-deep)" }}
                         />
                       </div>
+                      {/* The one true conversion control — the highest-contrast
+                          element in the panel so it never reads as another input
+                          field. Shows real pending feedback while submitting. */}
                       <MagneticButton
                         as="button"
                         type="submit"
-                        className="w-full py-3.5 rounded-xl font-semibold text-sm mt-1"
-                        style={{ background: "var(--color-wine)", color: "#fff" }}
+                        disabled={submitting}
+                        aria-busy={submitting}
+                        className="w-full py-4 rounded-lg font-semibold text-sm mt-3 inline-flex items-center justify-center gap-2 disabled:cursor-progress"
+                        style={{
+                          background: "var(--color-wine)",
+                          color: "#fff",
+                          boxShadow: "0 12px 28px -12px rgba(184,48,92,0.55)",
+                          opacity: submitting ? 0.85 : 1,
+                        }}
                         whileHover={{ scale: 1.02 }}
                       >
-                        {t.contact.submit}
+                        {submitting && (
+                          <svg
+                            className="animate-spin motion-reduce:animate-none"
+                            width="15"
+                            height="15"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            aria-hidden="true"
+                          >
+                            <circle cx="12" cy="12" r="9" stroke="currentColor" strokeOpacity="0.35" strokeWidth="3" />
+                            <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                          </svg>
+                        )}
+                        {submitting ? t.contact.submitting : t.contact.submit}
                       </MagneticButton>
                     </motion.form>
                   )}
@@ -271,33 +317,7 @@ export function Testimonials() {
       </div>
 
       {/* Footer */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 mt-16 pt-8 flex flex-col md:flex-row items-center justify-between gap-4"
-        style={{ borderTop: "1px solid var(--color-line-ink)" }}>
-        <span className="font-display text-lg tracking-tight" style={{ color: "var(--color-ink-deep)" }}>
-          Godinez <span style={{ color: "var(--color-wine)" }}>&amp; Wittwer</span>
-        </span>
-        <p className="text-xs" style={{ color: "var(--color-ink-soft)" }}>
-          {t.footer.copyright}
-        </p>
-        <div className="flex gap-6">
-          {[
-            { label: t.footer.privacy, href: `/privacy${legalSuffix}` },
-            { label: t.footer.terms, href: `/terms${legalSuffix}` },
-            { label: t.footer.contact, href: "#contact" },
-          ].map((l) => (
-            <a
-              key={l.label}
-              href={l.href}
-              className="text-xs transition-colors"
-              style={{ color: "var(--color-ink-soft)" }}
-              onMouseEnter={(e) => ((e.target as HTMLElement).style.color = "var(--color-wine)")}
-              onMouseLeave={(e) => ((e.target as HTMLElement).style.color = "var(--color-ink-soft)")}
-            >
-              {l.label}
-            </a>
-          ))}
-        </div>
-      </div>
+      <Footer />
     </motion.section>
   )
 }
