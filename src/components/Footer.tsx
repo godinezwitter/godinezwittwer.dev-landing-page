@@ -1,18 +1,18 @@
 import { useLang } from "@/i18n/language"
 import { navigate } from "@/router"
+import { legalPath } from "@/legalRoutes"
 
 /** Site footer — brand wordmark, copyright, and legal/contact links. Shown on
- * every page. The legal stubs are static .html files served language-matched
- * (…de.html for German); Contact routes back to the main page's contact form. */
+ * every page. The legal pages are routed like any other view, at their
+ * language-native paths (German gets /agb + /datenschutz); Contact routes back
+ * to the main page's contact form. */
 export function Footer() {
   const { t, lang } = useLang()
-  // Serve the language-matched legal stub (…de.html for German, …html for English).
-  const legalSuffix = lang === "de" ? ".de.html" : ".html"
 
   const links = [
-    { label: t.footer.privacy, href: `/privacy${legalSuffix}` },
-    { label: t.footer.terms, href: `/terms${legalSuffix}` },
-    { label: t.footer.contact, href: "/#contact", route: true },
+    { label: t.footer.privacy, href: legalPath("privacy", lang) },
+    { label: t.footer.terms, href: legalPath("terms", lang) },
+    { label: t.footer.contact, href: "/#contact" },
   ]
 
   return (
@@ -31,7 +31,7 @@ export function Footer() {
           <a
             key={l.label}
             href={l.href}
-            onClick={l.route ? (e) => { e.preventDefault(); navigate(l.href) } : undefined}
+            onClick={(e) => { e.preventDefault(); navigate(l.href) }}
             className="text-xs transition-colors py-2.5 -my-2.5"
             style={{ color: "var(--color-ink-soft)" }}
             onMouseEnter={(e) => ((e.target as HTMLElement).style.color = "var(--color-wine)")}

@@ -157,10 +157,136 @@ const en = {
     terms: "Terms",
     contact: "Contact",
   },
+  /* The two legal documents. Each section renders as: heading, `body`
+     paragraphs, an optional `list`, then any `tail` paragraphs — the shape the
+     existing copy actually needs. The closing contact block is split around its
+     inline link so the sentence stays translatable. */
+  legal: {
+    kicker: "Legal",
+    back: "Back to homepage",
+    updated: "Last updated: 29 August 2026",
+    note: "This is a template stub. Review it with a legal advisor and replace the placeholder details with your own before relying on it in production.",
+    terms: {
+      title: "Terms of Service",
+      intro:
+        "These terms cover your use of the Godinez & Wittwer website and the landing-page design and copywriting services we provide. By hiring us or using this site, you agree to them.",
+      sections: [
+        {
+          heading: "Our services",
+          body: [
+            "Godinez & Wittwer designs and writes landing pages for Fiverr sellers and buyers. The exact scope, timeline, and price for your project are agreed in writing before work begins.",
+          ],
+          list: [],
+          tail: [],
+        },
+        {
+          heading: "Revisions and delivery",
+          body: [
+            "Each project includes two rounds of revisions unless stated otherwise. Delivery timelines are estimates and depend on receiving the content and feedback we need from you on time.",
+          ],
+          list: [],
+          tail: [],
+        },
+        {
+          heading: "Payment",
+          body: [
+            "Fees, deposits, and payment schedules are set out in your project agreement. Work starts once the agreed deposit is received.",
+          ],
+          list: [],
+          tail: [],
+        },
+        {
+          heading: "Refunds",
+          body: [
+            "If you are not satisfied after the two included revision rounds, you are eligible for a full refund as described on our homepage. Refund requests should be made in writing.",
+          ],
+          list: [],
+          tail: [],
+        },
+        {
+          heading: "Ownership",
+          body: [
+            "Once the project is paid in full, the final delivered page and its copy are yours to use. We may show non-confidential work in our portfolio unless you ask us not to.",
+          ],
+          list: [],
+          tail: [],
+        },
+        {
+          heading: "Limitation of liability",
+          body: [
+            "We deliver our work with care, but we cannot guarantee specific business outcomes such as sales or ranking. Our liability is limited to the amount you paid for the project.",
+          ],
+          list: [],
+          tail: [],
+        },
+      ],
+      contact: {
+        heading: "Contact",
+        before: "Questions about these terms? Reach us through the ",
+        link: "contact form",
+        after: " on our homepage.",
+      },
+    },
+    privacy: {
+      title: "Privacy Policy",
+      intro:
+        "This policy explains what information Godinez & Wittwer collects when you use our website or contact us about a landing-page project, and how we handle it.",
+      sections: [
+        {
+          heading: "Information we collect",
+          body: ["When you submit the project brief form, we collect the details you provide:"],
+          list: [
+            "Your name and email address",
+            "The Fiverr category or service you sell",
+            "Anything you write in the message field about your project",
+          ],
+          tail: [
+            "We also collect basic, non-identifying analytics about how visitors use the site, such as pages viewed and general location, to improve the experience.",
+          ],
+        },
+        {
+          heading: "How we use your information",
+          body: [],
+          list: [
+            "To reply to your enquiry with a strategy and quote",
+            "To deliver and support the work you hire us for",
+            "To improve our website and services",
+          ],
+          tail: [
+            "We do not sell your personal information, and we do not share it except as needed to deliver your project.",
+          ],
+        },
+        {
+          heading: "Data retention",
+          body: [
+            "We keep enquiry details only as long as needed to respond and, if you become a client, to complete and support your project. You can ask us to delete your information at any time.",
+          ],
+          list: [],
+          tail: [],
+        },
+        {
+          heading: "Your choices",
+          body: [
+            "You can request access to, correction of, or deletion of the information we hold about you by contacting us. We will respond within a reasonable time.",
+          ],
+          list: [],
+          tail: [],
+        },
+      ],
+      contact: {
+        heading: "Contact",
+        before: "Questions about this policy? Reach us through the ",
+        link: "contact form",
+        after: " on our homepage.",
+      },
+    },
+  },
   meta: {
     titleHome: "Godinez & Wittwer — Landing Pages & Websites, Engineered",
     titleAbout: "About — Godinez & Wittwer",
     titleNotFound: "Page not found — Godinez & Wittwer",
+    titleTerms: "Terms of Service — Godinez & Wittwer",
+    titlePrivacy: "Privacy Policy — Godinez & Wittwer",
   },
   error: {
     title: "Something went wrong.",
@@ -331,10 +457,136 @@ const de: Content = {
     terms: "AGB",
     contact: "Kontakt",
   },
+  legal: {
+    kicker: "Rechtliches",
+    back: "Zurück zur Startseite",
+    updated: "Zuletzt aktualisiert: 29. August 2026",
+    note: "Dies ist eine Vorlage. Lass sie von einer Rechtsberatung prüfen und ersetze die Platzhalter durch deine eigenen Angaben, bevor du dich im Produktivbetrieb darauf verlässt.",
+    terms: {
+      /* ­ is a soft hyphen. The German titles are compound nouns too long
+         for the page's title rail, and browser auto-hyphenation needs a German
+         dictionary we can't count on — so the compound seams are marked
+         explicitly. They are invisible unless the line actually breaks. */
+      title: "Allgemeine Geschäfts­bedingungen",
+      intro:
+        "Diese Bedingungen regeln die Nutzung der Website von Godinez & Wittwer sowie die von uns angebotenen Landingpage-Design- und Textleistungen. Indem du uns beauftragst oder diese Website nutzt, stimmst du ihnen zu.",
+      sections: [
+        {
+          heading: "Unsere Leistungen",
+          body: [
+            "Godinez & Wittwer gestaltet und textet Landingpages für Fiverr-Anbieter und -Käufer. Der genaue Umfang, Zeitplan und Preis für dein Projekt werden vor Beginn schriftlich vereinbart.",
+          ],
+          list: [],
+          tail: [],
+        },
+        {
+          heading: "Überarbeitungen und Lieferung",
+          body: [
+            "Jedes Projekt umfasst zwei Überarbeitungsrunden, sofern nicht anders angegeben. Lieferfristen sind Schätzungen und hängen davon ab, dass wir die benötigten Inhalte und dein Feedback rechtzeitig erhalten.",
+          ],
+          list: [],
+          tail: [],
+        },
+        {
+          heading: "Zahlung",
+          body: [
+            "Honorare, Anzahlungen und Zahlungspläne sind in deiner Projektvereinbarung festgelegt. Die Arbeit beginnt, sobald die vereinbarte Anzahlung eingegangen ist.",
+          ],
+          list: [],
+          tail: [],
+        },
+        {
+          heading: "Rückerstattungen",
+          body: [
+            "Wenn du nach den zwei enthaltenen Überarbeitungsrunden nicht zufrieden bist, hast du Anspruch auf eine vollständige Rückerstattung, wie auf unserer Startseite beschrieben. Rückerstattungsanfragen sind schriftlich zu stellen.",
+          ],
+          list: [],
+          tail: [],
+        },
+        {
+          heading: "Eigentum",
+          body: [
+            "Sobald das Projekt vollständig bezahlt ist, gehören die final gelieferte Seite und ihre Texte dir. Wir dürfen nicht vertrauliche Arbeiten in unserem Portfolio zeigen, sofern du dem nicht widersprichst.",
+          ],
+          list: [],
+          tail: [],
+        },
+        {
+          heading: "Haftungsbeschränkung",
+          body: [
+            "Wir liefern unsere Arbeit mit Sorgfalt, können aber bestimmte geschäftliche Ergebnisse wie Verkäufe oder Rankings nicht garantieren. Unsere Haftung ist auf den von dir für das Projekt gezahlten Betrag beschränkt.",
+          ],
+          list: [],
+          tail: [],
+        },
+      ],
+      contact: {
+        heading: "Kontakt",
+        before: "Fragen zu diesen Bedingungen? Erreiche uns über das ",
+        link: "Kontaktformular",
+        after: " auf unserer Startseite.",
+      },
+    },
+    privacy: {
+      title: "Datenschutz­erklärung",
+      intro:
+        "Diese Erklärung beschreibt, welche Informationen Godinez & Wittwer erfasst, wenn du unsere Website nutzt oder uns wegen eines Landingpage-Projekts kontaktierst, und wie wir damit umgehen.",
+      sections: [
+        {
+          heading: "Welche Informationen wir erfassen",
+          body: ["Wenn du das Projekt-Briefing-Formular absendest, erfassen wir die von dir angegebenen Daten:"],
+          list: [
+            "Deinen Namen und deine E-Mail-Adresse",
+            "Die Fiverr-Kategorie oder Dienstleistung, die du anbietest",
+            "Alles, was du im Nachrichtenfeld über dein Projekt schreibst",
+          ],
+          tail: [
+            "Ausserdem erfassen wir grundlegende, nicht personenbezogene Analysedaten darüber, wie Besucher die Website nutzen — etwa aufgerufene Seiten und ungefähren Standort —, um das Erlebnis zu verbessern.",
+          ],
+        },
+        {
+          heading: "Wie wir deine Informationen verwenden",
+          body: [],
+          list: [
+            "Um auf deine Anfrage mit einer Strategie und einem Angebot zu antworten",
+            "Um die von dir beauftragte Arbeit zu liefern und zu betreuen",
+            "Um unsere Website und Dienste zu verbessern",
+          ],
+          tail: [
+            "Wir verkaufen deine personenbezogenen Daten nicht und geben sie nur weiter, soweit es zur Umsetzung deines Projekts nötig ist.",
+          ],
+        },
+        {
+          heading: "Speicherdauer",
+          body: [
+            "Wir bewahren Anfragedaten nur so lange auf, wie es zur Beantwortung nötig ist — und, falls du Kunde wirst, zur Umsetzung und Betreuung deines Projekts. Du kannst jederzeit die Löschung deiner Daten verlangen.",
+          ],
+          list: [],
+          tail: [],
+        },
+        {
+          heading: "Deine Rechte",
+          body: [
+            "Du kannst Auskunft über die zu dir gespeicherten Daten sowie deren Berichtigung oder Löschung verlangen, indem du uns kontaktierst. Wir antworten innerhalb einer angemessenen Frist.",
+          ],
+          list: [],
+          tail: [],
+        },
+      ],
+      contact: {
+        heading: "Kontakt",
+        before: "Fragen zu dieser Erklärung? Erreiche uns über das ",
+        link: "Kontaktformular",
+        after: " auf unserer Startseite.",
+      },
+    },
+  },
   meta: {
     titleHome: "Godinez & Wittwer — Landingpages & Websites, sauber gebaut",
     titleAbout: "Über uns — Godinez & Wittwer",
     titleNotFound: "Seite nicht gefunden — Godinez & Wittwer",
+    titleTerms: "AGB — Godinez & Wittwer",
+    titlePrivacy: "Datenschutzerklärung — Godinez & Wittwer",
   },
   error: {
     title: "Etwas ist schiefgelaufen.",
