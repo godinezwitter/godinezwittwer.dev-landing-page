@@ -1,0 +1,63 @@
+/* Magic Bento — adapted from React Bits, stripped to its restrained core for the
+   warm paper theme: a faint cursor-following spotlight in the grid gaps and a
+   proximity-driven border ring on each card. No particles, tilt, or ripple. */
+
+.magic-bento {
+  position: relative;
+}
+
+/* Soft wine pool that follows the cursor. Cards are opaque paper, so it reads
+   mostly in the gaps between them — the quiet signature of the effect. */
+.magic-bento__spotlight {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    300px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+    rgba(184, 48, 92, 0.05),
+    transparent 70%
+  );
+  opacity: var(--spot-o, 0);
+  transition: opacity 0.5s ease;
+}
+
+.magic-card {
+  position: relative;
+  z-index: 1;
+  background: var(--color-paper);
+  border: 1px solid var(--color-line-ink);
+  border-radius: 0.625rem;
+  box-shadow: 0 1px 2px rgba(120, 20, 50, 0.05), 0 18px 40px -24px var(--color-shadow-wine);
+  /* transform is owned by Framer (whileHover); only tint transitions live here. */
+  transition: box-shadow 0.35s ease, border-color 0.35s ease;
+}
+
+/* Border ring that lights up wine near the cursor, masked to the 1px edge. */
+.magic-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: radial-gradient(
+    220px circle at var(--glow-x, 50%) var(--glow-y, 50%),
+    var(--color-wine),
+    transparent 60%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: var(--glow-intensity, 0);
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+/* Reduced motion: hold the resting state — no spotlight, no cursor ring. */
+@media (prefers-reduced-motion: reduce) {
+  .magic-bento__spotlight,
+  .magic-card::after {
+    display: none;
+  }
+}

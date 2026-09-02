@@ -7,7 +7,7 @@ useGLTF.preload("/models/flower.glb")
 
 /** Cheap synthetic studio IBL so the model's PBR materials don't render flat/dark. */
 function StudioEnvironment() {
-  const { gl, scene } = useThree()
+  const { gl, scene, invalidate } = useThree()
 
   useEffect(() => {
     const canvas = document.createElement("canvas")
@@ -32,12 +32,13 @@ function StudioEnvironment() {
 
     tex.dispose()
     pmrem.dispose()
+    invalidate() // paint the lighting change when the loop is on demand
 
     return () => {
       envMap.dispose()
       scene.environment = null
     }
-  }, [gl, scene])
+  }, [gl, scene, invalidate])
 
   return null
 }
@@ -51,7 +52,7 @@ function StudioEnvironment() {
 const BASE_FOV_DEG = 38
 
 function ResponsiveCamera() {
-  const { camera, size } = useThree()
+  const { camera, size, invalidate } = useThree()
 
   useEffect(() => {
     const aspect = size.width / size.height
@@ -61,18 +62,21 @@ function ResponsiveCamera() {
     const cam = camera as THREE.PerspectiveCamera
     cam.fov = (vFovRad * 180) / Math.PI
     cam.updateProjectionMatrix()
-  }, [camera, size])
+    invalidate() // repaint on resize when the loop is on demand
+  }, [camera, size, invalidate])
 
   return null
 }
 
 type FlowerModelProps = {
   progressRef: React.RefObject<number>
+  frozen?: boolean
 }
 
 /** Rotation/position/scale are a pure function of scroll progress (0 when unset, e.g. reduced motion) — no ambient idle animation. Renders the model's own textured materials as-is (no glass override). */
-function FlowerModel({ progressRef }: FlowerModelProps) {
+function FlowerModel({ progressRef, frozen }: FlowerModelProps) {
   const { scene } = useGLTF("/models/flower.glb")
+  const invalidate = useThree((s) => s.invalidate)
   const wrapperRef = useRef<THREE.Group>(null)
 
   useLayoutEffect(() => {
@@ -85,11 +89,12 @@ function FlowerModel({ progressRef }: FlowerModelProps) {
     const scale = 2.0 / maxDim
     scene.scale.setScalar(scale)
     scene.position.set(-center.x * scale, -center.y * scale, -center.z * scale)
-  }, [scene])
+    invalidate() // paint the fitted model when the loop is on demand
+  }, [scene, invalidate])
 
   useFrame(() => {
     const wrapper = wrapperRef.current
-    if (!wrapper) return
+    if (!wrapper || frozen) return
     const p = progressRef.current
     wrapper.rotation.y = p * Math.PI * 2.2
     wrapper.position.y = -p * 0.9
@@ -106,16 +111,22 @@ function FlowerModel({ progressRef }: FlowerModelProps) {
 
 type FlowerSceneProps = {
   progressRef: React.RefObject<number>
+  /** No scroll scrub is driving the model (reduced motion, or the static
+   * mobile hero): render the resting pose once instead of spinning the GPU
+   * on a permanent render loop. */
+  frozen?: boolean
 }
 
 /** Full-bleed transparent canvas rendering the flower model, driven entirely by scroll progress. */
-export function FlowerScene({ progressRef }: FlowerSceneProps) {
+export function FlowerScene({ progressRef, frozen = false }: FlowerSceneProps) {
   return (
     <Canvas
       className="!absolute inset-0"
+      frameloop={frozen ? "demand" : "always"}
       gl={{ alpha: true, antialias: true }}
       camera={{ position: [0, 0, 5], fov: BASE_FOV_DEG }}
       dpr={[1, 2]}
+      onCreated={({ invalidate }) => invalidate()}
     >
       <ResponsiveCamera />
       <StudioEnvironment />
@@ -123,7 +134,7 @@ export function FlowerScene({ progressRef }: FlowerSceneProps) {
       <directionalLight color={0xffffff} intensity={1.1} position={[-3, 5, 10]} />
       <directionalLight color={0xf0a8bd} intensity={0.35} position={[5, -1, 4]} />
       <Suspense fallback={null}>
-        <FlowerModel progressRef={progressRef} />
+        <FlowerModel progressRef={progressRef} frozen={frozen} />
       </Suspense>
     </Canvas>
   )
