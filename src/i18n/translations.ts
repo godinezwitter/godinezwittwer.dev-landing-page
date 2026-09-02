@@ -101,6 +101,8 @@ const en = {
     tag: "Concept",
     comingSoon: "Live site coming soon",
     visit: "Visit live site",
+    preview: "Preview",
+    close: "Close preview",
   },
   why: {
     kicker: "Why trust us",
@@ -403,6 +405,8 @@ const de: Content = {
     tag: "Konzept",
     comingSoon: "Live-Seite kommt bald",
     visit: "Live-Seite besuchen",
+    preview: "Vorschau",
+    close: "Vorschau schließen",
   },
   why: {
     kicker: "Warum uns vertrauen",
