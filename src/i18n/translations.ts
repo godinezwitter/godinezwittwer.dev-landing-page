@@ -99,6 +99,8 @@ const en = {
       "Client work is just getting started — so here's what we've built to show range: concept pages designed and coded end to end.",
     categories: ["Eco-tech · Landing page", "Editorial · Portfolio", "SaaS · Marketing site"],
     tag: "Concept",
+    comingSoon: "Live site coming soon",
+    visit: "Visit live site",
   },
   why: {
     kicker: "Why trust us",
@@ -399,6 +401,8 @@ const de: Content = {
       "Kundenprojekte starten gerade erst — hier ist, was wir gebaut haben, um unsere Bandbreite zu zeigen: Konzeptseiten, komplett gestaltet und programmiert.",
     categories: ["Eco-Tech · Landingpage", "Editorial · Portfolio", "SaaS · Marketing-Website"],
     tag: "Konzept",
+    comingSoon: "Live-Seite kommt bald",
+    visit: "Live-Seite besuchen",
   },
   why: {
     kicker: "Warum uns vertrauen",
