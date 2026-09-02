@@ -1,0 +1,5 @@
+# SPA fallback: the client-side router owns every path (e.g. /about), so a hard
+# load or refresh on a non-root URL must still be served index.html.
+# Honored by Netlify, Cloudflare Pages, and Render. Vercel needs vercel.json;
+# GitHub Pages needs a 404.html copy of index.html.
+/*  /index.html  200

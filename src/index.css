@@ -1,33 +1,47 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&display=swap');
 @import 'tailwindcss';
 
 @theme {
-  /* Legacy palette — still referenced by a couple of untouched utility spots during the transition. */
-  --color-taupe: #ada49a;
-  --color-indigo: #3b3d66;
-  --color-sage: #828e73;
-  --color-taupe-light: #c8c0b8;
-  --color-taupe-dark: #8a8178;
-  --color-indigo-light: #5557a0;
-  --color-indigo-dark: #252640;
-  --color-sage-light: #a3b090;
-  --color-sage-dark: #5e6853;
+  /* Burgundy brand — the identity, unchanged and carried into the light world as the sole accent. */
+  --color-wine: #b8305c;
+  --color-wine-deep: #8a2244;
+  --color-rose: #e0567f;
+  --color-blush: #f2b8ca;
 
-  /* Wine-glass palette — built around the burgundy liquid-glass reference and the flower itself. */
+  /* Dark world — HERO ONLY. Kept byte-for-byte so the untouched hero renders identically. */
   --color-void: #12060a;
   --color-void-light: #1c0a10;
   --color-void-lighter: #260f18;
   --color-ink: #f5ece9;
   --color-ink-muted: #b89aa0;
   --color-line: rgba(255, 255, 255, 0.14);
-  --color-wine: #b8305c;
-  --color-rose: #e0567f;
-  --color-blush: #f2b8ca;
   --color-mono: #d98aa0;
 
+  /* Light world — everything below the hero. The page breathes from dark into warm paper. */
+  --color-paper: #faf6f2;
+  --color-paper-2: #f2eae3;
+  --color-ink-deep: #1e1216;
+  --color-ink-soft: #6b545a;
+  --color-line-ink: rgba(30, 18, 22, 0.12);
+  --color-shadow-wine: rgba(120, 20, 50, 0.12);
+
   --font-display: 'DM Sans', system-ui, sans-serif;
+  --font-serif: 'Fraunces', Georgia, 'Times New Roman', serif;
   --font-body: 'DM Sans', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* One tight corner everywhere — cards, panels, inputs, buttons, chips, the nav
+     all use the same 10px radius; every `rounded-*` utility resolves to it.
+     `rounded-full` is kept only for things that must read as circles: the
+     blurred glow blobs, check-icon badges, carousel indicator dots, and the
+     hamburger bars. */
+  --radius-sm: 0.625rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.625rem;
+  --radius-xl: 0.625rem;
+  --radius-2xl: 0.625rem;
+  --radius-3xl: 0.625rem;
 }
 
 html {
@@ -41,27 +55,41 @@ html {
   }
 }
 
-
 body {
   font-family: var(--font-body);
-  background-color: var(--color-void);
-  color: var(--color-ink);
-  /* Persistent liquid-glass backdrop behind every section — sections tint over it with .bg-glass-section instead of covering it with a solid fill. */
-  background-image: url('/hero-bg-burgundy.webp');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+  background-color: var(--color-paper);
+  color: var(--color-ink-deep);
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Section tint that still lets the fixed background read through — used everywhere except the Hero, which stays fully opaque. Fades in over the top of the section instead of starting at full opacity immediately, so the handoff from the section above reads as a soft gradient rather than a hard seam. */
-.bg-glass-section {
-  background: linear-gradient(
-    to bottom,
-    rgba(18, 6, 10, 0) 0%,
-    rgba(18, 6, 10, 0.86) 220px,
-    rgba(18, 6, 10, 0.86) 100%
-  );
+/* Keyboard skip link — hidden until focused, then pinned top-left. */
+.skip-link {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 200;
+  margin: 0.5rem;
+  padding: 0.6rem 1rem;
+  border-radius: var(--radius-lg);
+  background: var(--color-wine);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transform: translateY(-160%);
+  transition: transform 0.18s ease;
+}
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+#main-content:focus {
+  outline: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .skip-link {
+    transition: none;
+  }
 }
 
 ::-webkit-scrollbar {
@@ -80,15 +108,46 @@ body:hover::-webkit-scrollbar-thumb {
   opacity: 1;
 }
 
+/* Browser surfaces the design owns — retuned for the light world. */
+::selection {
+  background: rgba(184, 48, 92, 0.22);
+  color: var(--color-ink-deep);
+}
+
+:root {
+  accent-color: var(--color-wine);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-wine);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+input,
+textarea {
+  caret-color: var(--color-wine);
+}
+
+::placeholder {
+  color: var(--color-ink-soft);
+  opacity: 0.55;
+}
+
 .font-display {
   font-family: var(--font-display);
+}
+
+.font-serif {
+  font-family: var(--font-serif);
 }
 
 .font-mono {
   font-family: var(--font-mono);
 }
 
-/* Liquid-glass: translucent + blurred + a soft diagonal sheen, like the burgundy reference's specular streaks. */
+/* --- Hero-only utilities (dark world). Retained because the untouched hero depends on them. --- */
+
 .glass {
   position: relative;
   background: rgba(255, 255, 255, 0.07);
@@ -121,30 +180,10 @@ body:hover::-webkit-scrollbar-thumb {
   pointer-events: none;
 }
 
-.glass-nav {
-  background: rgba(18, 6, 10, 0.85);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--color-line);
-}
-
-.glass-taupe {
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--color-line);
-}
-
-/* Bordered technical-readout panel with corner brackets, matching the lab/annotation motif. */
 .lab-panel {
   position: relative;
   border: 1px solid var(--color-line);
   background: rgba(255, 255, 255, 0.02);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-.lab-panel:hover {
-  border-color: rgba(224, 86, 127, 0.4);
-  box-shadow: 0 0 28px rgba(224, 86, 127, 0.14);
 }
 .lab-panel::before,
 .lab-panel::after {
@@ -169,7 +208,6 @@ body:hover::-webkit-scrollbar-thumb {
   opacity: 0.7;
 }
 
-/* Small diagonal hazard-stripe corner mark, referencing the Be Group–style technical badges. */
 .corner-stripe {
   width: 20px;
   height: 8px;
@@ -189,4 +227,90 @@ body:hover::-webkit-scrollbar-thumb {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--color-mono);
+}
+
+/* --- Nav (spans both worlds: transparent over the dark hero, dark glass over light content). --- */
+
+/* Floating pill nav — true glass (inner refraction edge + inset highlight) over a
+   burgundy-tinted void, with a wine-tinted drop shadow. Reads on both worlds. */
+.glass-pill {
+  background: rgba(18, 6, 10, 0.7);
+  backdrop-filter: blur(20px) saturate(1.3);
+  -webkit-backdrop-filter: blur(20px) saturate(1.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 12px 30px -14px rgba(120, 20, 50, 0.55);
+  transition: background 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+}
+.glass-pill--solid {
+  background: rgba(18, 6, 10, 0.88);
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 18px 44px -16px rgba(120, 20, 50, 0.65);
+}
+
+/* --- Light world utilities. --- */
+
+/* Section kicker — replaces the retired mono [ bracket ] eyebrows. */
+.kicker {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-wine);
+}
+
+/* Shared display heading — the one typographic voice for every section title.
+   Fraunces at display sizes wants tight leading + a touch of negative tracking
+   and high optical size to read as intentional rather than set-in-a-word-processor.
+   Per-instance font-size stays inline (it varies section to section). */
+.section-title {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  line-height: 1.01;
+  letter-spacing: -0.021em;
+  color: var(--color-ink-deep);
+  font-optical-sizing: auto;
+  text-wrap: balance;
+}
+
+/* Raised light surface with a burgundy-tinted shadow (never flat black). */
+.surface {
+  background: var(--color-paper);
+  border: 1px solid var(--color-line-ink);
+  box-shadow: 0 1px 2px rgba(120, 20, 50, 0.05), 0 18px 40px -24px var(--color-shadow-wine);
+  transition: box-shadow 0.35s ease, transform 0.35s ease, border-color 0.35s ease;
+}
+.surface-2 {
+  background: var(--color-paper-2);
+}
+
+/* Contact form fields — real CSS so focus/error borders don't depend on Tailwind JIT. */
+.field-input {
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--color-line-ink);
+  transition: border-color 0.2s ease;
+}
+.field-input:focus {
+  border-color: var(--color-wine);
+}
+.field-input.field-input--error {
+  border-color: var(--color-wine-deep);
+}
+
+/* The soft hero → paper seam: a burgundy wash that resolves into warm white. */
+.hero-seam {
+  background: linear-gradient(to bottom, var(--color-void) 0%, rgba(18, 6, 10, 0.55) 30%, var(--color-paper) 100%);
+}
+
+/* Subtle paper grain so the light world never reads sterile. Scoped to the light region. */
+.grain-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
 }

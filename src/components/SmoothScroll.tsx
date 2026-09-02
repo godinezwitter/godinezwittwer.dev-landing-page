@@ -2,6 +2,29 @@ import Lenis from "lenis"
 import { useEffect } from "react"
 import { gsap, ScrollTrigger } from "@/lib/gsap"
 
+// The live Lenis instance, exposed so route changes and cross-page anchor links
+// can drive smooth programmatic scrolling through the same engine that handles
+// wheel input. Null under reduced-motion (Lenis never starts) — callers fall
+// back to native scrolling.
+let lenisInstance: Lenis | null = null
+
+/** Smoothly scroll to a target: a number (pixel offset), a selector, or a hash
+ * like "#contact". Routes through Lenis when it's running, otherwise falls back
+ * to native scrolling so reduced-motion users still land in the right place. */
+export function scrollToTarget(target: string | number) {
+  if (lenisInstance) {
+    // Clear the fixed nav pill for element targets; land flush at the very top for 0.
+    const offset = typeof target === "number" ? 0 : -88
+    lenisInstance.scrollTo(target, { offset })
+    return
+  }
+  if (typeof target === "number") {
+    window.scrollTo({ top: target, behavior: "smooth" })
+  } else {
+    document.querySelector(target)?.scrollIntoView({ behavior: "smooth" })
+  }
+}
+
 /** Buttery inertial scroll wired into GSAP's ticker so ScrollTrigger reads
  * smoothed values instead of raw wheel/trackpad deltas — this is what gives
  * the pinned scroll-driven scenes (Hero, Portfolio slider) their natural,
@@ -15,6 +38,7 @@ export function SmoothScroll() {
       duration: 1.1,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     })
+    lenisInstance = lenis
 
     lenis.on("scroll", ScrollTrigger.update)
 
@@ -38,6 +62,7 @@ export function SmoothScroll() {
       ScrollTrigger.removeEventListener("refresh", onRefresh)
       gsap.ticker.remove(onTick)
       lenis.destroy()
+      lenisInstance = null
     }
   }, [])
 
