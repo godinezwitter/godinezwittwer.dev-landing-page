@@ -1,0 +1,77 @@
+/* PillNav hover — recreated from React Bits "PillNav" and retuned for this site's
+   dark glass pill + burgundy accent. On hover a wine circle grows from the
+   bottom edge of a tab to fill it, while the label slides up and out and an
+   off-white twin slides up into its place. The circle's diameter and
+   transform-origin are computed per-tab in Nav.tsx (so the arc matches the pill's
+   rounded rect); the reveal itself is a paused GSAP timeline scrubbed on
+   enter/leave. This file owns only the structural styling that geometry needs. */
+
+.pill-tab {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+/* The growing wine disc. Sized + positioned by GSAP; starts at scale 0. */
+.pill-tab__circle {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  z-index: 1;
+  display: block;
+  border-radius: 9999px;
+  background: var(--color-wine);
+  pointer-events: none;
+  will-change: transform;
+}
+
+.pill-tab__label-stack {
+  position: relative;
+  z-index: 2;
+  display: inline-block;
+  line-height: 1;
+}
+
+.pill-tab__label {
+  position: relative;
+  z-index: 2;
+  display: inline-block;
+  line-height: 1;
+  will-change: transform;
+}
+
+/* The twin that rides up from below into the circle — reads on wine.
+   Hidden at rest (GSAP raises it); the base opacity also covers reduced motion,
+   where no timeline runs and it would otherwise sit doubled over the label. */
+.pill-tab__label--hover {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 3;
+  display: inline-block;
+  opacity: 0;
+  color: var(--color-ink);
+  will-change: transform, opacity;
+}
+
+/* Persistent marker under the active tab — PillNav's active dot. */
+.pill-tab__dot {
+  position: absolute;
+  left: 50%;
+  bottom: -0.12rem;
+  width: 0.32rem;
+  height: 0.32rem;
+  transform: translateX(-50%);
+  border-radius: 9999px;
+  background: var(--color-wine);
+}
+
+/* Reduced motion: no circle, no label swap — the resting state is the design. */
+@media (prefers-reduced-motion: reduce) {
+  .pill-tab__circle {
+    display: none;
+  }
+}

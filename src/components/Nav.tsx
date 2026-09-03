@@ -1,14 +1,18 @@
 import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll } from "framer-motion"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { MagneticButton } from "@/components/MagneticButton"
+import { gsap } from "@/lib/gsap"
 import { useLang } from "@/i18n/language"
 import { navigate, useRoute } from "@/router"
 import type { Lang } from "@/i18n/translations"
+import "./Nav.css"
 
-const pillSpring = { type: "spring" as const, stiffness: 420, damping: 34 }
+/** Easing shared by every PillNav-derived tween — matches React Bits' default. */
+const EASE = "power3.out"
 
-/** Segmented EN / DE switch. Reads on the dark glass pill and the mobile dropdown alike. */
-function LangToggle({ className = "" }: { className?: string }) {
+/** Segmented EN / DE switch. `onLight` retunes it for the now-backgroundless bar
+ * over the paper world; the default (dark) styling still serves the mobile dropdown. */
+function LangToggle({ className = "", onLight = false }: { className?: string; onLight?: boolean }) {
   const { lang, setLang, t } = useLang()
   const options: Lang[] = ["en", "de"]
   return (
@@ -16,7 +20,10 @@ function LangToggle({ className = "" }: { className?: string }) {
       role="group"
       aria-label={t.nav.language}
       className={`flex items-center gap-0.5 rounded-lg p-0.5 ${className}`}
-      style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}
+      style={{
+        background: onLight ? "rgba(30,18,22,0.04)" : "rgba(255,255,255,0.06)",
+        border: `1px solid ${onLight ? "rgba(30,18,22,0.1)" : "rgba(255,255,255,0.1)"}`,
+      }}
     >
       {options.map((opt) => {
         const active = lang === opt
@@ -29,7 +36,7 @@ function LangToggle({ className = "" }: { className?: string }) {
             className="px-2.5 py-1 rounded-lg text-xs font-semibold uppercase tracking-wide transition-colors"
             style={{
               background: active ? "rgba(224, 86, 127, 0.18)" : "transparent",
-              color: active ? "var(--color-rose)" : "var(--color-ink-muted)",
+              color: active ? (onLight ? "var(--color-wine)" : "var(--color-rose)") : onLight ? "var(--color-ink-soft)" : "var(--color-ink-muted)",
             }}
           >
             {opt}
@@ -41,11 +48,13 @@ function LangToggle({ className = "" }: { className?: string }) {
 }
 
 export function Nav() {
-  const [scrolled, setScrolled] = useState(false)
+  // Auto-hide bar: slides up out of view on scroll-down, drops back in on
+  // scroll-up (and is always shown near the top of the page).
+  const [hidden, setHidden] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const route = useRoute()
   const reduce = useReducedMotion()
-  const { t } = useLang()
+  const { t, lang } = useLang()
 
   const tabs = [
     { to: "/", label: t.nav.tabs.work },
@@ -53,78 +62,200 @@ export function Nav() {
     { to: "/about", label: t.nav.tabs.about },
   ]
 
+  const lastY = useRef(0)
   const { scrollY } = useScroll()
-  useMotionValueEvent(scrollY, "change", (y) => setScrolled(y > 60))
+  useMotionValueEvent(scrollY, "change", (y) => {
+    const prev = lastY.current
+    lastY.current = y
+    if (menuOpen || y < 72) {
+      setHidden(false)
+      return
+    }
+    if (Math.abs(y - prev) < 6) return // ignore sub-pixel / momentum jitter
+    setHidden(y > prev) // scrolling down hides, scrolling up reveals
+  })
+
+  // --- PillNav hover mechanics (recreated from React Bits) -------------------
+  // Per-tab: a paused GSAP timeline that grows the wine circle from the pill's
+  // bottom edge and swaps the label for its off-white twin. Enter/leave scrub it.
+  const circleRefs = useRef<Array<HTMLSpanElement | null>>([])
+  const tlRefs = useRef<Array<ReturnType<typeof gsap.timeline> | null>>([])
+  const tweenRefs = useRef<Array<ReturnType<typeof gsap.to> | null>>([])
+  const navItemsRef = useRef<HTMLDivElement | null>(null)
+  const logoBadgeRef = useRef<HTMLSpanElement | null>(null)
+  const logoTweenRef = useRef<ReturnType<typeof gsap.to> | null>(null)
+
+  // Build (and rebuild on resize / font load / language change) the reveal
+  // timelines. Their geometry — circle diameter and transform-origin — is
+  // derived from each pill's box so the growing arc lands flush with its
+  // rounded rect, exactly as PillNav computes it.
+  useEffect(() => {
+    if (reduce) return
+
+    const layout = () => {
+      circleRefs.current.forEach((circle, i) => {
+        const pill = circle?.parentElement as HTMLElement | null
+        if (!circle || !pill) return
+
+        const { width: w, height: h } = pill.getBoundingClientRect()
+        if (!w || !h) return
+
+        const R = ((w * w) / 4 + h * h) / (2 * h)
+        const D = Math.ceil(2 * R) + 2
+        const delta = Math.ceil(R - Math.sqrt(Math.max(0, R * R - (w * w) / 4))) + 1
+        const originY = D - delta
+
+        circle.style.width = `${D}px`
+        circle.style.height = `${D}px`
+        circle.style.bottom = `-${delta}px`
+        gsap.set(circle, { xPercent: -50, scale: 0, transformOrigin: `50% ${originY}px` })
+
+        const label = pill.querySelector<HTMLElement>(".pill-tab__label")
+        const hover = pill.querySelector<HTMLElement>(".pill-tab__label--hover")
+        if (label) gsap.set(label, { y: 0 })
+        if (hover) gsap.set(hover, { y: Math.ceil(h + 100), opacity: 0 })
+
+        tlRefs.current[i]?.kill()
+        const tl = gsap.timeline({ paused: true })
+        tl.to(circle, { scale: 1.2, xPercent: -50, duration: 2, ease: EASE, overwrite: "auto" }, 0)
+        if (label) tl.to(label, { y: -(h + 8), duration: 2, ease: EASE, overwrite: "auto" }, 0)
+        if (hover) tl.to(hover, { y: 0, opacity: 1, duration: 2, ease: EASE, overwrite: "auto" }, 0)
+        tlRefs.current[i] = tl
+      })
+    }
+
+    layout()
+    window.addEventListener("resize", layout)
+    document.fonts?.ready.then(layout).catch(() => {})
+
+    const tweens = tweenRefs.current
+    const tls = tlRefs.current
+    return () => {
+      window.removeEventListener("resize", layout)
+      tweens.forEach((tw) => tw?.kill())
+      tls.forEach((tl) => tl?.kill())
+    }
+  }, [reduce, lang])
+
+  // One-time load-in: the logo badge pops from nothing and the tab group opens
+  // from zero width, left to right — PillNav's `initialLoadAnimation`.
+  useEffect(() => {
+    if (reduce) return
+
+    if (logoBadgeRef.current) {
+      gsap.fromTo(logoBadgeRef.current, { scale: 0 }, { scale: 1, duration: 0.6, ease: EASE })
+    }
+    const row = navItemsRef.current
+    if (row) {
+      gsap.set(row, { width: 0, overflow: "hidden" })
+      gsap.to(row, {
+        width: "auto",
+        duration: 0.6,
+        ease: EASE,
+        onComplete: () => {
+          row.style.width = ""
+          row.style.overflow = ""
+        },
+      })
+    }
+    // Intentionally mount-only: language changes must not replay the intro.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const handleEnter = (i: number) => {
+    const tl = tlRefs.current[i]
+    if (!tl) return
+    tweenRefs.current[i]?.kill()
+    tweenRefs.current[i] = tl.tweenTo(tl.duration(), { duration: 0.3, ease: EASE, overwrite: "auto" })
+  }
+
+  const handleLeave = (i: number) => {
+    const tl = tlRefs.current[i]
+    if (!tl) return
+    tweenRefs.current[i]?.kill()
+    tweenRefs.current[i] = tl.tweenTo(0, { duration: 0.2, ease: EASE, overwrite: "auto" })
+  }
+
+  const handleLogoEnter = () => {
+    const badge = logoBadgeRef.current
+    if (!badge || reduce) return
+    logoTweenRef.current?.kill()
+    gsap.set(badge, { rotate: 0 })
+    logoTweenRef.current = gsap.to(badge, { rotate: 360, duration: 0.5, ease: EASE, overwrite: "auto" })
+  }
 
   return (
     <motion.nav
       initial={{ opacity: 0, y: -18 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: 0.2 }}
+      animate={hidden ? { y: "-120%", opacity: 0 } : { opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
       className="fixed top-0 inset-x-0 z-50 flex flex-col items-center px-4 pt-4 pointer-events-none"
     >
-      {/* The pill — capped at the same max-width as the page content (max-w-7xl)
-          so on desktop it reads as wide as the sections it sits above, instead
-          of hugging just its own content. */}
+      {/* No background surface any more — the controls float directly over the
+          page. Capped at the page content width (max-w-7xl); pointer events are
+          re-enabled per control so the empty gaps don't block the content. */}
       <div className="w-full max-w-7xl md:px-6">
-      <div
-        className={`glass-pill${scrolled ? " glass-pill--solid" : ""} pointer-events-auto flex items-center gap-1 rounded-2xl p-1.5 pr-1.5 md:pr-2 md:w-full`}
-      >
-        {/* Monogram badge — the Godinez & Wittwer mark, links home */}
-        <motion.a
+      <div className="flex items-center gap-1 w-full p-1.5 pr-1.5 md:pr-2">
+        {/* Monogram badge — the Godinez & Wittwer mark, links home. Spins 360°
+            on hover, PillNav-style (the badge span is the tween target). */}
+        <a
           href="/#home"
           onClick={(e) => { e.preventDefault(); navigate("/#home") }}
+          onMouseEnter={handleLogoEnter}
           aria-label={t.nav.home}
-          className="relative flex items-center justify-center w-9 h-9 rounded-lg shrink-0 before:absolute before:content-[''] before:-inset-1"
+          className="pointer-events-auto relative flex items-center justify-center w-9 h-9 rounded-lg shrink-0 before:absolute before:content-[''] before:-inset-1"
           style={{ background: "var(--color-wine)" }}
-          whileHover={reduce ? undefined : { scale: 1.06 }}
-          whileTap={reduce ? undefined : { scale: 0.94 }}
         >
           <span
+            ref={logoBadgeRef}
             className="font-mono font-semibold leading-none tracking-tight"
             style={{ color: "var(--color-ink)", fontSize: "0.72rem" }}
           >
             GW
           </span>
-        </motion.a>
+        </a>
 
-        {/* Desktop tabs with a sliding active pill — centered in the now-wider pill */}
-        <div className="hidden md:flex items-center gap-0.5 px-1 ml-1">
-          {tabs.map((tab) => {
+        {/* Desktop tabs — each a pill with the PillNav circular reveal + label swap */}
+        <div ref={navItemsRef} className="pointer-events-auto hidden md:flex items-center gap-0.5 px-1 ml-1">
+          {tabs.map((tab, i) => {
             const isActive = route === tab.to
             return (
-              <a
-                key={tab.to}
-                href={tab.to}
-                onClick={(e) => { e.preventDefault(); navigate(tab.to) }}
-                aria-current={isActive ? "page" : undefined}
-                className="relative px-4 py-2 rounded-2xl text-sm font-medium transition-colors"
-                style={{ color: isActive ? "var(--color-rose)" : "var(--color-ink-muted)" }}
-              >
-                {isActive && (
-                  <motion.span
-                    layoutId="nav-pill"
-                    className="absolute inset-0 rounded-2xl"
-                    style={{ background: "rgba(224, 86, 127, 0.16)", zIndex: 0 }}
-                    transition={pillSpring}
+              <span key={tab.to} className="relative inline-flex">
+                <a
+                  href={tab.to}
+                  onClick={(e) => { e.preventDefault(); navigate(tab.to) }}
+                  onMouseEnter={() => handleEnter(i)}
+                  onMouseLeave={() => handleLeave(i)}
+                  aria-current={isActive ? "page" : undefined}
+                  className="pill-tab px-4 py-2 rounded-2xl text-sm font-medium"
+                  style={{ color: isActive ? "var(--color-wine)" : "var(--color-ink-soft)" }}
+                >
+                  <span
+                    className="pill-tab__circle"
+                    aria-hidden="true"
+                    ref={(el) => { circleRefs.current[i] = el }}
                   />
-                )}
-                <span className="relative" style={{ zIndex: 1 }}>
-                  {tab.label}
-                </span>
-              </a>
+                  <span className="pill-tab__label-stack">
+                    <span className="pill-tab__label">{tab.label}</span>
+                    <span className="pill-tab__label--hover" aria-hidden="true">
+                      {tab.label}
+                    </span>
+                  </span>
+                </a>
+                {isActive && <span className="pill-tab__dot" aria-hidden="true" />}
+              </span>
             )
           })}
         </div>
 
         {/* Language switch (desktop) */}
-        <LangToggle className="hidden md:flex ml-auto mr-1" />
+        <LangToggle className="pointer-events-auto hidden md:flex ml-auto mr-1" onLight />
 
         {/* CTA — solid rose pill, magnetic (desktop) */}
         <MagneticButton
           href="/#contact"
           onClick={(e) => { e.preventDefault(); navigate("/#contact") }}
-          className="hidden md:block text-sm font-semibold px-5 py-2 rounded-lg"
+          className="pointer-events-auto hidden md:block text-sm font-semibold px-5 py-2 rounded-lg"
           style={{ background: "var(--color-rose)", color: "var(--color-void)" }}
           whileHover={{ scale: 1.05 }}
         >
@@ -133,7 +264,7 @@ export function Nav() {
 
         {/* Hamburger (mobile) */}
         <button
-          className="md:hidden relative flex flex-col items-center justify-center gap-[5px] w-9 h-9 rounded-lg before:absolute before:content-[''] before:-inset-1"
+          className="pointer-events-auto md:hidden relative flex flex-col items-center justify-center gap-[5px] w-9 h-9 ml-auto rounded-lg before:absolute before:content-[''] before:-inset-1"
           onClick={() => setMenuOpen((o) => !o)}
           aria-label={menuOpen ? t.nav.closeMenu : t.nav.openMenu}
           aria-expanded={menuOpen}
@@ -142,7 +273,7 @@ export function Nav() {
             <motion.span
               key={i}
               className="block h-[2px] w-4 rounded-full"
-              style={{ background: "var(--color-ink)" }}
+              style={{ background: "var(--color-ink-deep)" }}
               animate={
                 menuOpen
                   ? i === 1
@@ -159,7 +290,8 @@ export function Nav() {
       </div>
       </div>
 
-      {/* Mobile dropdown — a rounded glass panel beneath the pill */}
+      {/* Mobile dropdown — a rounded glass panel beneath the bar. Keeps its own
+          surface: it overlays page content and needs to stay readable. */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div

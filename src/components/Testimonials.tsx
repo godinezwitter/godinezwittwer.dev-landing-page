@@ -1,55 +1,108 @@
-import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion"
-import { lazy, Suspense, useRef, useState, type FormEvent } from "react"
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
+import { useState, type FormEvent } from "react"
 import { useSection } from "@/hooks/useSection"
+import { useHCaptcha } from "@/hooks/useHCaptcha"
 import { wipeReveal } from "@/lib/motion"
 import { MagneticButton } from "@/components/MagneticButton"
-
-// Silk pulls in the three.js / react-three-fiber stack. Load it lazily so that
-// weight stays out of the initial bundle — the static wash covers the gap until
-// the chunk lands.
-const SilkBackground = lazy(() =>
-  import("@/components/Silk").then((m) => ({ default: m.SilkBackground })),
-)
 import { CheckIcon } from "@/components/icons"
 import { Footer } from "@/components/Footer"
+import { sendContactForm } from "@/lib/contact"
 import { useLang } from "@/i18n/language"
+import type { Content } from "@/i18n/translations"
+
+/** hCaptcha sitekey — present only when hCaptcha is turned on in the Web3Forms
+ *  dashboard. When unset, the widget and its check are skipped entirely. */
+const HCAPTCHA_SITEKEY = import.meta.env.VITE_HCAPTCHA_SITEKEY
+
+type FieldKey = "name" | "email" | "service" | "message"
+type FieldErrors = Partial<Record<FieldKey, string>>
+
+/** Deliberately permissive: one @, a dot in the domain, no spaces. Enough to
+ *  catch typos without rejecting valid-but-unusual addresses. */
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+/** The rule for a single field. Returns the message to show, or undefined when
+ *  the value is acceptable. `service` is the only optional field. */
+function fieldError(key: FieldKey, raw: string, c: Content["contact"]): string | undefined {
+  const v = raw.trim()
+  if (key === "service") return undefined
+  if (!v) return key === "name" ? c.errName : key === "email" ? c.errEmailReq : c.errMessage
+  if (key === "email" && !EMAIL_RE.test(v)) return c.errEmailInvalid
+  if (key === "message" && v.length < 10) return c.errMessageShort
+  return undefined
+}
+
+const ORDER: FieldKey[] = ["name", "email", "service", "message"]
 
 export function Testimonials() {
   const { ref, inView } = useSection()
   const reduce = useReducedMotion()
   const { t } = useLang()
-  // Once the contact card is on screen, still the ambient silk so nothing moves
-  // behind the form while the visitor is filling it in.
-  const contactRef = useRef<HTMLDivElement>(null)
-  const contactInView = useInView(contactRef, { margin: "-25% 0px" })
-  const [activeForm, setActiveForm] = useState<{ name: string; email: string; service: string; message: string }>({
-    name: "", email: "", service: "", message: "",
+  const [activeForm, setActiveForm] = useState({
+    name: "", email: "", service: "", message: "", botcheck: "",
   })
-  const [errors, setErrors] = useState<{ name?: string; email?: string }>({})
+  const [errors, setErrors] = useState<FieldErrors>({})
+  const [touched, setTouched] = useState<Partial<Record<FieldKey, boolean>>>({})
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [sendFailed, setSendFailed] = useState(false)
+  const [captchaError, setCaptchaError] = useState(false)
 
-  const validate = () => {
-    const next: { name?: string; email?: string } = {}
-    if (!activeForm.name.trim()) next.name = t.contact.errName
-    if (!activeForm.email.trim()) next.email = t.contact.errEmailReq
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(activeForm.email)) next.email = t.contact.errEmailInvalid
-    return next
+  const {
+    containerRef: captchaRef,
+    token: captchaToken,
+    reset: resetCaptcha,
+    enabled: captchaEnabled,
+  } = useHCaptcha(HCAPTCHA_SITEKEY)
+
+  // Update a field's value, and — once it's been blurred at least once — keep
+  // its error message live so fixing a mistake clears it as you type.
+  const setField = (key: FieldKey, value: string) => {
+    setActiveForm((prev) => ({ ...prev, [key]: value }))
+    if (touched[key]) setErrors((prev) => ({ ...prev, [key]: fieldError(key, value, t.contact) }))
   }
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleBlur = (key: FieldKey) => {
+    setTouched((prev) => ({ ...prev, [key]: true }))
+    setErrors((prev) => ({ ...prev, [key]: fieldError(key, activeForm[key], t.contact) }))
+  }
+
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     if (submitting) return
-    const found = validate()
+
+    const found: FieldErrors = {}
+    for (const k of ORDER) {
+      const msg = fieldError(k, activeForm[k], t.contact)
+      if (msg) found[k] = msg
+    }
     setErrors(found)
-    if (Object.keys(found).length > 0) return
-    // Simulate the network round-trip so the button always shows real pending
-    // feedback; swap this for the actual submit call when the backend lands.
+    setTouched({ name: true, email: true, service: true, message: true })
+
+    const firstBad = ORDER.find((k) => found[k])
+    if (firstBad) {
+      document.getElementById(`contact-${firstBad}`)?.focus()
+      return
+    }
+
+    if (captchaEnabled && !captchaToken) {
+      setCaptchaError(true)
+      return
+    }
+    setCaptchaError(false)
+
+    setSendFailed(false)
     setSubmitting(true)
-    window.setTimeout(() => {
-      setSubmitting(false)
+    try {
+      await sendContactForm({ ...activeForm, hcaptcha: captchaToken })
       setSubmitted(true)
-    }, 1100)
+    } catch (err) {
+      console.error("Contact form submission failed:", err)
+      setSendFailed(true)
+    } finally {
+      setSubmitting(false)
+      resetCaptcha() // hCaptcha tokens are single-use — force a fresh one per attempt
+    }
   }
 
   return (
@@ -61,10 +114,6 @@ export function Testimonials() {
       initial={reduce ? false : "hidden"}
       animate={inView ? "visible" : "hidden"}
     >
-      <Suspense fallback={null}>
-        <SilkBackground pauseAnimation={contactInView} />
-      </Suspense>
-
       <div className="relative z-10 max-w-7xl mx-auto px-6">
         <motion.div
           className="mb-14 max-w-2xl"
@@ -139,7 +188,6 @@ export function Testimonials() {
         {/* CTA + Contact form */}
         <motion.div
           id="contact"
-          ref={contactRef}
           className="surface rounded-3xl overflow-hidden"
           initial={{ opacity: 0, y: 40 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -207,74 +255,89 @@ export function Testimonials() {
                   ) : (
                     <motion.form
                       key="form"
-                      onSubmit={handleSubmit}
+                      onSubmit={(e) => void handleSubmit(e)}
                       noValidate
                       className="flex flex-col gap-4"
                       exit={reduce ? undefined : { opacity: 0 }}
                       transition={{ duration: 0.2 }}
                     >
-                      {[
-                        { key: "name", label: t.contact.nameLabel, type: "text", placeholder: t.contact.namePlaceholder, required: true },
-                        { key: "email", label: t.contact.emailLabel, type: "email", placeholder: t.contact.emailPlaceholder, required: true },
-                        { key: "service", label: t.contact.serviceLabel, type: "text", placeholder: t.contact.servicePlaceholder, required: false },
-                      ].map((field) => {
-                        const err = errors[field.key as "name" | "email"]
+                      {([
+                        { key: "name", label: t.contact.nameLabel, type: "text", autoComplete: "name", placeholder: t.contact.namePlaceholder, multiline: false, required: true },
+                        { key: "email", label: t.contact.emailLabel, type: "email", autoComplete: "email", placeholder: t.contact.emailPlaceholder, multiline: false, required: true },
+                        { key: "service", label: t.contact.serviceLabel, type: "text", autoComplete: "off", placeholder: t.contact.servicePlaceholder, multiline: false, required: false },
+                        { key: "message", label: t.contact.messageLabel, type: "text", autoComplete: "off", placeholder: t.contact.messagePlaceholder, multiline: true, required: true },
+                      ] as const).map((field) => {
+                        const err = errors[field.key]
+                        const id = `contact-${field.key}`
+                        const shared = {
+                          id,
+                          placeholder: field.placeholder,
+                          value: activeForm[field.key],
+                          required: field.required,
+                          "aria-required": field.required || undefined,
+                          "aria-invalid": err ? (true as const) : undefined,
+                          "aria-describedby": err ? `${id}-error` : undefined,
+                          onChange: (e: { target: { value: string } }) => setField(field.key, e.target.value),
+                          onBlur: () => handleBlur(field.key),
+                          className: `field-input w-full px-4 py-3 rounded-xl text-sm outline-none${field.multiline ? " resize-none" : ""}${err ? " field-input--error" : ""}`,
+                          style: { background: "var(--color-paper)", color: "var(--color-ink-deep)" },
+                        }
                         return (
                           <div key={field.key}>
-                            <label
-                              htmlFor={`contact-${field.key}`}
-                              className="block text-xs font-semibold mb-1.5"
-                              style={{ color: "var(--color-ink-soft)" }}
-                            >
+                            <label htmlFor={id} className="flex items-baseline gap-2 text-xs font-semibold mb-1.5" style={{ color: "var(--color-ink-soft)" }}>
                               {field.label}
+                              {!field.required && (
+                                <span className="font-normal" style={{ opacity: 0.7 }}>
+                                  {t.contact.optional}
+                                </span>
+                              )}
                             </label>
-                            <input
-                              id={`contact-${field.key}`}
-                              type={field.type}
-                              required={field.required}
-                              placeholder={field.placeholder}
-                              value={activeForm[field.key as keyof typeof activeForm]}
-                              aria-invalid={err ? true : undefined}
-                              aria-describedby={err ? `contact-${field.key}-error` : undefined}
-                              onChange={(e) => {
-                                setActiveForm((prev) => ({ ...prev, [field.key]: e.target.value }))
-                                if (field.key === "name" || field.key === "email") {
-                                  setErrors((prev) => ({ ...prev, [field.key]: undefined }))
-                                }
-                              }}
-                              className={`field-input w-full px-4 py-3 rounded-xl text-sm outline-none${err ? " field-input--error" : ""}`}
-                              style={{ background: "var(--color-paper)", color: "var(--color-ink-deep)" }}
-                            />
+                            {field.multiline ? (
+                              <textarea rows={3} {...shared} />
+                            ) : (
+                              <input type={field.type} autoComplete={field.autoComplete} {...shared} />
+                            )}
                             {err && (
-                              <p
-                                id={`contact-${field.key}-error`}
-                                className="mt-1.5 text-xs"
-                                style={{ color: "var(--color-wine-deep)" }}
-                              >
+                              <p id={`${id}-error`} className="mt-1.5 text-xs" style={{ color: "var(--color-wine-deep)" }}>
                                 {err}
                               </p>
                             )}
                           </div>
                         )
                       })}
-                      <div>
-                        <label
-                          htmlFor="contact-message"
-                          className="block text-xs font-semibold mb-1.5"
-                          style={{ color: "var(--color-ink-soft)" }}
-                        >
-                          {t.contact.messageLabel}
-                        </label>
-                        <textarea
-                          id="contact-message"
-                          rows={3}
-                          placeholder={t.contact.messagePlaceholder}
-                          value={activeForm.message}
-                          onChange={(e) => setActiveForm((prev) => ({ ...prev, message: e.target.value }))}
-                          className="field-input w-full px-4 py-3 rounded-xl text-sm outline-none resize-none"
-                          style={{ background: "var(--color-paper)", color: "var(--color-ink-deep)" }}
-                        />
-                      </div>
+
+                      {/* Honeypot — off-screen, unlabelled, never tab-reachable.
+                          Web3Forms drops any submission where `botcheck` is filled. */}
+                      <input
+                        type="checkbox"
+                        name="botcheck"
+                        tabIndex={-1}
+                        autoComplete="off"
+                        aria-hidden="true"
+                        checked={activeForm.botcheck !== ""}
+                        onChange={(e) => setActiveForm((prev) => ({ ...prev, botcheck: e.target.checked ? "1" : "" }))}
+                        style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
+                      />
+
+                      {/* hCaptcha — only mounts when VITE_HCAPTCHA_SITEKEY is set,
+                          which must line up with the Web3Forms dashboard toggle. */}
+                      {captchaEnabled && (
+                        <div>
+                          <div ref={captchaRef} />
+                          {captchaError && (
+                            <p role="alert" className="mt-1.5 text-xs" style={{ color: "var(--color-wine-deep)" }}>
+                              {t.contact.errCaptcha}
+                            </p>
+                          )}
+                        </div>
+                      )}
+
+                      {sendFailed && (
+                        <p role="alert" className="text-xs leading-relaxed" style={{ color: "var(--color-wine-deep)" }}>
+                          {t.contact.errSend}
+                        </p>
+                      )}
+
                       {/* The one true conversion control — the highest-contrast
                           element in the panel so it never reads as another input
                           field. Shows real pending feedback while submitting. */}
