@@ -39,133 +39,96 @@ export function Hero() {
         style={{ background: "var(--color-blush)", opacity: 0.28 }}
         aria-hidden="true"
       />
+      {/* Graph-paper ruling across the whole hero. Sits after the bloom so the
+          lines read as printed on the paper rather than lit from behind it. */}
+      <div className="grid-paper" aria-hidden="true" />
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 py-20 md:py-28">
-        <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-14 lg:gap-16 items-center">
-          {/* Left — the pitch. min-w-0 so the grid track can shrink below the
-              copy's natural width on narrow screens instead of overflowing. */}
-          <motion.div className="min-w-0" variants={staggerContainer} initial="hidden" animate="visible">
-            <motion.p variants={fadeUp} className="kicker mb-5">
-              {t.hero.kicker}
-            </motion.p>
+        {/* The pitch, held to a readable measure — without the old right-hand
+            panel there's no second column to bound it, and a headline running
+            the full 7xl would sprawl on a wide display. */}
+        <motion.div className="min-w-0 max-w-3xl" variants={staggerContainer} initial="hidden" animate="visible">
+          <motion.p variants={fadeUp} className="kicker mb-5">
+            {t.hero.kicker}
+          </motion.p>
 
-            <motion.h1
-              variants={fadeUp}
-              className="section-title mb-6"
-              style={{ fontSize: "clamp(2.5rem, 5.6vw, 4.4rem)", lineHeight: 1.04 }}
-              // The last line is a stack of absolutely-positioned words with no
-              // whitespace between them; give assistive tech one clean sentence.
-              aria-label={`${t.hero.line1} ${t.hero.line2} ${rotatingWords[wordIndex]}`}
-            >
-              <span aria-hidden="true" className="block">
-                {t.hero.line1}
-              </span>
-              <span aria-hidden="true" className="block">
-                {t.hero.line2}
-              </span>
-              {/* The final word rotates through outcomes every couple of seconds.
-                  The words are stacked absolutely and cross-fade by toggling
-                  opacity, so the line height stays fixed and nothing shifts. */}
-              <span
-                aria-hidden="true"
-                className="relative block"
-                style={{ color: "var(--color-wine)", height: "1.15em" }}
-              >
-                {rotatingWords.map((word, i) => {
-                  const active = i === wordIndex
-                  return (
-                    <span
-                      key={word}
-                      aria-hidden={active ? undefined : true}
-                      className="absolute left-0 top-0 whitespace-nowrap"
-                      style={{
-                        opacity: active ? 1 : 0,
-                        transform: reduce ? "none" : `translateY(${active ? "0" : "0.35em"})`,
-                        transition: reduce ? undefined : "opacity 0.5s ease, transform 0.5s ease",
-                      }}
-                    >
-                      {word}
-                    </span>
-                  )
-                })}
-              </span>
-            </motion.h1>
-
-            <motion.p
-              variants={fadeUp}
-              className="text-lg leading-relaxed mb-9 max-w-[52ch]"
-              style={{ color: "var(--color-ink-soft)" }}
-            >
-              {t.hero.subhead}
-            </motion.p>
-
-            <motion.div variants={fadeUp} className="flex flex-wrap gap-4">
-              <MagneticButton
-                href="#contact"
-                className="px-7 py-3.5 rounded-lg font-semibold text-sm"
-                style={{
-                  background: "var(--color-wine)",
-                  color: "#fff",
-                  boxShadow: "0 12px 28px -12px rgba(184,48,92,0.55)",
-                }}
-                whileHover={{ scale: 1.04 }}
-              >
-                {t.hero.ctaPrimary}
-              </MagneticButton>
-              <MagneticButton
-                href="#work"
-                className="px-7 py-3.5 rounded-lg font-semibold text-sm"
-                style={{
-                  background: "var(--color-paper-2)",
-                  color: "var(--color-ink-deep)",
-                  border: "1px solid var(--color-line-ink)",
-                }}
-                whileHover={{ scale: 1.04 }}
-              >
-                {t.hero.ctaSecondary}
-              </MagneticButton>
-            </motion.div>
-          </motion.div>
-
-          {/* Right — "how we work", as a paper surface card echoing the About /
-              contact panels. Desktop only: on narrow screens there's no column
-              for it and the pitch carries the hero on its own. */}
-          <motion.div
-            className="hidden lg:block"
-            initial={reduce ? false : { opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.25 }}
+          <motion.h1
+            variants={fadeUp}
+            className="section-title mb-6"
+            style={{ fontSize: "clamp(2.5rem, 5.6vw, 4.4rem)", lineHeight: 1.04 }}
+            // The last line is a stack of absolutely-positioned words with no
+            // whitespace between them; give assistive tech one clean sentence.
+            aria-label={`${t.hero.line1} ${t.hero.line2} ${rotatingWords[wordIndex]}`}
           >
-            <div className="surface rounded-3xl p-8">
-              <p className="kicker mb-6">{t.hero.panelTitle}</p>
-              <ol className="flex flex-col">
-                {t.hero.panel.map(({ title, detail }, i) => (
-                  <li
-                    key={title}
-                    className="grid grid-cols-[auto_1fr] gap-x-4 py-4"
-                    style={i > 0 ? { borderTop: "1px solid var(--color-line-ink)" } : undefined}
+            <span aria-hidden="true" className="block">
+              {t.hero.line1}
+            </span>
+            <span aria-hidden="true" className="block">
+              {t.hero.line2}
+            </span>
+            {/* The final word rotates through outcomes every couple of seconds.
+                The words are stacked absolutely and cross-fade by toggling
+                opacity, so the line height stays fixed and nothing shifts. */}
+            <span
+              aria-hidden="true"
+              className="relative block"
+              style={{ color: "var(--color-wine)", height: "1.15em" }}
+            >
+              {rotatingWords.map((word, i) => {
+                const active = i === wordIndex
+                return (
+                  <span
+                    key={word}
+                    aria-hidden={active ? undefined : true}
+                    className="absolute left-0 top-0 whitespace-nowrap"
+                    style={{
+                      opacity: active ? 1 : 0,
+                      transform: reduce ? "none" : `translateY(${active ? "0" : "0.35em"})`,
+                      transition: reduce ? undefined : "opacity 0.5s ease, transform 0.5s ease",
+                    }}
                   >
-                    <span
-                      className="font-body font-semibold tabular-nums leading-none pt-0.5"
-                      style={{ fontSize: "1.05rem", color: "var(--color-wine)", letterSpacing: "-0.02em" }}
-                      aria-hidden="true"
-                    >
-                      0{i + 1}
-                    </span>
-                    <div>
-                      <p className="text-sm font-semibold mb-1" style={{ color: "var(--color-ink-deep)" }}>
-                        {title}
-                      </p>
-                      <p className="text-xs leading-relaxed" style={{ color: "var(--color-ink-soft)" }}>
-                        {detail}
-                      </p>
-                    </div>
-                  </li>
-                ))}
-              </ol>
-            </div>
+                    {word}
+                  </span>
+                )
+              })}
+            </span>
+          </motion.h1>
+
+          <motion.p
+            variants={fadeUp}
+            className="text-lg leading-relaxed mb-9 max-w-[52ch]"
+            style={{ color: "var(--color-ink-soft)" }}
+          >
+            {t.hero.subhead}
+          </motion.p>
+
+          <motion.div variants={fadeUp} className="flex flex-wrap gap-4">
+            <MagneticButton
+              href="#contact"
+              className="px-7 py-3.5 rounded-lg font-semibold text-sm"
+              style={{
+                background: "var(--color-wine)",
+                color: "#fff",
+                boxShadow: "0 12px 28px -12px rgba(184,48,92,0.55)",
+              }}
+              whileHover={{ scale: 1.04 }}
+            >
+              {t.hero.ctaPrimary}
+            </MagneticButton>
+            <MagneticButton
+              href="#work"
+              className="px-7 py-3.5 rounded-lg font-semibold text-sm"
+              style={{
+                background: "var(--color-paper-2)",
+                color: "var(--color-ink-deep)",
+                border: "1px solid var(--color-line-ink)",
+              }}
+              whileHover={{ scale: 1.04 }}
+            >
+              {t.hero.ctaSecondary}
+            </MagneticButton>
           </motion.div>
-        </div>
+        </motion.div>
       </div>
     </section>
   )

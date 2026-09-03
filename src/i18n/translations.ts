@@ -22,12 +22,6 @@ const en = {
       "We're Joel and Dee — two engineers who design and build high-converting landing pages and sites for Fiverr sellers. Real code, real testing, no templates.",
     ctaPrimary: "Start Your Project",
     ctaSecondary: "See Our Work",
-    panelTitle: "How we work",
-    panel: [
-      { title: "Real code, not templates", detail: "React · Angular · TypeScript · .NET" },
-      { title: "Two sets of eyes", detail: "Built by one, reviewed by the other" },
-      { title: "Fast turnaround", detail: "Most pages live in 2–5 days" },
-    ],
   },
   about: {
     kicker: "Who we are",
@@ -345,12 +339,6 @@ const de: Content = {
       "Wir sind Joel und Dee — zwei Entwickler, die hochkonvertierende Landingpages und Websites für Fiverr-Anbieter gestalten und bauen. Echter Code, echte Tests, keine Templates.",
     ctaPrimary: "Projekt starten",
     ctaSecondary: "Unsere Arbeiten",
-    panelTitle: "So arbeiten wir",
-    panel: [
-      { title: "Echter Code, keine Templates", detail: "React · Angular · TypeScript · .NET" },
-      { title: "Vier Augen", detail: "Von einem gebaut, vom anderen geprüft" },
-      { title: "Schnelle Umsetzung", detail: "Die meisten Seiten sind in 2–5 Tagen live" },
-    ],
   },
   about: {
     kicker: "Wer wir sind",
