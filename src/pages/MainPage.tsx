@@ -25,11 +25,10 @@ export function MainPage() {
     <>
       <Hero />
 
-      {/* Light world — the page breathes out of the dark hero into warm paper. */}
+      {/* The hero already opens in the warm paper world; the sections below just
+          continue it, carrying the same grain. */}
       <div className="relative" style={{ background: "var(--color-paper)" }}>
         <div className="grain-overlay" aria-hidden="true" />
-        {/* Authored seam: the burgundy hero resolves into paper instead of cutting. */}
-        <div className="hero-seam h-24 md:h-36" aria-hidden="true" />
         <div className="relative" style={{ zIndex: 1 }}>
           <Services />
           <Process />
