@@ -49,6 +49,7 @@ export function Nav() {
 
   const tabs = [
     { to: "/", label: t.nav.tabs.work },
+    { to: "/projects", label: t.nav.tabs.projects },
     { to: "/about", label: t.nav.tabs.about },
   ]
 
