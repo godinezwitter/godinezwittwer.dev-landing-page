@@ -1,6 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion"
 import { MagneticButton } from "@/components/MagneticButton"
-import { Footer } from "@/components/Footer"
 import { navigate } from "@/router"
 import { useLang } from "@/i18n/language"
 
@@ -47,10 +46,6 @@ export function NotFound() {
             {t.notFound.cta}
           </MagneticButton>
         </motion.div>
-      </div>
-      <div className="relative" style={{ zIndex: 1 }}>
-        <Footer />
-        <div className="h-16" aria-hidden="true" />
       </div>
     </div>
   )

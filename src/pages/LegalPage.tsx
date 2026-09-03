@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react"
 import { motion, useReducedMotion } from "framer-motion"
 import { scrollToTarget } from "@/components/SmoothScroll"
-import { Footer } from "@/components/Footer"
 import { useLang } from "@/i18n/language"
 import { translations, type Lang } from "@/i18n/translations"
 import { navigate } from "@/router"
@@ -158,9 +157,6 @@ export function LegalPage({ doc, routeLang }: { doc: LegalDoc; routeLang: Lang }
             </div>
           </motion.div>
         </div>
-
-        <Footer />
-        <div className="h-16" aria-hidden="true" />
       </div>
     </div>
   )

@@ -2,10 +2,10 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { useState, type FormEvent } from "react"
 import { useSection } from "@/hooks/useSection"
 import { useHCaptcha } from "@/hooks/useHCaptcha"
+import { useIsMobile } from "@/hooks/useIsMobile"
 import { wipeReveal } from "@/lib/motion"
 import { MagneticButton } from "@/components/MagneticButton"
 import { CheckIcon } from "@/components/icons"
-import { Footer } from "@/components/Footer"
 import { sendContactForm } from "@/lib/contact"
 import { useLang } from "@/i18n/language"
 import type { Content } from "@/i18n/translations"
@@ -47,13 +47,16 @@ export function Testimonials() {
   const [submitted, setSubmitted] = useState(false)
   const [sendFailed, setSendFailed] = useState(false)
   const [captchaError, setCaptchaError] = useState(false)
+  // The normal hCaptcha checkbox is a fixed ~303px — wider than the form panel
+  // on a phone — so anything under the `sm` breakpoint gets the compact widget.
+  const narrow = useIsMobile("(max-width: 639px)")
 
   const {
     containerRef: captchaRef,
     token: captchaToken,
     reset: resetCaptcha,
     enabled: captchaEnabled,
-  } = useHCaptcha(HCAPTCHA_SITEKEY)
+  } = useHCaptcha(HCAPTCHA_SITEKEY, narrow ? "compact" : "normal")
 
   // Update a field's value, and — once it's been blurred at least once — keep
   // its error message live so fixing a mistake clears it as you type.
@@ -193,17 +196,17 @@ export function Testimonials() {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.35 }}
         >
-          <div className="relative p-10 md:p-16">
+          <div className="relative p-6 sm:p-10 md:p-16">
             <div
               className="absolute top-0 right-0 w-80 h-80 rounded-full blur-[90px] pointer-events-none"
               style={{ background: "var(--color-blush)", opacity: 0.35 }}
               aria-hidden="true"
             />
-            <div className="relative grid lg:grid-cols-2 gap-12 items-center">
-              <div>
+            <div className="relative grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
+              <div className="min-w-0">
                 <h2
                   className="section-title mb-5"
-                  style={{ fontSize: "clamp(1.9rem, 3.5vw, 2.8rem)" }}
+                  style={{ fontSize: "clamp(1.7rem, 3.5vw, 2.8rem)" }}
                 >
                   {t.contact.heading}
                 </h2>
@@ -228,7 +231,7 @@ export function Testimonials() {
               </div>
 
               {/* Form */}
-              <div className="surface-2 rounded-2xl p-7" style={{ border: "1px solid var(--color-line-ink)" }}>
+              <div className="surface-2 min-w-0 rounded-2xl p-5 sm:p-7" style={{ border: "1px solid var(--color-line-ink)" }}>
                 <AnimatePresence mode="wait" initial={false}>
                   {submitted ? (
                     <motion.div
@@ -279,7 +282,7 @@ export function Testimonials() {
                           "aria-describedby": err ? `${id}-error` : undefined,
                           onChange: (e: { target: { value: string } }) => setField(field.key, e.target.value),
                           onBlur: () => handleBlur(field.key),
-                          className: `field-input w-full px-4 py-3 rounded-xl text-sm outline-none${field.multiline ? " resize-none" : ""}${err ? " field-input--error" : ""}`,
+                          className: `field-input w-full px-4 py-3 rounded-xl text-base sm:text-sm outline-none${field.multiline ? " resize-none" : ""}${err ? " field-input--error" : ""}`,
                           style: { background: "var(--color-paper)", color: "var(--color-ink-deep)" },
                         }
                         return (
@@ -293,7 +296,7 @@ export function Testimonials() {
                               )}
                             </label>
                             {field.multiline ? (
-                              <textarea rows={3} {...shared} />
+                              <textarea rows={3} {...shared} className={`${shared.className} min-h-[7.5rem] sm:min-h-0`} />
                             ) : (
                               <input type={field.type} autoComplete={field.autoComplete} {...shared} />
                             )}
@@ -323,7 +326,18 @@ export function Testimonials() {
                           which must line up with the Web3Forms dashboard toggle. */}
                       {captchaEnabled && (
                         <div>
-                          <div ref={captchaRef} />
+                          <span className="mb-1.5 block text-xs font-semibold" style={{ color: "var(--color-ink-soft)" }}>
+                            {t.contact.captchaLabel}
+                          </span>
+                          {/* The widget itself is a fixed-size iframe we can't restyle,
+                              so it sits centred in a field-shaped shell that carries the
+                              same border, radius and paper tone as the inputs above. */}
+                          <div
+                            className="field-input flex justify-center rounded-xl px-3 py-3"
+                            style={{ background: "var(--color-paper)" }}
+                          >
+                            <div ref={captchaRef} />
+                          </div>
                           {captchaError && (
                             <p role="alert" className="mt-1.5 text-xs" style={{ color: "var(--color-wine-deep)" }}>
                               {t.contact.errCaptcha}
@@ -378,9 +392,6 @@ export function Testimonials() {
           </div>
         </motion.div>
       </div>
-
-      {/* Footer */}
-      <Footer />
     </motion.section>
   )
 }
