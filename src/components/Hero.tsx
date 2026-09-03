@@ -10,10 +10,10 @@ import heroKnightReveal from "@/imports/hero-knight-reveal.jpg"
 /** Editorial hero in the light "paper" world — the same typographic voice,
  * kicker eyebrow, and fade-up reveals as every section below it. A halftone
  * illustration fills the whole section as a background (see
- * ImageRevealBackground): a kneeling knight in a plain field by default,
- * the same field in bloom wherever the cursor's spotlight lands. The
- * headline's final word cycles through the studio's outcomes (convert / load
- * fast / …); reduced-motion holds it on the first word. */
+ * ImageRevealBackground): a kneeling knight in a plain field by default, the
+ * same field turned to blowing roses wherever the cursor's spotlight lands.
+ * The headline's final word cycles through the studio's outcomes (convert /
+ * load fast / …); reduced-motion holds it on the first word. */
 export function Hero() {
   const reduce = useReducedMotion()
   const { t } = useLang()
@@ -35,13 +35,15 @@ export function Hero() {
       style={{ background: "var(--color-paper)" }}
     >
       {/* The knight fills the whole section as a background layer — everything
-          else stacks on top of it. Position "center top" keeps the plain sky
-          in frame so the headline always lands on open space, even when
-          `cover` has to crop the field away at the bottom on a short viewport. */}
+          else stacks on top of it. The art places him in the right two-thirds
+          of the frame with open sky/field on the left, so "right top" keeps
+          him in frame under `cover` instead of cropping him out on a narrow
+          or unusually tall viewport, and leaves the left side clear for the
+          pitch panel to sit on plain ground rather than over his figure. */}
       <ImageRevealBackground
         baseImage={heroKnightBase}
         revealImage={heroKnightReveal}
-        backgroundPosition="center top"
+        backgroundPosition="right top"
         className="absolute inset-0"
       />
       {/* Same warm paper grain the rest of the light world carries. */}
