@@ -14,6 +14,7 @@ const en = {
     language: "Language",
   },
   hero: {
+    kicker: "Fiverr web studio · Switzerland",
     line1: "Clean websites,",
     line2: "engineered to",
     rotating: ["convert.", "load fast.", "earn trust.", "sell."],
@@ -21,10 +22,7 @@ const en = {
       "We're Joel and Dee — two engineers who design and build high-converting landing pages and sites for Fiverr sellers. Real code, real testing, no templates.",
     ctaPrimary: "Start Your Project",
     ctaSecondary: "See Our Work",
-    cornerLeft: "Digital Pages, Made Smarter",
-    cornerRight: "Fiverr Studio",
-    scroll: "[ Scroll ]",
-    panelTitle: "[ How we work ]",
+    panelTitle: "How we work",
     panel: [
       { title: "Real code, not templates", detail: "React · Angular · TypeScript · .NET" },
       { title: "Two sets of eyes", detail: "Built by one, reviewed by the other" },
@@ -339,6 +337,7 @@ const de: Content = {
     language: "Sprache",
   },
   hero: {
+    kicker: "Fiverr Web-Studio · Schweiz",
     line1: "Saubere Websites,",
     line2: "gebaut, um zu",
     rotating: ["überzeugen.", "begeistern.", "verkaufen.", "konvertieren."],
@@ -346,10 +345,7 @@ const de: Content = {
       "Wir sind Joel und Dee — zwei Entwickler, die hochkonvertierende Landingpages und Websites für Fiverr-Anbieter gestalten und bauen. Echter Code, echte Tests, keine Templates.",
     ctaPrimary: "Projekt starten",
     ctaSecondary: "Unsere Arbeiten",
-    cornerLeft: "Digitale Seiten, klüger gemacht",
-    cornerRight: "Fiverr Studio",
-    scroll: "[ Scrollen ]",
-    panelTitle: "[ So arbeiten wir ]",
+    panelTitle: "So arbeiten wir",
     panel: [
       { title: "Echter Code, keine Templates", detail: "React · Angular · TypeScript · .NET" },
       { title: "Vier Augen", detail: "Von einem gebaut, vom anderen geprüft" },
