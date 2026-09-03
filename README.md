@@ -11,10 +11,20 @@ npm run dev
 
 ## Workflow
 
-- `main` is protected — no direct pushes.
-- Create a branch per change: `feature/...`, `fix/...`.
-- Open a pull request; it needs one approval from the other maintainer before merging.
+Nothing goes straight to `main`. Work is collected on `dev` first, then released
+to `main`:
+
+```
+feature/xyz ──► dev ──► main
+```
+
+- Branch off **`dev`**, never off `main`: `feature/...`, `fix/...`, `chore/...`, `docs/...`.
+- Open the pull request against **`dev`** — no approval needed, but `build` must pass.
+- Releasing means a PR from `dev` to `main`, which needs one approval from the other maintainer.
+- We squash-merge, so a merged branch is done — delete it and branch fresh for the next change.
 - CI (`.github/workflows/ci.yml`) lints and builds every PR.
+
+Details and naming conventions: [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## UI component sources (optional)
 
