@@ -48,16 +48,16 @@ export function Hero() {
       />
       {/* Same warm paper grain the rest of the light world carries. */}
       <div className="grain-overlay" aria-hidden="true" />
+      {/* Graph-paper ruling, overlaid on the illustration rather than under it
+          — a layer behind an opaque full-bleed image would never be seen. */}
+      <div className="grid-paper" aria-hidden="true" />
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 py-20 md:py-28">
-        {/* The pitch, on its own translucent paper panel — a gradient scrim
-            can't guarantee contrast against a full-bleed illustration whose
-            dark linework lands wherever `cover` happens to crop it, but a
-            panel with its own background always can, and reads as an
-            intentional card rather than a legibility patch. */}
+        {/* The pitch, left-aligned directly on the illustration — no card
+            behind it, just the same plain-text treatment as every other
+            section. */}
         <motion.div
-          className="min-w-0 max-w-3xl rounded-3xl px-6 py-8 md:px-10 md:py-10"
-          style={{ background: "rgba(250,246,242,0.88)", backdropFilter: "blur(6px)" }}
+          className="min-w-0 max-w-3xl -mt-6 md:-mt-10"
           variants={staggerContainer}
           initial="hidden"
           animate="visible"
