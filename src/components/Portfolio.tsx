@@ -1,235 +1,204 @@
-import { motion, useReducedMotion, type PanInfo } from "framer-motion"
-import { useLayoutEffect, useRef, useState } from "react"
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
+import { useEffect, useState, type KeyboardEvent } from "react"
 import { useSection } from "@/hooks/useSection"
-import { useIsMobile } from "@/hooks/useIsMobile"
-import { gsap } from "@/lib/gsap"
-import { TiltCard } from "@/components/TiltCard"
+import { fadeUp, staggerContainer, wipeReveal } from "@/lib/motion"
 import { useLang } from "@/i18n/language"
+import { TiltCard } from "@/components/TiltCard"
+import CardSwap, { Card } from "@/components/CardSwap"
 import heroPortfolio1 from "@/imports/greenmotive-hero.webp"
 import heroPortfolio2 from "@/imports/0569e0ae4f0c254626ea1e061e84132a.jpg"
 import heroPortfolio3 from "@/imports/terrava-hero.webp"
 
-// Image and project name are language-independent; the category label and the
-// "Concept" tag come from the dictionary (matched by index).
-const portfolioItems = [
+// Image and project name are language-independent; category + tag come from
+// the dictionary (matched by index). `url` is each concept project's own
+// live site — left undefined until it's actually deployed. Clicking a card
+// always does something: opens the live site once `url` exists, or opens a
+// larger preview of the concept in the meantime.
+const portfolioItems: { img: string; title: string; url?: string }[] = [
   { img: heroPortfolio1, title: "GreenMotive" },
   { img: heroPortfolio2, title: "Helious" },
   { img: heroPortfolio3, title: "Terrava" },
 ]
 
-/** Pinned, scroll-scrubbed slide sequence — each project holds the viewport while the next one crossfades in underneath. */
-function PinnedSlides() {
-  const pinRef = useRef<HTMLDivElement>(null)
-  const { t } = useLang()
+type CardContentProps = {
+  item: (typeof portfolioItems)[number]
+  category: string
+  tag: string
+  comingSoon: string
+}
 
-  useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-      const slides = gsap.utils.toArray<HTMLElement>(".portfolio-slide")
-      if (slides.length < 2) return
-
-      gsap.set(slides.slice(1), { autoAlpha: 0, scale: 0.96 })
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: pinRef.current,
-          start: "top top",
-          end: () => `+=${(slides.length - 1) * window.innerHeight}`,
-          pin: true,
-          scrub: 0.4,
-          anticipatePin: 1,
-          fastScrollEnd: true,
-        },
-      })
-
-      slides.forEach((slide, i) => {
-        if (i === 0) return
-        tl.to(slides[i - 1], { autoAlpha: 0, scale: 0.96, duration: 1 }, i - 1)
-        tl.to(slide, { autoAlpha: 1, scale: 1, duration: 1 }, i - 1)
-      })
-    }, pinRef)
-
-    return () => ctx.revert()
-  }, [])
-
+/** Shared card face — a photo with a bottom gradient for legible title/tags, used both in the CardSwap stack and the reduced-motion grid fallback. */
+function CardFace({ item, category, tag, comingSoon }: CardContentProps) {
   return (
-    <div ref={pinRef} className="relative w-full h-[100dvh] overflow-hidden">
-      {portfolioItems.map((item, i) => (
-        <div key={item.title} className="portfolio-slide absolute inset-0">
-          <img src={item.img} alt={`${item.title} — ${t.work.categories[i]}`} className="w-full h-full object-cover" />
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{ background: "linear-gradient(to top, rgba(12,4,7,0.94) 0%, rgba(12,4,7,0.2) 45%, transparent 70%)" }}
-          />
-          <div className="absolute bottom-0 left-0 right-0 p-10 md:p-16 max-w-3xl">
-            <h3 className="font-body mb-4" style={{ fontSize: "clamp(2rem, 4vw, 3.4rem)", color: "#fff" }}>
-              {item.title}
-            </h3>
-            <div className="flex flex-wrap items-center gap-3">
-              <span
-                className="inline-block text-xs font-semibold uppercase tracking-[0.12em] px-3.5 py-1.5 rounded-lg"
-                style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.25)", color: "#fff" }}
-              >
-                {t.work.tag}
-              </span>
-              <span className="text-sm" style={{ color: "rgba(255,255,255,0.7)" }}>
-                {t.work.categories[i]}
-              </span>
-            </div>
-          </div>
+    <>
+      <img src={item.img} alt={`${item.title} — ${category}`} className="absolute inset-0 w-full h-full object-cover" draggable={false} />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: "linear-gradient(to top, rgba(12,4,7,0.95) 0%, rgba(12,4,7,0.4) 50%, transparent 78%)" }}
+      />
+      <div className="absolute bottom-0 left-0 right-0 p-5">
+        <h3 className="font-body text-xl mb-2.5" style={{ color: "#fff" }}>
+          {item.title}
+        </h3>
+        <div className="flex flex-wrap items-center gap-2">
+          <span
+            className="text-xs font-semibold uppercase tracking-[0.1em] px-3 py-1 rounded-lg"
+            style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.25)", color: "#fff" }}
+          >
+            {tag}
+          </span>
+          <span className="text-xs" style={{ color: "rgba(255,255,255,0.7)" }}>
+            {category}
+          </span>
         </div>
-      ))}
-    </div>
+        {!item.url && (
+          <p className="text-[0.7rem] mt-2.5" style={{ color: "rgba(255,255,255,0.55)" }}>
+            {comingSoon}
+          </p>
+        )}
+      </div>
+    </>
   )
 }
 
-/** Static grid fallback for reduced-motion — no pinning, no scroll-scrub. */
-function GridFallback() {
+/** Full-size preview shown when a card without a live `url` is clicked — the
+ * concept still deserves a closer look even though there's nowhere to send
+ * the click yet. Closes on backdrop click, its own button, or Escape. */
+function ProjectLightbox({
+  item,
+  category,
+  tag,
+  comingSoon,
+  closeLabel,
+  onClose,
+}: CardContentProps & { closeLabel: string; onClose: () => void }) {
+  const reduce = useReducedMotion()
+
+  useEffect(() => {
+    const onKey = (e: globalThis.KeyboardEvent) => {
+      if (e.key === "Escape") onClose()
+    }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [onClose])
+
+  return (
+    <motion.div
+      className="fixed inset-0 z-[100] flex items-center justify-center p-6"
+      style={{ background: "rgba(12,4,7,0.85)", backdropFilter: "blur(8px)" }}
+      initial={reduce ? undefined : { opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={reduce ? undefined : { opacity: 0 }}
+      onClick={onClose}
+    >
+      <motion.div
+        className="relative w-full max-w-2xl rounded-2xl overflow-hidden"
+        style={{ boxShadow: "0 40px 90px -20px rgba(0,0,0,0.65)", aspectRatio: "4/5" }}
+        initial={reduce ? undefined : { opacity: 0, scale: 0.95, y: 16 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={reduce ? undefined : { opacity: 0, scale: 0.95, y: 16 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <CardFace item={item} category={category} tag={tag} comingSoon={comingSoon} />
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label={closeLabel}
+          className="absolute top-4 right-4 w-9 h-9 rounded-full flex items-center justify-center"
+          style={{ background: "rgba(0,0,0,0.4)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff" }}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+            <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" />
+          </svg>
+        </button>
+      </motion.div>
+    </motion.div>
+  )
+}
+
+/** Static grid fallback for reduced-motion — no auto-rotation, no pinning. Every card is a real, focusable button: it either opens the live site or the preview lightbox, so it's never a dead control. */
+function GridFallback({ onOpen }: { onOpen: (i: number) => void }) {
   const { t } = useLang()
   return (
-    <div className="grid md:grid-cols-3 gap-6">
+    <div className="grid sm:grid-cols-3 gap-5">
       {portfolioItems.map((item, i) => (
         <TiltCard
           key={item.title}
-          className="group relative rounded-2xl overflow-hidden cursor-pointer"
-          style={{ aspectRatio: "4/5" }}
+          className="group relative rounded-2xl overflow-hidden"
+          style={{ aspectRatio: "4/5", boxShadow: "0 22px 48px -24px rgba(120,20,50,0.5)" }}
           maxTilt={5}
-          motionProps={{ whileHover: "hovered" }}
         >
-          <motion.img
-            src={item.img}
-            alt={`${item.title} — ${t.work.categories[i]}`}
-            className="w-full h-full object-cover"
-            variants={{ hovered: { scale: 1.06 } }}
-            transition={{ duration: 0.5 }}
-          />
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{ background: "linear-gradient(to top, rgba(12,4,7,0.92) 0%, transparent 55%)" }}
-          />
-          <div className="absolute bottom-0 left-0 right-0 p-6">
-            <h3 className="font-body text-2xl mb-2" style={{ color: "#fff" }}>
-              {item.title}
-            </h3>
-            <div className="flex flex-wrap items-center gap-2.5">
-              <span
-                className="text-xs font-semibold uppercase tracking-[0.12em] px-3 py-1 rounded-lg"
-                style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.25)", color: "#fff" }}
-              >
-                {t.work.tag}
-              </span>
-              <span className="text-xs" style={{ color: "rgba(255,255,255,0.7)" }}>
-                {t.work.categories[i]}
-              </span>
-            </div>
-          </div>
+          <button
+            type="button"
+            className="absolute inset-0 w-full h-full text-left cursor-pointer"
+            onClick={() => onOpen(i)}
+            aria-label={item.url ? `${t.work.visit} — ${item.title}` : `${t.work.preview} — ${item.title}`}
+          >
+            <CardFace item={item} category={t.work.categories[i]} tag={t.work.tag} comingSoon={t.work.comingSoon} />
+          </button>
         </TiltCard>
       ))}
     </div>
   )
 }
 
-/** Mobile-native swipeable carousel — adapted from React Bits "Carousel" (drag + snap +
- *  spring + dot indicators), styled with the project cards. Replaces the heavy pinned
- *  scroll-scrub on phones, where GSAP pinning feels janky and isn't touch-native. */
-function PortfolioCarousel() {
+/** The auto-rotating card stack, boxed in a reserved column so its drop/return animation never fights the page layout. */
+function CardStack({ onOpen }: { onOpen: (i: number) => void }) {
   const { t } = useLang()
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [width, setWidth] = useState(0)
-  const [index, setIndex] = useState(0)
-  const last = portfolioItems.length - 1
-
-  useLayoutEffect(() => {
-    const el = containerRef.current
-    if (!el) return
-    const measure = () => setWidth(el.clientWidth)
-    measure()
-    const ro = new ResizeObserver(measure)
-    ro.observe(el)
-    return () => ro.disconnect()
-  }, [])
-
-  const itemWidth = width * 0.84
-  const gap = 14
-  const offset = itemWidth + gap
-  const sidePad = Math.max((width - itemWidth) / 2, 0)
-
-  const goTo = (i: number) => setIndex(Math.max(0, Math.min(i, last)))
-
-  const handleDragEnd = (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-    const dir =
-      info.offset.x < -40 || info.velocity.x < -500
-        ? 1
-        : info.offset.x > 40 || info.velocity.x > 500
-          ? -1
-          : 0
-    if (dir !== 0) goTo(index + dir)
-  }
+  const [active, setActive] = useState(0)
 
   return (
-    <div className="relative">
-      <div ref={containerRef} className="overflow-hidden">
-        <motion.div
-          className="flex"
-          style={{ gap, paddingLeft: sidePad, paddingRight: sidePad }}
-          drag="x"
-          dragElastic={0.12}
-          dragConstraints={{ left: -offset * last, right: 0 }}
-          onDragEnd={handleDragEnd}
-          animate={{ x: -index * offset }}
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+    <div>
+      {/* CardSwap.css scales the stack down below 768px, but this reserved
+       * box doesn't shrink with it unless told to — match its breakpoint so
+       * mobile doesn't carry a tall empty gap above the (now smaller) cards.
+       * overflow-hidden contains the drop/return animation's ~1.25x-height
+       * swing to this box instead of letting it paint over Testimonials
+       * below — nothing else in the ancestor chain clips it. */}
+      <div className="relative w-full h-[440px] md:h-[580px] overflow-hidden">
+        <CardSwap
+          width={360}
+          height={460}
+          cardDistance={55}
+          verticalDistance={60}
+          delay={4500}
+          pauseOnHover
+          skewAmount={5}
+          onActiveChange={setActive}
         >
           {portfolioItems.map((item, i) => (
-            <motion.article
+            <Card
               key={item.title}
-              className="relative shrink-0 rounded-2xl overflow-hidden"
-              style={{ width: itemWidth, aspectRatio: "4/5" }}
-              animate={{ scale: i === index ? 1 : 0.92, opacity: i === index ? 1 : 0.5 }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              role={item.url ? "link" : "button"}
+              tabIndex={0}
+              aria-label={item.url ? `${t.work.visit} — ${item.title}` : `${t.work.preview} — ${item.title}`}
+              className="cursor-pointer"
+              onClick={() => onOpen(i)}
+              onKeyDown={(e: KeyboardEvent<HTMLDivElement>) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault()
+                  onOpen(i)
+                }
+              }}
             >
-              <img
-                src={item.img}
-                alt={`${item.title} — ${t.work.categories[i]}`}
-                className="w-full h-full object-cover pointer-events-none"
-                draggable={false}
-              />
-              <div
-                className="absolute inset-0 pointer-events-none"
-                style={{ background: "linear-gradient(to top, rgba(12,4,7,0.92) 0%, transparent 58%)" }}
-              />
-              <div className="absolute bottom-0 left-0 right-0 p-6">
-                <h3 className="font-body text-2xl mb-2" style={{ color: "#fff" }}>
-                  {item.title}
-                </h3>
-                <div className="flex flex-wrap items-center gap-2.5">
-                  <span
-                    className="inline-block text-xs font-semibold uppercase tracking-[0.12em] px-3 py-1 rounded-lg"
-                    style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.25)", color: "#fff" }}
-                  >
-                    {t.work.tag}
-                  </span>
-                  <span className="text-xs" style={{ color: "rgba(255,255,255,0.7)" }}>
-                    {t.work.categories[i]}
-                  </span>
-                </div>
-              </div>
-            </motion.article>
+              <CardFace item={item} category={t.work.categories[i]} tag={t.work.tag} comingSoon={t.work.comingSoon} />
+            </Card>
           ))}
-        </motion.div>
+        </CardSwap>
       </div>
 
-      {/* Dot indicators — active dot elongates in wine. */}
-      <div className="flex items-center justify-center gap-2 mt-7">
+      {/* Position indicator — without this, a visitor has no way to tell how
+       * many projects exist or where they are short of waiting through the
+       * full auto-rotation. */}
+      <div className="flex items-center justify-center gap-2 mt-6" role="status" aria-label={`${active + 1} / ${portfolioItems.length}`}>
         {portfolioItems.map((item, i) => (
-          <button
+          <span
             key={item.title}
-            type="button"
-            onClick={() => goTo(i)}
-            aria-label={`Show ${item.title}`}
-            aria-current={i === index}
-            className="relative h-2 rounded-full transition-all duration-300 before:absolute before:content-[''] before:-inset-y-[18px] before:-inset-x-1"
+            aria-hidden="true"
+            className="h-2 rounded-full transition-all duration-300"
             style={{
-              width: i === index ? 22 : 8,
-              background: i === index ? "var(--color-wine)" : "var(--color-line-ink)",
+              width: i === active ? 22 : 8,
+              background: i === active ? "var(--color-wine)" : "var(--color-line-ink)",
             }}
           />
         ))}
@@ -241,43 +210,59 @@ function PortfolioCarousel() {
 export function Portfolio() {
   const { ref, inView } = useSection()
   const reduce = useReducedMotion()
-  const isMobile = useIsMobile()
   const { t } = useLang()
+  const [previewIndex, setPreviewIndex] = useState<number | null>(null)
+
+  const openCard = (i: number) => {
+    const item = portfolioItems[i]
+    if (item.url) {
+      window.open(item.url, "_blank", "noopener,noreferrer")
+    } else {
+      setPreviewIndex(i)
+    }
+  }
+
+  const previewItem = previewIndex !== null ? portfolioItems[previewIndex] : null
 
   return (
-    <section id="work" ref={ref} className="relative overflow-hidden">
-      <div className="relative max-w-7xl mx-auto px-6 pt-24 pb-14">
-        <motion.div
-          className="flex flex-col md:flex-row md:items-end justify-between gap-6"
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7 }}
-        >
-          <div>
-            <h2
-              className="section-title"
-              style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.4rem)" }}
-            >
+    <motion.section
+      ref={ref}
+      id="work"
+      className="relative py-28"
+      variants={reduce ? undefined : wipeReveal}
+      initial={reduce ? false : "hidden"}
+      animate={inView ? "visible" : "hidden"}
+    >
+      <div className="relative max-w-7xl mx-auto px-6">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <motion.div variants={staggerContainer} initial="hidden" animate={inView ? "visible" : "hidden"}>
+            <motion.p variants={fadeUp} className="kicker mb-4">
+              {t.work.kicker}
+            </motion.p>
+            <motion.h2 variants={fadeUp} className="section-title mb-6" style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.4rem)" }}>
               {t.work.heading}
-            </h2>
-          </div>
-          <p className="text-base max-w-xs" style={{ color: "var(--color-ink-soft)" }}>
-            {t.work.subhead}
-          </p>
-        </motion.div>
+            </motion.h2>
+            <motion.p variants={fadeUp} className="text-lg leading-relaxed max-w-md" style={{ color: "var(--color-ink-soft)" }}>
+              {t.work.subhead}
+            </motion.p>
+          </motion.div>
+
+          {reduce ? <GridFallback onOpen={openCard} /> : <CardStack onOpen={openCard} />}
+        </div>
       </div>
 
-      {reduce ? (
-        <div className="relative max-w-7xl mx-auto px-6 pb-28">
-          <GridFallback />
-        </div>
-      ) : isMobile ? (
-        <div className="relative pb-20">
-          <PortfolioCarousel />
-        </div>
-      ) : (
-        <PinnedSlides />
-      )}
-    </section>
+      <AnimatePresence>
+        {previewItem && (
+          <ProjectLightbox
+            item={previewItem}
+            category={t.work.categories[portfolioItems.indexOf(previewItem)]}
+            tag={t.work.tag}
+            comingSoon={t.work.comingSoon}
+            closeLabel={t.work.close}
+            onClose={() => setPreviewIndex(null)}
+          />
+        )}
+      </AnimatePresence>
+    </motion.section>
   )
 }
