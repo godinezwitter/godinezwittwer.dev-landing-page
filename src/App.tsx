@@ -8,6 +8,7 @@ import { PageIntro } from "@/components/PageIntro"
 import { Nav } from "@/components/Nav"
 import { MainPage } from "@/pages/MainPage"
 import { AboutPage } from "@/pages/AboutPage"
+import { OurProjectsPage } from "@/pages/OurProjectsPage"
 import { LegalPage } from "@/pages/LegalPage"
 import { NotFound } from "@/pages/NotFound"
 import { matchLegalRoute, type LegalDoc } from "@/legalRoutes"
@@ -17,6 +18,7 @@ function documentTitle(route: string, legalDoc: LegalDoc | null, meta: Content["
   if (legalDoc === "terms") return meta.titleTerms
   if (legalDoc === "privacy") return meta.titlePrivacy
   if (route === "/about") return meta.titleAbout
+  if (route === "/projects") return meta.titleProjects
   if (route === "/") return meta.titleHome
   return meta.titleNotFound
 }
@@ -48,6 +50,8 @@ function SiteChrome() {
           <LegalPage doc={legal.doc} routeLang={legal.lang} />
         ) : route === "/about" ? (
           <AboutPage />
+        ) : route === "/projects" ? (
+          <OurProjectsPage />
         ) : route === "/" ? (
           <MainPage />
         ) : (

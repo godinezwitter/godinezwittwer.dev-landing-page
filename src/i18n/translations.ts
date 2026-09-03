@@ -5,7 +5,7 @@
 
 const en = {
   nav: {
-    tabs: { work: "Work", about: "About Us" },
+    tabs: { work: "Work", projects: "Our Projects", about: "About Us" },
     cta: "Get Started",
     skip: "Skip to content",
     home: "Godinez & Wittwer — back to top",
@@ -99,8 +99,28 @@ const en = {
     tag: "Concept",
     comingSoon: "Live site coming soon",
     visit: "Visit live site",
-    preview: "Preview",
-    close: "Close preview",
+    learnMore: "Learn more",
+  },
+  projects: {
+    kicker: "Concept work",
+    heading: "Our Projects",
+    intro:
+      "Client work is just getting started, so these three concept builds are here to show how we actually think and build: real structure, invented briefs, coded end to end — no templates, no stock layouts.",
+    backCta: "Back to work",
+    items: [
+      {
+        description:
+          "A single-purpose landing page for a fictional sustainability startup. The brief was simple: turn one scroll into one signup. Every section — hero, offer, proof, objection, call to action — earns its place, structured exactly the way we'd plan a real client page.",
+      },
+      {
+        description:
+          "A magazine-style portfolio concept for a writer and photographer. The challenge here was typographic: a layout that lets long-form work breathe and reads like an actual publication, instead of a generic gallery template.",
+      },
+      {
+        description:
+          "A marketing site for an imagined infrastructure-management platform. Built to explain a technical product to a non-technical buyer — a clear feature walkthrough, a platform explainer, and a signup flow that doesn't overwhelm.",
+      },
+    ],
   },
   why: {
     kicker: "Why trust us",
@@ -286,6 +306,7 @@ const en = {
   meta: {
     titleHome: "Godinez & Wittwer — Landing Pages & Websites, Engineered",
     titleAbout: "About — Godinez & Wittwer",
+    titleProjects: "Our Projects — Godinez & Wittwer",
     titleNotFound: "Page not found — Godinez & Wittwer",
     titleTerms: "Terms of Service — Godinez & Wittwer",
     titlePrivacy: "Privacy Policy — Godinez & Wittwer",
@@ -307,7 +328,7 @@ export type Content = typeof en
 
 const de: Content = {
   nav: {
-    tabs: { work: "Arbeiten", about: "Über uns" },
+    tabs: { work: "Arbeiten", projects: "Unsere Projekte", about: "Über uns" },
     cta: "Loslegen",
     skip: "Zum Inhalt springen",
     home: "Godinez & Wittwer — nach oben",
@@ -401,8 +422,28 @@ const de: Content = {
     tag: "Konzept",
     comingSoon: "Live-Seite kommt bald",
     visit: "Live-Seite besuchen",
-    preview: "Vorschau",
-    close: "Vorschau schließen",
+    learnMore: "Mehr erfahren",
+  },
+  projects: {
+    kicker: "Konzeptarbeiten",
+    heading: "Unsere Projekte",
+    intro:
+      "Kundenprojekte starten gerade erst — deshalb zeigen diese drei Konzeptseiten, wie wir wirklich denken und arbeiten: echte Struktur, erfundene Briefings, komplett programmiert — keine Templates, keine Standardlayouts.",
+    backCta: "Zurück zu den Arbeiten",
+    items: [
+      {
+        description:
+          "Eine fokussierte Landingpage für ein fiktives Nachhaltigkeits-Startup. Das Briefing war simpel: aus einem Scroll wird eine Anmeldung. Jeder Abschnitt — Hero, Angebot, Beweis, Einwand, Call-to-Action — verdient seinen Platz, genau so geplant, wie wir eine echte Kundenseite strukturieren würden.",
+      },
+      {
+        description:
+          "Ein Portfolio-Konzept im Magazin-Stil für eine:n Autor:in und Fotograf:in. Die Herausforderung war typografisch: ein Layout, das langen Texten Raum gibt und wie eine echte Publikation wirkt statt wie ein generisches Galerie-Template.",
+      },
+      {
+        description:
+          "Eine Marketing-Website für eine erfundene Infrastruktur-Management-Plattform. Gebaut, um ein technisches Produkt einer nicht-technischen Zielgruppe zu erklären — ein klarer Funktionsüberblick, eine Plattform-Erklärung und ein Anmeldeprozess, der nicht überfordert.",
+      },
+    ],
   },
   why: {
     kicker: "Warum uns vertrauen",
@@ -588,6 +629,7 @@ const de: Content = {
   meta: {
     titleHome: "Godinez & Wittwer — Landingpages & Websites, sauber gebaut",
     titleAbout: "Über uns — Godinez & Wittwer",
+    titleProjects: "Unsere Projekte — Godinez & Wittwer",
     titleNotFound: "Seite nicht gefunden — Godinez & Wittwer",
     titleTerms: "AGB — Godinez & Wittwer",
     titlePrivacy: "Datenschutzerklärung — Godinez & Wittwer",
