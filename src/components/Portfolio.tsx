@@ -1,31 +1,27 @@
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
-import { useEffect, useState, type KeyboardEvent } from "react"
+import { motion, useReducedMotion } from "framer-motion"
+import { useState, type KeyboardEvent } from "react"
 import { useSection } from "@/hooks/useSection"
 import { fadeUp, staggerContainer, wipeReveal } from "@/lib/motion"
 import { useLang } from "@/i18n/language"
+import { navigate } from "@/router"
 import { TiltCard } from "@/components/TiltCard"
 import CardSwap, { Card } from "@/components/CardSwap"
 import heroPortfolio1 from "@/imports/greenmotive-hero.webp"
 import heroPortfolio2 from "@/imports/0569e0ae4f0c254626ea1e061e84132a.jpg"
 import heroPortfolio3 from "@/imports/terrava-hero.webp"
 
-// Image and project name are language-independent; category + tag come from
-// the dictionary (matched by index). `url` is each concept project's own
+// Image, project name, and slug are language-independent; category + tag come
+// from the dictionary (matched by index). `url` is each concept project's own
 // live site — left undefined until it's actually deployed. Clicking a card
-// always does something: opens the live site once `url` exists, or opens a
-// larger preview of the concept in the meantime.
-const portfolioItems: { img: string; title: string; url?: string }[] = [
-  { img: heroPortfolio1, title: "GreenMotive" },
-  { img: heroPortfolio2, title: "Helious" },
-  { img: heroPortfolio3, title: "Terrava" },
+// always does something: opens the live site once `url` exists, or opens
+// that project's own section on the "Our Projects" page in the meantime.
+export const portfolioItems: { img: string; title: string; slug: string; url?: string }[] = [
+  { img: heroPortfolio1, title: "GreenMotive", slug: "greenmotive" },
+  { img: heroPortfolio2, title: "Helious", slug: "helious" },
+  { img: heroPortfolio3, title: "Terrava", slug: "terrava" },
 ]
 
-type CardContentProps = {
-  item: (typeof portfolioItems)[number]
-  category: string
-  tag: string
-  comingSoon: string
-}
+type CardContentProps = { item: (typeof portfolioItems)[number]; category: string; tag: string; comingSoon: string }
 
 /** Shared card face — a photo with a bottom gradient for legible title/tags, used both in the CardSwap stack and the reduced-motion grid fallback. */
 function CardFace({ item, category, tag, comingSoon }: CardContentProps) {
@@ -61,62 +57,7 @@ function CardFace({ item, category, tag, comingSoon }: CardContentProps) {
   )
 }
 
-/** Full-size preview shown when a card without a live `url` is clicked — the
- * concept still deserves a closer look even though there's nowhere to send
- * the click yet. Closes on backdrop click, its own button, or Escape. */
-function ProjectLightbox({
-  item,
-  category,
-  tag,
-  comingSoon,
-  closeLabel,
-  onClose,
-}: CardContentProps & { closeLabel: string; onClose: () => void }) {
-  const reduce = useReducedMotion()
-
-  useEffect(() => {
-    const onKey = (e: globalThis.KeyboardEvent) => {
-      if (e.key === "Escape") onClose()
-    }
-    window.addEventListener("keydown", onKey)
-    return () => window.removeEventListener("keydown", onKey)
-  }, [onClose])
-
-  return (
-    <motion.div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-6"
-      style={{ background: "rgba(12,4,7,0.85)", backdropFilter: "blur(8px)" }}
-      initial={reduce ? undefined : { opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={reduce ? undefined : { opacity: 0 }}
-      onClick={onClose}
-    >
-      <motion.div
-        className="relative w-full max-w-2xl rounded-2xl overflow-hidden"
-        style={{ boxShadow: "0 40px 90px -20px rgba(0,0,0,0.65)", aspectRatio: "4/5" }}
-        initial={reduce ? undefined : { opacity: 0, scale: 0.95, y: 16 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={reduce ? undefined : { opacity: 0, scale: 0.95, y: 16 }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <CardFace item={item} category={category} tag={tag} comingSoon={comingSoon} />
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label={closeLabel}
-          className="absolute top-4 right-4 w-9 h-9 rounded-full flex items-center justify-center"
-          style={{ background: "rgba(0,0,0,0.4)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff" }}
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-            <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" />
-          </svg>
-        </button>
-      </motion.div>
-    </motion.div>
-  )
-}
-
-/** Static grid fallback for reduced-motion — no auto-rotation, no pinning. Every card is a real, focusable button: it either opens the live site or the preview lightbox, so it's never a dead control. */
+/** Static grid fallback for reduced-motion — no auto-rotation, no pinning. Every card is a real, focusable button: it either opens the live site or the project's own page, so it's never a dead control. */
 function GridFallback({ onOpen }: { onOpen: (i: number) => void }) {
   const { t } = useLang()
   return (
@@ -132,7 +73,7 @@ function GridFallback({ onOpen }: { onOpen: (i: number) => void }) {
             type="button"
             className="absolute inset-0 w-full h-full text-left cursor-pointer"
             onClick={() => onOpen(i)}
-            aria-label={item.url ? `${t.work.visit} — ${item.title}` : `${t.work.preview} — ${item.title}`}
+            aria-label={item.url ? `${t.work.visit} — ${item.title}` : `${t.work.learnMore} — ${item.title}`}
           >
             <CardFace item={item} category={t.work.categories[i]} tag={t.work.tag} comingSoon={t.work.comingSoon} />
           </button>
@@ -155,12 +96,12 @@ function CardStack({ onOpen }: { onOpen: (i: number) => void }) {
        * overflow-hidden contains the drop/return animation's ~1.25x-height
        * swing to this box instead of letting it paint over Testimonials
        * below — nothing else in the ancestor chain clips it. */}
-      <div className="relative w-full h-[440px] md:h-[580px] overflow-hidden">
+      <div className="relative w-full h-[460px] md:h-[610px] overflow-hidden">
         <CardSwap
-          width={360}
-          height={460}
-          cardDistance={55}
-          verticalDistance={60}
+          width="100%"
+          height={480}
+          cardDistance={60}
+          verticalDistance={62}
           delay={4500}
           pauseOnHover
           skewAmount={5}
@@ -171,7 +112,7 @@ function CardStack({ onOpen }: { onOpen: (i: number) => void }) {
               key={item.title}
               role={item.url ? "link" : "button"}
               tabIndex={0}
-              aria-label={item.url ? `${t.work.visit} — ${item.title}` : `${t.work.preview} — ${item.title}`}
+              aria-label={item.url ? `${t.work.visit} — ${item.title}` : `${t.work.learnMore} — ${item.title}`}
               className="cursor-pointer"
               onClick={() => onOpen(i)}
               onKeyDown={(e: KeyboardEvent<HTMLDivElement>) => {
@@ -211,18 +152,18 @@ export function Portfolio() {
   const { ref, inView } = useSection()
   const reduce = useReducedMotion()
   const { t } = useLang()
-  const [previewIndex, setPreviewIndex] = useState<number | null>(null)
 
+  // Clicking a card always goes somewhere: to the live site once a project
+  // has its own `url`, or to that project's own section on the dedicated
+  // "Our Projects" page in the meantime, where it's actually explained.
   const openCard = (i: number) => {
     const item = portfolioItems[i]
     if (item.url) {
       window.open(item.url, "_blank", "noopener,noreferrer")
     } else {
-      setPreviewIndex(i)
+      navigate(`/projects#${item.slug}`)
     }
   }
-
-  const previewItem = previewIndex !== null ? portfolioItems[previewIndex] : null
 
   return (
     <motion.section
@@ -250,19 +191,6 @@ export function Portfolio() {
           {reduce ? <GridFallback onOpen={openCard} /> : <CardStack onOpen={openCard} />}
         </div>
       </div>
-
-      <AnimatePresence>
-        {previewItem && (
-          <ProjectLightbox
-            item={previewItem}
-            category={t.work.categories[portfolioItems.indexOf(previewItem)]}
-            tag={t.work.tag}
-            comingSoon={t.work.comingSoon}
-            closeLabel={t.work.close}
-            onClose={() => setPreviewIndex(null)}
-          />
-        )}
-      </AnimatePresence>
     </motion.section>
   )
 }
