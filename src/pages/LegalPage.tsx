@@ -138,11 +138,15 @@ export function LegalPage({ doc, routeLang }: { doc: LegalDoc; routeLang: Lang }
                 <p className="mt-3 leading-relaxed" style={ink}>
                   {d.contact.before}
                   <a
-                    href="/#contact"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      navigate("/#contact")
-                    }}
+                    href={d.contact.href}
+                    onClick={
+                      d.contact.href.startsWith("/")
+                        ? (e) => {
+                            e.preventDefault()
+                            navigate(d.contact.href)
+                          }
+                        : undefined
+                    }
                     className="font-semibold underline underline-offset-2"
                     style={{ color: "var(--color-wine)" }}
                   >

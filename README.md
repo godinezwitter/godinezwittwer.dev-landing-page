@@ -6,15 +6,44 @@ Business landing page. Built with Vite, React, TypeScript, and Tailwind CSS.
 
 ```bash
 npm install
+cp .env.example .env   # paste your Web3Forms access key (see below)
 npm run dev
 ```
 
+## Contact form
+
+The contact form posts to [Web3Forms](https://web3forms.com), which relays
+submissions to **godinezwittwer.dev@gmail.com** — no backend of our own.
+
+Env vars (see `.env.example`) — set in `.env` locally and as build variables on
+the host / in CI:
+
+| Variable | Required | Notes |
+| --- | --- | --- |
+| `VITE_WEB3FORMS_ACCESS_KEY` | yes | From web3forms.com after confirming the email. Publishable. No key → form validates but the send fails closed. |
+| `VITE_HCAPTCHA_SITEKEY` | only with hCaptcha | Set **only** if hCaptcha is enabled in the Web3Forms dashboard (your form → Settings → Spam Protection). Use the sitekey shown there. Blank → no captcha widget. |
+
+**Important:** the hCaptcha dashboard toggle and `VITE_HCAPTCHA_SITEKEY` must
+agree. hCaptcha on in the dashboard but no sitekey here → Web3Forms rejects every
+submission. Sitekey here but hCaptcha off in the dashboard → a pointless checkbox
+(harmless, but remove the var).
+
 ## Workflow
 
-- `main` is protected — no direct pushes.
-- Create a branch per change: `feature/...`, `fix/...`.
-- Open a pull request; it needs one approval from the other maintainer before merging.
+Nothing goes straight to `main`. Work is collected on `dev` first, then released
+to `main`:
+
+```
+feature/xyz ──► dev ──► main
+```
+
+- Branch off **`dev`**, never off `main`: `feature/...`, `fix/...`, `chore/...`, `docs/...`.
+- Open the pull request against **`dev`** — no approval needed, but `build` must pass.
+- Releasing means a PR from `dev` to `main`, which needs one approval from the other maintainer.
+- We squash-merge, so a merged branch is done — delete it and branch fresh for the next change.
 - CI (`.github/workflows/ci.yml`) lints and builds every PR.
+
+Details and naming conventions: [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## UI component sources (optional)
 
