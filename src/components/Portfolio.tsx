@@ -98,7 +98,7 @@ function CardStack({ onOpen }: { onOpen: (i: number) => void }) {
        * below — nothing else in the ancestor chain clips it. */}
       <div className="relative w-full h-[460px] md:h-[610px] overflow-hidden">
         <CardSwap
-          width={420}
+          width="100%"
           height={480}
           cardDistance={60}
           verticalDistance={62}
