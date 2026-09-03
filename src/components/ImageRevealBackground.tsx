@@ -9,10 +9,6 @@ interface ImageRevealBackgroundProps {
   /** Classes for the outer frame — size, position, rounding, overflow. Both
    * image layers fill it via absolute inset-0. */
   className?: string
-  /** CSS background-position for both layers. Default "center". Useful for a
-   * full-bleed frame where `cover` would otherwise crop toward the middle of
-   * the art instead of the part that needs to stay in frame. */
-  backgroundPosition?: string
 }
 
 const MIN_RADIUS = 160
@@ -42,12 +38,7 @@ const DESKTOP_QUERY = "(min-width: 1024px)"
  * Desktop only: the mask math assumes a moving pointer, so screens under
  * the `lg` breakpoint (and prefers-reduced-motion) get a plain static crop
  * of the reveal image instead of the interactive rig. */
-export function ImageRevealBackground({
-  baseImage,
-  revealImage,
-  className,
-  backgroundPosition = "center",
-}: ImageRevealBackgroundProps) {
+export function ImageRevealBackground({ baseImage, revealImage, className }: ImageRevealBackgroundProps) {
   const reduce = useReducedMotion()
   const [isDesktop, setIsDesktop] = useState(() => window.matchMedia(DESKTOP_QUERY).matches)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -142,7 +133,7 @@ export function ImageRevealBackground({
   const layerStyle = (image: string): React.CSSProperties => ({
     backgroundImage: `url(${image})`,
     backgroundSize: "cover",
-    backgroundPosition,
+    backgroundPosition: "center",
   })
 
   if (!interactive) {
