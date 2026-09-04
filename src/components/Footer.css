@@ -1,0 +1,156 @@
+/* --- Site footer (the one dark block below the paper world). ---------------
+   Two React Bits-derived pieces live here: the DotGrid canvas that lights up
+   under the cursor (.gw-footer__dots, painted in Footer.tsx) and the giant GW
+   wordmark, whose wine fill is revealed by a spotlight mask that tracks the
+   pointer. Both degrade to something static on touch and reduced motion. */
+
+.gw-footer {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  /* Near-black, but warmed toward the burgundy identity — never a flat #000. */
+  background: var(--color-void);
+  color: var(--color-ink);
+}
+
+.gw-footer__dots {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  /* Fade the field out at the top edge so the seam with the paper world above
+     is a clean rule rather than a row of half-lit dots. */
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 18%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 18%);
+}
+
+/* --- Column headings + links --------------------------------------------- */
+
+.gw-footer__heading {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(184, 154, 160, 0.75);
+}
+
+.gw-link {
+  position: relative;
+  display: inline-block;
+  color: var(--color-ink-muted);
+  transition: color 0.25s ease;
+}
+.gw-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  /* The link carries vertical padding for the touch target; pin the rule to
+     the text baseline rather than to the padded box. */
+  bottom: calc(0.375rem - 1px);
+  height: 1px;
+  background: rgba(245, 236, 233, 0.45);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.gw-link:hover,
+.gw-link:focus-visible {
+  color: var(--color-ink);
+}
+.gw-link:hover::after,
+.gw-link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* --- The GW wordmark ------------------------------------------------------ */
+
+.gw-mark {
+  position: relative;
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-optical-sizing: auto;
+  font-size: clamp(9rem, 34vw, 26rem);
+  /* Tight enough that the monogram reads as a mark rather than a headline. A
+     line box that short leaves the glyphs hanging out of it, so the padding
+     puts the ink back inside the box and the override cancels the clipping
+     Chromium applies to buttons — without both, Fraunces loses its feet. */
+  line-height: 0.8;
+  padding-bottom: 0.2em;
+  overflow: visible;
+  letter-spacing: -0.045em;
+  /* Spotlight position + strength, driven from the pointer handler. */
+  --gw-x: 24%;
+  --gw-y: 48%;
+  --gw-spot: 0;
+}
+
+.gw-mark__layer {
+  display: block;
+  user-select: none;
+}
+
+/* Hollow by default — the letterforms read as a drawn mark, not a headline. */
+.gw-mark__outline {
+  color: rgba(245, 236, 233, 0.045);
+  -webkit-text-stroke: 1.25px rgba(245, 236, 233, 0.2);
+  transition: -webkit-text-stroke-color 0.4s ease;
+}
+.gw-mark:hover .gw-mark__outline,
+.gw-mark:focus-visible .gw-mark__outline {
+  -webkit-text-stroke-color: rgba(245, 236, 233, 0.32);
+}
+
+/* The lit fill, revealed only inside the pointer's spotlight. */
+.gw-mark__fill {
+  position: absolute;
+  inset: 0;
+  color: transparent;
+  background-image: linear-gradient(112deg, var(--color-ink) 0%, rgba(245, 236, 233, 0.8) 48%, rgba(245, 236, 233, 0.5) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  opacity: var(--gw-spot);
+  transition: opacity 0.4s ease;
+  mask-image: radial-gradient(circle 18vmin at var(--gw-x) var(--gw-y), #000 0%, rgba(0, 0, 0, 0.45) 42%, transparent 78%);
+  -webkit-mask-image: radial-gradient(circle 18vmin at var(--gw-x) var(--gw-y), #000 0%, rgba(0, 0, 0, 0.45) 42%, transparent 78%);
+}
+.gw-mark:hover,
+.gw-mark:focus-visible {
+  --gw-spot: 0.75;
+}
+.gw-mark:focus-visible {
+  outline: 2px solid var(--color-rose);
+  outline-offset: 8px;
+  border-radius: var(--radius-lg);
+}
+
+/* No cursor to follow: park the spotlight and leave it lit, so touch visitors
+   get the same two-tone mark rather than an empty outline. */
+@media (hover: none) {
+  .gw-mark {
+    --gw-spot: 0.75;
+    cursor: default;
+  }
+  .gw-mark__fill {
+    mask-image: radial-gradient(circle 60vmin at 18% 55%, #000 0%, transparent 88%);
+    -webkit-mask-image: radial-gradient(circle 60vmin at 18% 55%, #000 0%, transparent 88%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gw-mark {
+    --gw-spot: 0.75;
+  }
+  .gw-mark__fill,
+  .gw-mark__outline,
+  .gw-link,
+  .gw-link::after {
+    transition: none;
+  }
+}

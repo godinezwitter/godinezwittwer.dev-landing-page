@@ -1,7 +1,6 @@
 import { useEffect } from "react"
 import { scrollToTarget } from "@/components/SmoothScroll"
 import { About } from "@/components/About"
-import { Footer } from "@/components/Footer"
 
 /** The "About Us" tab — the founder story on its own page, over warm paper. */
 export function AboutPage() {
@@ -18,8 +17,6 @@ export function AboutPage() {
         <div className="pt-16 md:pt-20">
           <About />
         </div>
-        <Footer />
-        <div className="h-16" aria-hidden="true" />
       </div>
     </div>
   )

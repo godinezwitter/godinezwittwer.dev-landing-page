@@ -45,8 +45,13 @@ function loadHCaptcha(): Promise<HCaptchaAPI> {
  *
  * `sitekey` comes from `VITE_HCAPTCHA_SITEKEY`; it must match the sitekey shown
  * in the Web3Forms dashboard when hCaptcha spam protection is turned on there.
+ *
+ * `size` picks the widget layout: the default "normal" checkbox is a fixed
+ * ~303px wide, which is wider than a phone-width form panel, so narrow screens
+ * ask for "compact" (~164px). Changing it re-renders the widget, which drops any
+ * token already collected — that's correct, since the old widget is gone.
  */
-export function useHCaptcha(sitekey: string | undefined) {
+export function useHCaptcha(sitekey: string | undefined, size: "normal" | "compact" = "normal") {
   const containerRef = useRef<HTMLDivElement>(null)
   const widgetId = useRef<string | null>(null)
   const [token, setToken] = useState("")
@@ -59,6 +64,7 @@ export function useHCaptcha(sitekey: string | undefined) {
         if (cancelled || !containerRef.current || widgetId.current !== null) return
         widgetId.current = hc.render(containerRef.current, {
           sitekey,
+          size,
           callback: (t: string) => setToken(t),
           "expired-callback": () => setToken(""),
           "error-callback": () => setToken(""),
@@ -69,8 +75,18 @@ export function useHCaptcha(sitekey: string | undefined) {
       })
     return () => {
       cancelled = true
+      const id = widgetId.current
+      widgetId.current = null
+      if (id !== null && window.hcaptcha) {
+        try {
+          window.hcaptcha.remove(id)
+        } catch {
+          /* widget already torn down with its container */
+        }
+      }
+      setToken("")
     }
-  }, [sitekey])
+  }, [sitekey, size])
 
   const reset = useCallback(() => {
     setToken("")

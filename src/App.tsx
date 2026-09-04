@@ -6,6 +6,7 @@ import { useRoute } from "@/router"
 import { SmoothScroll } from "@/components/SmoothScroll"
 import { PageIntro } from "@/components/PageIntro"
 import { Nav } from "@/components/Nav"
+import { Footer } from "@/components/Footer"
 import { MainPage } from "@/pages/MainPage"
 import { AboutPage } from "@/pages/AboutPage"
 import { OurProjectsPage } from "@/pages/OurProjectsPage"
@@ -58,6 +59,7 @@ function SiteChrome() {
           <NotFound />
         )}
       </main>
+      <Footer />
     </div>
   )
 }

@@ -41,8 +41,8 @@ const en = {
     linkedin: "on LinkedIn",
   },
   services: {
-    kicker: "Six services, one goal",
-    heading: "Everything a winning page needs",
+    kicker: "What we do",
+    quote: "No templates. Real code. Every time.",
     cardAction: "Get started",
     items: [
       {
@@ -159,6 +159,7 @@ const en = {
     servicePlaceholder: "e.g. Logo Design, SEO, Writing",
     messageLabel: "Tell us about your gig",
     messagePlaceholder: "Briefly describe what you sell and your goal for the page…",
+    captchaLabel: "Security check",
     submit: "Send my brief",
     submitting: "Sending…",
     successTitle: "Brief received",
@@ -173,10 +174,12 @@ const en = {
     errSend: "Something went wrong sending your brief. Please email us directly at godinezwittwer.dev@gmail.com.",
   },
   footer: {
-    copyright: "© 2026 Godinez & Wittwer — Web Studio. Switzerland.",
     privacy: "Privacy",
     terms: "Terms",
     contact: "Contact",
+    headings: { pages: "Pages", services: "Services" },
+    /* Label for the GW monogram, which doubles as the back-to-top control. */
+    backToTop: "Godinez & Wittwer — back to top",
   },
   /* The two legal documents. Each section renders as: heading, `body`
      paragraphs, an optional `list`, then any `tail` paragraphs — the shape the
@@ -365,8 +368,8 @@ const de: Content = {
     linkedin: "auf LinkedIn",
   },
   services: {
-    kicker: "Sechs Leistungen, ein Ziel",
-    heading: "Alles, was eine überzeugende Seite braucht",
+    kicker: "Was wir machen",
+    quote: "Keine Vorlagen. Echter Code. Jedes Mal.",
     cardAction: "Loslegen",
     items: [
       {
@@ -483,6 +486,7 @@ const de: Content = {
     servicePlaceholder: "z. B. Logo-Design, SEO, Texte",
     messageLabel: "Erzähl uns von deinem Gig",
     messagePlaceholder: "Beschreibe kurz, was du verkaufst und dein Ziel für die Seite …",
+    captchaLabel: "Sicherheitscheck",
     submit: "Briefing senden",
     submitting: "Wird gesendet…",
     successTitle: "Briefing erhalten",
@@ -497,10 +501,11 @@ const de: Content = {
     errSend: "Beim Senden ist etwas schiefgelaufen. Schreib uns direkt an godinezwittwer.dev@gmail.com.",
   },
   footer: {
-    copyright: "© 2026 Godinez & Wittwer — Web-Studio. Schweiz.",
     privacy: "Datenschutz",
     terms: "AGB",
     contact: "Kontakt",
+    headings: { pages: "Seiten", services: "Leistungen" },
+    backToTop: "Godinez & Wittwer — nach oben",
   },
   legal: {
     kicker: "Rechtliches",
