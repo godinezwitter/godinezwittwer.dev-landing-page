@@ -8,20 +8,42 @@ import { gsap, ScrollTrigger } from "@/lib/gsap"
 // back to native scrolling.
 let lenisInstance: Lenis | null = null
 
+/* Scrolling to a pinned section lands on the first frame of its scene, which for
+   the services rig is an empty stage with the quote still assembling — someone
+   who clicked a service name in the footer wants the cards, not the intro. So
+   that one anchor resolves to the tail of its pinned range instead, where the
+   cards have folded up and the section reads as itself. The other pinned scenes
+   (the hero, the portfolio slider) do want their opening frame, so this stays
+   scoped to #services rather than applying to pins in general. */
+const SERVICES_ANCHOR = "#services"
+const PIN_TAIL = 240 // px short of the pin's end, so the scene isn't mid-handoff
+
+function resolveAnchor(target: string): string | number {
+  if (target !== SERVICES_ANCHOR) return target
+  const el = document.querySelector<HTMLElement>(target)
+  if (!el) return target
+  // Phones and reduced motion run the same scene unpinned, with no trigger to
+  // find — there the element's own position is already the right landing spot.
+  const pin = ScrollTrigger.getAll().find((st) => st.trigger === el && st.pin)
+  if (!pin) return target
+  return Math.max(pin.start, pin.end - PIN_TAIL)
+}
+
 /** Smoothly scroll to a target: a number (pixel offset), a selector, or a hash
  * like "#contact". Routes through Lenis when it's running, otherwise falls back
  * to native scrolling so reduced-motion users still land in the right place. */
 export function scrollToTarget(target: string | number) {
+  const resolved = typeof target === "string" ? resolveAnchor(target) : target
   if (lenisInstance) {
     // Clear the fixed nav pill for element targets; land flush at the very top for 0.
-    const offset = typeof target === "number" ? 0 : -88
-    lenisInstance.scrollTo(target, { offset })
+    const offset = typeof resolved === "number" ? 0 : -88
+    lenisInstance.scrollTo(resolved, { offset })
     return
   }
-  if (typeof target === "number") {
-    window.scrollTo({ top: target, behavior: "smooth" })
+  if (typeof resolved === "number") {
+    window.scrollTo({ top: resolved, behavior: "smooth" })
   } else {
-    document.querySelector(target)?.scrollIntoView({ behavior: "smooth" })
+    document.querySelector(resolved)?.scrollIntoView({ behavior: "smooth" })
   }
 }
 

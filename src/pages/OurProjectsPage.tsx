@@ -1,7 +1,6 @@
 import { useEffect } from "react"
 import { scrollToTarget } from "@/components/SmoothScroll"
 import { Projects } from "@/components/Projects"
-import { Footer } from "@/components/Footer"
 
 /** The "Our Projects" tab — each concept build's own detail section, linked
  * to from the portfolio cards on the main page. */
@@ -27,8 +26,6 @@ export function OurProjectsPage() {
         <div className="pt-16 md:pt-20">
           <Projects />
         </div>
-        <Footer />
-        <div className="h-16" aria-hidden="true" />
       </div>
     </div>
   )
