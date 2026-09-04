@@ -243,12 +243,6 @@ textarea {
   background-image:
     repeating-linear-gradient(to right, var(--color-line-grid) 0 1px, transparent 1px var(--grid-cell)),
     repeating-linear-gradient(to bottom, var(--color-line-grid) 0 1px, transparent 1px var(--grid-cell));
-  /* The section below the hero carries the same paper colour, so a grid ending
-     at the hero's edge would draw a hard rule straight across the page. Fade it
-     out instead. Override with `mask-image: none` where the grid genuinely runs
-     to the edge. */
-  mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
 }
 
 /* Cells scale down with the viewport — 64px squares on a phone read as a few

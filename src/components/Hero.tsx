@@ -1,14 +1,19 @@
 import { motion, useReducedMotion } from "framer-motion"
 import { useEffect, useState } from "react"
 import { MagneticButton } from "@/components/MagneticButton"
+import { ImageRevealBackground } from "@/components/ImageRevealBackground"
 import { fadeUp, staggerContainer } from "@/lib/motion"
 import { useLang } from "@/i18n/language"
+import heroKnightBase from "@/imports/hero-knight-base.jpg"
+import heroKnightReveal from "@/imports/hero-knight-reveal.jpg"
 
-/** Static editorial hero in the light "paper" world — the same typographic
- * voice, kicker eyebrow, and fade-up reveals as every section below it, so the
- * page opens in one continuous vibe instead of a dark 3D prelude. The headline's
- * final word cycles through the studio's outcomes (convert / load fast / …);
- * reduced-motion holds it on the first word. No scroll-driven scenes, no WebGL. */
+/** Editorial hero in the light "paper" world — the same typographic voice,
+ * kicker eyebrow, and fade-up reveals as every section below it. A halftone
+ * illustration fills the whole section as a background (see
+ * ImageRevealBackground): a kneeling knight in a plain field by default, the
+ * same field turned to blowing roses wherever the cursor's spotlight lands.
+ * The headline's final word cycles through the studio's outcomes (convert /
+ * load fast / …); reduced-motion holds it on the first word. */
 export function Hero() {
   const reduce = useReducedMotion()
   const { t } = useLang()
@@ -29,25 +34,34 @@ export function Hero() {
       className="relative min-h-[100dvh] flex items-center overflow-hidden pt-20"
       style={{ background: "var(--color-paper)" }}
     >
+      {/* The knight fills the whole section as a background layer — everything
+          else stacks on top of it. The art places him in the right two-thirds
+          of the frame with open sky/field on the left, so "right top" keeps
+          him in frame under `cover` instead of cropping him out on a narrow
+          or unusually tall viewport, and leaves the left side clear for the
+          pitch panel to sit on plain ground rather than over his figure. */}
+      <ImageRevealBackground
+        baseImage={heroKnightBase}
+        revealImage={heroKnightReveal}
+        backgroundPosition="right top"
+        className="absolute inset-0"
+      />
       {/* Same warm paper grain the rest of the light world carries. */}
       <div className="grain-overlay" aria-hidden="true" />
-      {/* Soft blush bloom bleeding in from the top-right corner — the same warm
-          accent the section cards carry, kept mostly off-canvas so it reads as a
-          faint glow rather than a wash. */}
-      <div
-        className="absolute -top-40 -right-32 w-[20rem] h-[20rem] md:-top-48 md:-right-44 md:w-[34rem] md:h-[34rem] rounded-full blur-[120px] pointer-events-none"
-        style={{ background: "var(--color-blush)", opacity: 0.28 }}
-        aria-hidden="true"
-      />
-      {/* Graph-paper ruling across the whole hero. Sits after the bloom so the
-          lines read as printed on the paper rather than lit from behind it. */}
+      {/* Graph-paper ruling, overlaid on the illustration rather than under it
+          — a layer behind an opaque full-bleed image would never be seen. */}
       <div className="grid-paper" aria-hidden="true" />
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 py-20 md:py-28">
-        {/* The pitch, held to a readable measure — without the old right-hand
-            panel there's no second column to bound it, and a headline running
-            the full 7xl would sprawl on a wide display. */}
-        <motion.div className="min-w-0 max-w-3xl" variants={staggerContainer} initial="hidden" animate="visible">
+        {/* The pitch, left-aligned directly on the illustration — no card
+            behind it, just the same plain-text treatment as every other
+            section. */}
+        <motion.div
+          className="min-w-0 max-w-3xl -mt-6 md:-mt-10"
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+        >
           <motion.p variants={fadeUp} className="kicker mb-5">
             {t.hero.kicker}
           </motion.p>
