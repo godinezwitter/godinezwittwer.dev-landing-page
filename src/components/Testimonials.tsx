@@ -183,7 +183,10 @@ export function Testimonials() {
                 color: "var(--color-ink-deep)",
               }}
             >
-              <span style={{ color: "var(--color-wine)" }}>✓</span> {p}
+              <span className="shrink-0" style={{ color: "var(--color-wine)" }}>
+                <CheckIcon size={13} />
+              </span>
+              {p}
             </span>
           ))}
         </motion.div>
