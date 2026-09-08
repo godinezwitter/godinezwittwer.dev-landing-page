@@ -19,7 +19,7 @@ const en = {
     line2: "engineered to",
     rotating: ["convert.", "load fast.", "earn trust.", "sell."],
     subhead:
-      "We're Joel and Dee — two engineers who design and build high-converting landing pages and sites for Fiverr sellers. Real code, real testing, no templates.",
+      "We're Joel and Dee, two engineers who design and build high-converting landing pages and sites for Fiverr sellers. Real code, real testing, no templates.",
     ctaPrimary: "Start Your Project",
     ctaSecondary: "See Our Work",
   },
@@ -28,15 +28,15 @@ const en = {
     headingPre: "Two engineers who'd rather ",
     headingEm: "build than talk",
     intro:
-      "We're Joel Godinez and Dee Wittwer — third-year full-stack apprentices at Swiss Post by day, a two-person web studio the rest of the time. We build client sites the same way we ship production software: clean code, real testing, no shortcuts.",
+      "We're Joel Godinez and Dee Wittwer, third-year full-stack apprentices at Swiss Post by day and a two-person web studio the rest of the time. We build client sites the same way we ship production software: clean code, real testing, no shortcuts.",
     role: "Full-stack engineer",
     bios: [
-      "Front-end and motion lead. Comfortable across the stack — from React interfaces down to Spring Boot and .NET services.",
+      "Front-end and motion lead. Comfortable across the stack, from React interfaces down to Spring Boot and .NET services.",
       "Design and back-end lead. Sweats the details on layout and copy, then makes the whole thing run on solid, tested code.",
     ],
     offs: [
-      "Off the clock — skiing, gym, music, food.",
-      "Off the clock — football, cooking, music, fashion.",
+      "Off the clock: skiing, gym, music, food.",
+      "Off the clock: football, cooking, music, fashion.",
     ],
     linkedin: "on LinkedIn",
   },
@@ -51,15 +51,15 @@ const en = {
       },
       {
         title: "Conversion copywriting",
-        desc: "Words and structure that guide people to the click — headlines, hooks, and a flow that answers objections in order.",
+        desc: "Words and structure that guide people to the click: headlines, hooks, and a flow that answers objections in order.",
       },
       {
         title: "Fiverr gig pages",
-        desc: "Purpose-built for the Fiverr ecosystem — trust signals, clear offers, and structure that helps buyers say yes.",
+        desc: "Purpose-built for the Fiverr ecosystem: trust signals, clear offers, and structure that helps buyers say yes.",
       },
       {
         title: "Full website builds",
-        desc: "Multi-page sites coded from scratch — home, services, about, contact — structured to scale as you grow.",
+        desc: "Multi-page sites coded from scratch: home, services, about, contact. Structured to scale as you grow.",
       },
       {
         title: "Page refresh & audit",
@@ -67,28 +67,28 @@ const en = {
       },
       {
         title: "Brand identity add-on",
-        desc: "A tidy starter kit — logo, colour system, and type — so your page looks like a business, not a hobby.",
+        desc: "A tidy starter kit of logo, colour system, and type, so your page looks like a business, not a hobby.",
       },
     ],
   },
   process: {
     kicker: "The process",
-    heading: "From idea to live page — four clean steps",
+    heading: "From idea to live page in four clean steps",
     steps: [
-      { n: "01", title: "Discovery", desc: "A focused brief: your offer, audience, and goal. No fluff — just what the page needs to do." },
-      { n: "02", title: "Strategy & wireframe", desc: "We map the structure — hero, value, objections, CTA. Every section earns its place before we design." },
-      { n: "03", title: "Design & build", desc: "Design and code happen together. Real components, real content, tested as we go — not a flat mockup." },
-      { n: "04", title: "Review & launch", desc: "We revise until you're happy, QA across devices, and hand off clean — code or published live." },
+      { n: "01", title: "Discovery", desc: "A focused brief: your offer, audience, and goal. No fluff, just what the page needs to do." },
+      { n: "02", title: "Strategy & wireframe", desc: "We map the structure: hero, value, objections, CTA. Every section earns its place before we design." },
+      { n: "03", title: "Design & build", desc: "Design and code happen together. Real components, real content, tested as we go, not a flat mockup." },
+      { n: "04", title: "Review & launch", desc: "We revise until you're happy, QA across devices, and hand off clean, either as code or published live." },
     ],
     guaranteeTitle: "100% satisfaction guarantee",
-    guaranteeDesc: "Not happy after two revisions? You get a full refund — no questions asked.",
+    guaranteeDesc: "Not happy after two revisions? You get a full refund, no questions asked.",
     guaranteeCta: "Claim your page",
   },
   work: {
     kicker: "Selected work",
     heading: "Proof of craft",
     subhead:
-      "Client work is just getting started — so here's what we've built to show range: concept pages designed and coded end to end.",
+      "Client work is just getting started, so here's what we've built to show range: concept pages designed and coded end to end.",
     categories: ["Eco-tech · Landing page", "Editorial · Portfolio", "SaaS · Marketing site"],
     tag: "Concept",
     comingSoon: "Live site coming soon",
@@ -99,12 +99,12 @@ const en = {
     kicker: "Concept work",
     heading: "Our Projects",
     intro:
-      "Client work is just getting started, so these three concept builds are here to show how we actually think and build: real structure, invented briefs, coded end to end — no templates, no stock layouts.",
+      "Client work is just getting started, so these three concept builds are here to show how we actually think and build: real structure, invented briefs, coded end to end. No templates, no stock layouts.",
     backCta: "Back to work",
     items: [
       {
         description:
-          "A single-purpose landing page for a fictional sustainability startup. The brief was simple: turn one scroll into one signup. Every section — hero, offer, proof, objection, call to action — earns its place, structured exactly the way we'd plan a real client page.",
+          "A single-purpose landing page for a fictional sustainability startup. The brief was simple: turn one scroll into one signup. Every section (hero, offer, proof, objection, call to action) earns its place, structured exactly the way we'd plan a real client page.",
       },
       {
         description:
@@ -112,7 +112,7 @@ const en = {
       },
       {
         description:
-          "A marketing site for an imagined infrastructure-management platform. Built to explain a technical product to a non-technical buyer — a clear feature walkthrough, a platform explainer, and a signup flow that doesn't overwhelm.",
+          "A marketing site for an imagined infrastructure-management platform. Built to explain a technical product to a non-technical buyer: a clear feature walkthrough, a platform explainer, and a signup flow that doesn't overwhelm.",
       },
     ],
   },
@@ -125,7 +125,7 @@ const en = {
       {
         n: "01",
         title: "Professional engineers",
-        desc: "We build production software for Swiss Post by day. Your site gets the same standards — clean, tested, maintainable code, not a drag-and-drop template.",
+        desc: "We build production software for Swiss Post by day. Your site gets the same standards: clean, tested, maintainable code, not a drag-and-drop template.",
       },
       {
         n: "02",
@@ -135,7 +135,7 @@ const en = {
       {
         n: "03",
         title: "Revisions until you're happy",
-        desc: "We iterate until the page is genuinely right — not until a revision counter runs out. Clear, fast communication the whole way through.",
+        desc: "We iterate until the page is genuinely right, not until a revision counter runs out. Clear, fast communication the whole way through.",
       },
     ],
     proofPoints: [
@@ -150,7 +150,7 @@ const en = {
     heading: "Ready to build a page that actually works?",
     paragraph:
       "Tell us about your Fiverr gig and we'll come back within 24 hours with a strategy and a clear quote.",
-    checks: ["Free initial consultation", "Clear pricing — no surprises", "Delivery within 2–5 days"],
+    checks: ["Free initial consultation", "Clear pricing, no surprises", "Delivery within 2–5 days"],
     nameLabel: "Your name",
     namePlaceholder: "Jordan Rivera",
     emailLabel: "Email address",
@@ -167,7 +167,7 @@ const en = {
     optional: "(optional)",
     errName: "Please enter your name.",
     errEmailReq: "Please enter your email address.",
-    errEmailInvalid: "That email address doesn't look right — check for a typo.",
+    errEmailInvalid: "That email address doesn't look right. Check for a typo.",
     errMessage: "Please tell us a bit about your gig.",
     errMessageShort: "A sentence or two more would help us reply properly.",
     errCaptcha: "Please confirm you're human with the check above.",
@@ -346,7 +346,7 @@ const de: Content = {
     line2: "gebaut, um zu",
     rotating: ["überzeugen.", "begeistern.", "verkaufen.", "konvertieren."],
     subhead:
-      "Wir sind Joel und Dee — zwei Entwickler, die hochkonvertierende Landingpages und Websites für Fiverr-Anbieter gestalten und bauen. Echter Code, echte Tests, keine Templates.",
+      "Wir sind Joel und Dee, zwei Entwickler, die hochkonvertierende Landingpages und Websites für Fiverr-Anbieter gestalten und bauen. Echter Code, echte Tests, keine Templates.",
     ctaPrimary: "Projekt starten",
     ctaSecondary: "Unsere Arbeiten",
   },
@@ -355,15 +355,15 @@ const de: Content = {
     headingPre: "Zwei Entwickler, die lieber ",
     headingEm: "bauen als reden",
     intro:
-      "Wir sind Joel Godinez und Dee Wittwer — im dritten Lehrjahr als Full-Stack-Entwickler bei der Schweizerischen Post, den Rest der Zeit ein Zwei-Personen-Webstudio. Wir bauen Kundenseiten so, wie wir Produktivsoftware ausliefern: sauberer Code, echte Tests, keine Abkürzungen.",
+      "Wir sind Joel Godinez und Dee Wittwer, im dritten Lehrjahr als Full-Stack-Entwickler bei der Schweizerischen Post und den Rest der Zeit ein Zwei-Personen-Webstudio. Wir bauen Kundenseiten so, wie wir Produktivsoftware ausliefern: sauberer Code, echte Tests, keine Abkürzungen.",
     role: "Full-Stack-Entwickler",
     bios: [
-      "Front-end- und Motion-Lead. Zu Hause im ganzen Stack — von React-Oberflächen bis zu Spring-Boot- und .NET-Services.",
+      "Front-end- und Motion-Lead. Zu Hause im ganzen Stack, von React-Oberflächen bis zu Spring-Boot- und .NET-Services.",
       "Design- und Backend-Lead. Achtet auf jedes Detail bei Layout und Text und bringt das Ganze dann auf soliden, getesteten Code zum Laufen.",
     ],
     offs: [
-      "Nach Feierabend — Skifahren, Gym, Musik, Essen.",
-      "Nach Feierabend — Fussball, Kochen, Musik, Mode.",
+      "Nach Feierabend: Skifahren, Gym, Musik, Essen.",
+      "Nach Feierabend: Fussball, Kochen, Musik, Mode.",
     ],
     linkedin: "auf LinkedIn",
   },
@@ -378,15 +378,15 @@ const de: Content = {
       },
       {
         title: "Conversion-Texte",
-        desc: "Worte und Struktur, die zum Klick führen — Überschriften, Hooks und ein Aufbau, der Einwände der Reihe nach beantwortet.",
+        desc: "Worte und Struktur, die zum Klick führen: Überschriften, Hooks und ein Aufbau, der Einwände der Reihe nach beantwortet.",
       },
       {
         title: "Fiverr-Gig-Seiten",
-        desc: "Massgeschneidert für das Fiverr-Ökosystem — Vertrauenssignale, klare Angebote und eine Struktur, die Käufer zum Ja bewegt.",
+        desc: "Massgeschneidert für das Fiverr-Ökosystem: Vertrauenssignale, klare Angebote und eine Struktur, die Käufer zum Ja bewegt.",
       },
       {
         title: "Komplette Websites",
-        desc: "Mehrseitige Websites von Grund auf programmiert — Start, Leistungen, Über uns, Kontakt — so gebaut, dass sie mitwachsen.",
+        desc: "Mehrseitige Websites von Grund auf programmiert: Start, Leistungen, Über uns, Kontakt. So gebaut, dass sie mitwachsen.",
       },
       {
         title: "Seiten-Audit & Relaunch",
@@ -394,28 +394,28 @@ const de: Content = {
       },
       {
         title: "Marken-Basics",
-        desc: "Ein kompaktes Starter-Kit — Logo, Farbsystem und Typografie — damit deine Seite nach Unternehmen aussieht, nicht nach Hobby.",
+        desc: "Ein kompaktes Starter-Kit aus Logo, Farbsystem und Typografie, damit deine Seite nach Unternehmen aussieht, nicht nach Hobby.",
       },
     ],
   },
   process: {
     kicker: "Der Ablauf",
-    heading: "Von der Idee zur Live-Seite — vier klare Schritte",
+    heading: "Von der Idee zur Live-Seite in vier klaren Schritten",
     steps: [
-      { n: "01", title: "Briefing", desc: "Ein fokussiertes Briefing: dein Angebot, deine Zielgruppe, dein Ziel. Kein Füllstoff — nur, was die Seite leisten muss." },
-      { n: "02", title: "Strategie & Wireframe", desc: "Wir planen die Struktur — Hero, Nutzen, Einwände, CTA. Jeder Abschnitt verdient seinen Platz, bevor wir gestalten." },
-      { n: "03", title: "Design & Umsetzung", desc: "Design und Code entstehen zusammen. Echte Komponenten, echte Inhalte, laufend getestet — kein flaches Mockup." },
-      { n: "04", title: "Review & Launch", desc: "Wir überarbeiten, bis es passt, testen auf allen Geräten und übergeben sauber — als Code oder live veröffentlicht." },
+      { n: "01", title: "Briefing", desc: "Ein fokussiertes Briefing: dein Angebot, deine Zielgruppe, dein Ziel. Kein Füllstoff, nur, was die Seite leisten muss." },
+      { n: "02", title: "Strategie & Wireframe", desc: "Wir planen die Struktur: Hero, Nutzen, Einwände, CTA. Jeder Abschnitt verdient seinen Platz, bevor wir gestalten." },
+      { n: "03", title: "Design & Umsetzung", desc: "Design und Code entstehen zusammen. Echte Komponenten, echte Inhalte, laufend getestet, kein flaches Mockup." },
+      { n: "04", title: "Review & Launch", desc: "Wir überarbeiten, bis es passt, testen auf allen Geräten und übergeben sauber, als Code oder live veröffentlicht." },
     ],
     guaranteeTitle: "100% Zufriedenheitsgarantie",
-    guaranteeDesc: "Nach zwei Überarbeitungen nicht zufrieden? Du bekommst dein Geld zurück — ohne Wenn und Aber.",
+    guaranteeDesc: "Nach zwei Überarbeitungen nicht zufrieden? Du bekommst dein Geld zurück, ohne Wenn und Aber.",
     guaranteeCta: "Seite sichern",
   },
   work: {
     kicker: "Ausgewählte Arbeiten",
     heading: "Beweis für Handwerk",
     subhead:
-      "Kundenprojekte starten gerade erst — hier ist, was wir gebaut haben, um unsere Bandbreite zu zeigen: Konzeptseiten, komplett gestaltet und programmiert.",
+      "Kundenprojekte starten gerade erst, hier ist, was wir gebaut haben, um unsere Bandbreite zu zeigen: Konzeptseiten, komplett gestaltet und programmiert.",
     categories: ["Eco-Tech · Landingpage", "Editorial · Portfolio", "SaaS · Marketing-Website"],
     tag: "Konzept",
     comingSoon: "Live-Seite kommt bald",
@@ -426,12 +426,12 @@ const de: Content = {
     kicker: "Konzeptarbeiten",
     heading: "Unsere Projekte",
     intro:
-      "Kundenprojekte starten gerade erst — deshalb zeigen diese drei Konzeptseiten, wie wir wirklich denken und arbeiten: echte Struktur, erfundene Briefings, komplett programmiert — keine Templates, keine Standardlayouts.",
+      "Kundenprojekte starten gerade erst, deshalb zeigen diese drei Konzeptseiten, wie wir wirklich denken und arbeiten: echte Struktur, erfundene Briefings, komplett programmiert. Keine Templates, keine Standardlayouts.",
     backCta: "Zurück zu den Arbeiten",
     items: [
       {
         description:
-          "Eine fokussierte Landingpage für ein fiktives Nachhaltigkeits-Startup. Das Briefing war simpel: aus einem Scroll wird eine Anmeldung. Jeder Abschnitt — Hero, Angebot, Beweis, Einwand, Call-to-Action — verdient seinen Platz, genau so geplant, wie wir eine echte Kundenseite strukturieren würden.",
+          "Eine fokussierte Landingpage für ein fiktives Nachhaltigkeits-Startup. Das Briefing war simpel: aus einem Scroll wird eine Anmeldung. Jeder Abschnitt (Hero, Angebot, Beweis, Einwand, Call-to-Action) verdient seinen Platz, genau so geplant, wie wir eine echte Kundenseite strukturieren würden.",
       },
       {
         description:
@@ -439,7 +439,7 @@ const de: Content = {
       },
       {
         description:
-          "Eine Marketing-Website für eine erfundene Infrastruktur-Management-Plattform. Gebaut, um ein technisches Produkt einer nicht-technischen Zielgruppe zu erklären — ein klarer Funktionsüberblick, eine Plattform-Erklärung und ein Anmeldeprozess, der nicht überfordert.",
+          "Eine Marketing-Website für eine erfundene Infrastruktur-Management-Plattform. Gebaut, um ein technisches Produkt einer nicht-technischen Zielgruppe zu erklären: ein klarer Funktionsüberblick, eine Plattform-Erklärung und ein Anmeldeprozess, der nicht überfordert.",
       },
     ],
   },
@@ -452,7 +452,7 @@ const de: Content = {
       {
         n: "01",
         title: "Professionelle Entwickler",
-        desc: "Wir bauen tagsüber Produktivsoftware für die Schweizerische Post. Deine Seite bekommt denselben Standard — sauberer, getesteter, wartbarer Code, kein Baukasten-Template.",
+        desc: "Wir bauen tagsüber Produktivsoftware für die Schweizerische Post. Deine Seite bekommt denselben Standard: sauberer, getesteter, wartbarer Code, kein Baukasten-Template.",
       },
       {
         n: "02",
@@ -462,7 +462,7 @@ const de: Content = {
       {
         n: "03",
         title: "Überarbeitungen, bis du zufrieden bist",
-        desc: "Wir iterieren, bis die Seite wirklich stimmt — nicht, bis ein Zähler abgelaufen ist. Klare, schnelle Kommunikation auf dem ganzen Weg.",
+        desc: "Wir iterieren, bis die Seite wirklich stimmt, nicht, bis ein Zähler abgelaufen ist. Klare, schnelle Kommunikation auf dem ganzen Weg.",
       },
     ],
     proofPoints: [
@@ -477,7 +477,7 @@ const de: Content = {
     heading: "Bereit für eine Seite, die wirklich funktioniert?",
     paragraph:
       "Erzähl uns von deinem Fiverr-Gig und wir melden uns innerhalb von 24 Stunden mit einer Strategie und einem klaren Angebot.",
-    checks: ["Kostenloses Erstgespräch", "Klare Preise — keine Überraschungen", "Lieferung in 2–5 Tagen"],
+    checks: ["Kostenloses Erstgespräch", "Klare Preise, keine Überraschungen", "Lieferung in 2–5 Tagen"],
     nameLabel: "Dein Name",
     namePlaceholder: "Jordan Rivera",
     emailLabel: "E-Mail-Adresse",
@@ -494,7 +494,7 @@ const de: Content = {
     optional: "(optional)",
     errName: "Bitte gib deinen Namen ein.",
     errEmailReq: "Bitte gib deine E-Mail-Adresse ein.",
-    errEmailInvalid: "Diese E-Mail-Adresse sieht nicht richtig aus — prüf sie auf Tippfehler.",
+    errEmailInvalid: "Diese E-Mail-Adresse sieht nicht richtig aus. Prüf sie auf Tippfehler.",
     errMessage: "Erzähl uns kurz von deinem Gig.",
     errMessageShort: "Ein, zwei Sätze mehr helfen uns, richtig zu antworten.",
     errCaptcha: "Bitte bestätige mit dem Check oben, dass du ein Mensch bist.",
@@ -592,7 +592,7 @@ const de: Content = {
             "Alles, was du im Nachrichtenfeld über dein Projekt schreibst",
           ],
           tail: [
-            "Ausserdem erfassen wir grundlegende, nicht personenbezogene Analysedaten darüber, wie Besucher die Website nutzen — etwa aufgerufene Seiten und ungefähren Standort —, um das Erlebnis zu verbessern.",
+            "Ausserdem erfassen wir grundlegende, nicht personenbezogene Analysedaten darüber, wie Besucher die Website nutzen, etwa aufgerufene Seiten und ungefähren Standort, um das Erlebnis zu verbessern.",
           ],
         },
         {
@@ -610,7 +610,7 @@ const de: Content = {
         {
           heading: "Speicherdauer",
           body: [
-            "Wir bewahren Anfragedaten nur so lange auf, wie es zur Beantwortung nötig ist — und, falls du Kunde wirst, zur Umsetzung und Betreuung deines Projekts. Du kannst jederzeit die Löschung deiner Daten verlangen.",
+            "Wir bewahren Anfragedaten nur so lange auf, wie es zur Beantwortung nötig ist, und, falls du Kunde wirst, zur Umsetzung und Betreuung deines Projekts. Du kannst jederzeit die Löschung deiner Daten verlangen.",
           ],
           list: [],
           tail: [],
